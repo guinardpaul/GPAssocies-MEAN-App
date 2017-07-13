@@ -1,0 +1,112 @@
+<div class="container">
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Nom</th>
+      <th>Prénom</th>
+      <th>Adresse Facturation</th>
+      <th>Adresse Chantier</th>
+      <th>Email</th>
+      <th>Tél</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let client of clients">
+      <td>{{client.nom}}</td>
+      <td>{{client.prenom}}</td>
+      <td>{{client.adresseFacturation}} {{client.complAdresseFact}} <br/>
+        {{client.cpFact}} {{client.villeFact}}</td>
+      <td>{{client.adresseChantier}} {{client.complAdresseChantier}} <br/>
+        {{client.cpChantier}} {{client.villeChantier}}</td>
+      <td>{{client.email}}</td>
+      <td>{{client.numTel}}</td>
+      <td>
+        <a class="btn btn-success" [routerLink]="['/devis/client', client._id]">Consulter</a>
+        <button class="btn btn-warning" (click)="onUpdate(client)">Modifier</button>
+        <button class="btn btn-danger" (click)="onDelete(client._id)">Supprimer</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<button class="btn btn-primary" (click)="onAdd()">Ajouter client</button>
+</div>
+<br/>
+
+<div class="container" *ngIf="mode">
+<div class="panel-group">
+  <form class="form-horizontal">
+  <div class="panel-info col-sm-4">
+    <div class="panel-heading">Client</div>
+    <div class="panel-body">
+	      <div class="form-group">
+		      <label for="civilite">Civilité :</label>
+          <label class="radio-inline"><input type="radio" name="civilite" >M.</label>
+          <label class="radio-inline"><input type="radio" name="civilite" >Mme/Mlle</label>
+	      </div>
+        <div class="form-group">
+          <label for="nom">Nom :</label>
+          <input type="text" class="form-control" name="nom" id="nom" [(ngModel)]="client.nom" autofocus required />
+        </div>
+        <div class="form-group">
+          <label for="prenom">Prénom :</label>
+          <input type="text" class="form-control" name="prenom" id="prenom" [(ngModel)]="client.prenom" required />
+        </div>
+        <div class="form-group">
+          <label for="email">Email :</label>
+          <input type="text" class="form-control" name="email" id="email" [(ngModel)]="client.email" />
+        </div>
+        <div class="form-group">
+          <label for="numTel">Tél :</label>
+          <input type="text" class="form-control" name="numTel" id="numTel" [(ngModel)]="client.numTel" />
+        </div>
+        <div class="form-group">
+          <button (click)="addClient()" class="btn btn-success">Sauver</button>
+        </div>
+    </div>
+  </div>
+  <div class="panel-default col-sm-4">
+    <div class="panel-heading">Adresse Facturation</div>
+    <div class="panel-body">
+      <div class="form-group">
+        <label for="adresseFact">Adresse :</label>
+        <input type="text" class="form-control" name="adresseFact" id="adresseFact" [(ngModel)]="client.adresseFact" />
+      </div>
+      <div class="form-group">
+        <label for="complAdresseFact">Complément adresse :</label>
+        <input type="text" class="form-control" name="complAdresseFact" id="complAdresseFact" [(ngModel)]="client.complAdresseFact" />
+      </div>
+      <div class="form-group">
+        <label for="cpFact">Code postal :</label>
+        <input type="text" class="form-control" name="cpFact" id="cpFact" [(ngModel)]="client.cpFact" />
+      </div>
+      <div class="form-group">
+        <label for="villeFact">Ville :</label>
+        <input type="text" class="form-control" name="villeFact" id="villeFact" [(ngModel)]="client.villeFact" />
+      </div>
+    </div>
+  </div>
+    <div class="panel-default col-sm-4">
+      <div class="panel-heading">Adresse Chantier</div>
+      <div class="panel-body">
+        <div class="form-group">
+          <label for="adresseChantier">Adresse :</label>
+          <input type="text" class="form-control" name="adresseChantier" id="adresseChantier" [(ngModel)]="client.adresseChantier" />
+        </div>
+        <div class="form-group">
+          <label for="complAdresseChantier">Complément adresse :</label>
+          <input type="text" class="form-control" name="complAdresseChantier" id="complAdresseChantier" [(ngModel)]="client.complAdresseChantier" />
+        </div>
+        <div class="form-group">
+          <label for="cpChantier">Code postal :</label>
+          <input type="text" class="form-control" name="cpChantier" id="cpChantier" [(ngModel)]="client.cpChantier" />
+        </div>
+        <div class="form-group">
+          <label for="villeChantier">Ville :</label>
+          <input type="text" class="form-control" name="villeChantier" id="villeChantier" [(ngModel)]="client.villeChantier" />
+        </div>
+      </div>
+      </div>    
+    </form>
+  </div>
+</div>
