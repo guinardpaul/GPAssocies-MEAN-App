@@ -14,25 +14,85 @@ router.get('/clients', (req, res, next) => {
 // GET ONE CLIENT
 router.get('/clients/:id', (req, res, next) => {
     Client.findById(req.params.id, (err, data) => {
-        if(err) return next(err);
-        res.json(data);
+        if(data){
+            res.json(data);
+        } else {
+            res.json({
+                success: false,
+                message: 'Client not found'
+            });
+        }
     });
 });
 
 // SAVE CLIENT
 router.post('/clients', (req, res, next) => {
     Client.create(req.body, (err, data) => {
-        if(err) return next(err);
-        res.json({ success: true, obj: data, msg: 'Client created' });
+        if(err) {
+            if (err.errors.nom) {
+                res.json({
+                    success: false,
+                    message: err.errors.nom.properties.message
+                });
+            } else if (err.errors.prenom) {
+                res.json({
+                    success: false,
+                    message: err.errors.prenom.properties.message
+                });
+            } else if (err.errors.email) {
+                res.json({
+                    success: false,
+                    message: err.errors.email.properties.message
+                });
+            } else {
+                console.log(err);
+                res.json({
+                    success: false,
+                    message: 'Error trying to save Client'
+                });
+            }
+        }
+        res.json({ 
+            success: true, 
+            obj: data, 
+            msg: 'Client created'
+        });
     });
 });
 
 // UPDATE CLIENT
 router.put('/clients/:id', (req, res, next) => {
     Client.findByIdAndUpdate(req.params.id, req.body, (err, data) => {
-        if(err) return next(err);
+        if(err) {
+            if (err.errors.nom) {
+                res.json({
+                    success: false,
+                    message: err.errors.nom.properties.message
+                });
+            } else if (err.errors.prenom) {
+                res.json({
+                    success: false,
+                    message: err.errors.prenom.properties.message
+                });
+            } else if (err.errors.email) {
+                res.json({
+                    success: false,
+                    message: err.errors.email.properties.message
+                });
+            } else {
+                console.log(err);
+                res.json({
+                    success: false,
+                    message: 'Error trying to update Client'
+                });
+            }
+        }
         Client.findById(req.params.id, (err, data) => {
-            res.json({ success: true, obj: data, msg: 'Client updated' });
+            res.json({
+                success: true,
+                obj: data,
+                msg: 'Client updated'
+            });
         });
     });
 });
@@ -40,11 +100,16 @@ router.put('/clients/:id', (req, res, next) => {
 // REMOVE CLIENT
 router.delete('/clients/:id', (req, res, next) => {
     Client.findByIdAndRemove(req.params.id, req.body, (err, data) => {
-        if(err) return next(err);
-        if(data != null){
-            res.json({ success: true, msg: 'Client deleted'});
+        if(data){
+            res.json({ 
+                success: true, 
+                msg: 'Client deleted'
+            });
         } else {
-            res.json({ success: false, msg: 'Error. Client doesn\'t exist' });
+            res.json({ 
+                success: false, 
+                msg: 'Error. Client doesn\'t exist' 
+            });
         }
     });
 });
