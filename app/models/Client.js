@@ -59,7 +59,7 @@ const ClientSchema = new mongoose.Schema({
         required: true,
         validate: prenomValidator
     },
-    adresseFacturation: String,
+    adresseFact: String,
     complAdresseFact: String,
     cpFact: Number,
     villeFact: String,
@@ -70,6 +70,7 @@ const ClientSchema = new mongoose.Schema({
     email: {
         type: String,
         lowercase: true,
+        required: true,
         validate: emailValidator
     },
     numTel: String

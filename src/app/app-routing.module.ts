@@ -10,12 +10,13 @@ import { FactureComponent } from './components/facture/facture.component';
  * Const routes
  */
 const routes: Routes = [
-  {path: 'dashboard', component: DashboardComponent},
-  {path: 'client', component: ClientComponent},
-  {path: 'devis/client/:id_client', component: DevisComponent},
-  {path: 'devis', component: DevisComponent},
-  {path: 'facture', component: FactureComponent},
-  {path: '', redirectTo: 'dashboard', pathMatch: 'full'}
+  { path: 'dashboard', component: DashboardComponent },
+  { path: 'client', component: ClientComponent },
+  { path: 'devis', component: DevisComponent },
+  { path: 'devis/client/:id_client', component: DevisComponent },
+  { path: 'devis', component: DevisComponent },
+  { path: 'facture', component: FactureComponent },
+  { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
 ];
 
 @NgModule({

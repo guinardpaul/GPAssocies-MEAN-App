@@ -37,33 +37,33 @@
 <div class="panel panel-info">
 <div class="panel-heading">Devis</div>
 <div class="panel-body">
-<form class="form-horizontal">
+<form class="form-horizontal" [formGroup]="devisForm" (submit)="addDevis()">
 	<div class="form-group">
 		<label class="control-label" for="ref_devis">Ref :</label>
-		<input type="text" class="form-control" name="ref_devis" id="ref_devis" [(ngModel)]="devis.ref_devis" autofocus required />
+		<input type="text" class="form-control" name="ref_devis" id="ref_devis" formControlName="devis.ref_devis" autofocus required />
 	</div>
 	<div class="form-group">
 		<label class="control-label" for="date_creation">Date création :</label>
-		<input type="date" class="form-control" name="date_creation" id="date_creation" [(ngModel)]="devis.date_creation" />
+		<input type="date" class="form-control" name="date_creation" id="date_creation" formControlName="devis.date_creation" />
 	</div>
 	<div class="form-group">
 		<label class="control-label" for="montantHt">Montant HT :</label>
-		<input type="text" class="form-control" name="montantHt" id="montantHt" [(ngModel)]="devis.montantHt" />
+		<input type="text" class="form-control" name="montantHt" id="montantHt" formControlName="devis.montantHt" required />
 	</div>
 	<div class="form-group">
 		<label class="control-label" for="tauxTva">Taux TVA :</label>
-		<input type="text" class="form-control" name="tauxTva" id="tauxTva" [(ngModel)]="devis.tauxTva" />
+		<input type="text" class="form-control" name="tauxTva" id="tauxTva" formControlName="devis.tauxTva" required />
 	</div>
 	<div class="form-group">
 		<label class="control-label" for="montantTtc">Montant TTC :</label>
-		<input type="text" class="form-control" name="montantTtc" id="montantTtc" [(ngModel)]="devis.montantTtc" />
+		<input type="text" class="form-control" name="montantTtc" id="montantTtc" formControlName="devis.montantTtc" />
 	</div>
 	<div class="form-group">
 		<label class="control-label" for="client">Id client :</label>
-		<input type="text" class="form-control" name="client" id="client" [(ngModel)]="devis.client" required />
+		<input type="text" class="form-control" name="client" id="client" formControlName="devis.client" required />
 	</div>
 	<div class="form-group">
-		<button (click)="addDevis()" class="btn btn-success">Sauver</button>
+		<button type="submit" class="btn btn-success">Sauver</button>
 	</div>
 </form>
 </div>
