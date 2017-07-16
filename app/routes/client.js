@@ -1,8 +1,7 @@
-const express = require('express');
-const router = express.Router();
-const mongoose = require('mongoose');
 const Client = require('../models/Client');
 
+module.exports = (router) => {
+    
 // GET ALL CLIENT
 router.get('/clients', (req, res, next) => {
     Client.find((err, data) => {
@@ -27,7 +26,13 @@ router.get('/clients/:id', (req, res, next) => {
 
 // SAVE CLIENT
 router.post('/clients', (req, res, next) => {
-    Client.create(req.body, (err, data) => {
+    let client = new Client({
+        nom: req.body.nom,
+        prenom: req.body.prenom,
+        email: req.body.email
+    });
+    client.save((err) => {
+   // Client.create(req.body, (err, data) => {
         if(err) {
             if (err.errors.nom) {
                 res.json({
@@ -54,7 +59,7 @@ router.post('/clients', (req, res, next) => {
         }
         res.json({ 
             success: true, 
-            obj: data, 
+            //obj: data, 
             msg: 'Client created'
         });
     });
@@ -114,4 +119,5 @@ router.delete('/clients/:id', (req, res, next) => {
     });
 });
 
-module.exports = router;
+return router;
+};

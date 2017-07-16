@@ -1,7 +1,6 @@
-const express = require('express');
-const router = express.Router();
-const mongoose = require('mongoose');
 const Devis = require('../models/Devis');
+
+module.exports = (router) => {
 
 /**
  * Get All Devis
@@ -100,4 +99,5 @@ router.delete('/devis/:id', (req, res, next) => {
     });
 });
 
-module.exports = router;
+return router;
+}

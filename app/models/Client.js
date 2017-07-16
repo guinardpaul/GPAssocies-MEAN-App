@@ -59,6 +59,13 @@ const ClientSchema = new mongoose.Schema({
         required: true,
         validate: prenomValidator
     },
+        email: {
+        type: String,
+        lowercase: true,
+        required: true,
+        unique: true,
+        validate: emailValidator   
+    },
     adresseFact: String,
     complAdresseFact: String,
     cpFact: Number,
@@ -67,13 +74,11 @@ const ClientSchema = new mongoose.Schema({
     complAdresseChantier: String,
     cpChantier: Number,
     villeChantier: String,
-    email: {
-        type: String,
-        lowercase: true,
-        required: true,
-        validate: emailValidator
-    },
     numTel: String
+});
+
+ClientSchema.pre('save', function(next) {
+    next();
 });
 
 module.exports = mongoose.model('Client', ClientSchema);

@@ -1,7 +1,6 @@
-const express = require('express');
-const router = express.Router();
-const mongoose = require('mongoose');
 const FactureMois = require('../models/FactureMois');
+
+module.exports = (router) => {
 
 /**
  * GET ALL FactureMois
@@ -71,4 +70,5 @@ router.delete('/facture-mois/:id', (req, res, next) => {
     });
 });
 
-module.exports = router;
+return router;
+}

@@ -1,7 +1,6 @@
-const express = require('express');
-const router = express.Router();
-const mongoose = require('mongoose');
 const FactureGlobal = require('../models/FactureGlobal');
+
+module.exports = (router) => {
 
 /**
  * GET ALL FactureGlobal
@@ -92,4 +91,5 @@ router.delete('/facture-global/:id', (req, res, next) => {
     });
 });
 
-module.exports = router;
+return router;
+}
