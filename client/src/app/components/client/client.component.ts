@@ -4,7 +4,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 
 import { Client } from '../../models/client';
 import { ClientService } from '../../service/client.service';
-import { PassValueService } from '../../service/pass-value.service';
 
 @Component({
   selector: 'app-client',
@@ -16,7 +15,7 @@ export class ClientComponent implements OnInit {
   client: any = {};
   mode: boolean = false;
   clientForm: FormGroup;
-  
+
   /**
   * Get All Clients
   */
@@ -27,7 +26,7 @@ export class ClientComponent implements OnInit {
       error => console.log(error)
     );
   };
-  
+
   /**
   * Get One Client
   * @param id : client id
@@ -39,7 +38,7 @@ export class ClientComponent implements OnInit {
       error => console.log('Erreur ' + error)
     );
   };
-  
+
   /**
   * Save Client or update client if client id == 0
   */
@@ -61,7 +60,7 @@ export class ClientComponent implements OnInit {
     },
       error => console.log('Erreur '+ error)
   );
-}  
+}
 };
 
 /**
@@ -182,7 +181,7 @@ public numTelValidation(controls) {
 
 
 /**
-* 
+*
 * @param clientService : client service
 * @param formBuilder : Angular reactive Forms
 */
