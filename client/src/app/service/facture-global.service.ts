@@ -8,9 +8,9 @@ import 'rxjs/add/observable/throw';
 import { FactureGlobal } from '../models/factureGlobal';
 
 /**
- * Set api url accessing app/routes/ url
+ * Set dev url accessing app/routes/ url
  */
-const apiUrl = 'http://localhost:3000/api/facture-global/';
+const devUrl = 'http://localhost:3000/api/facture-global/';
 
 @Injectable()
 export class FactureGlobalService {
@@ -19,7 +19,7 @@ export class FactureGlobalService {
 	 * GET ALL FACTURE GLOBAL
 	 */
   public getAllFactureGlobal(): Observable<FactureGlobal[]> {
-		return this.http.get(apiUrl)
+		return this.http.get(devUrl)
 					.map(this.extractData)
 					.catch(this.handleError);
 	}
@@ -29,7 +29,7 @@ export class FactureGlobalService {
 	 * @param id : facture global id
 	 */
 	public getOneFactureGlobal(id: number): Observable<FactureGlobal> {
-		return this.http.get(apiUrl + id)
+		return this.http.get(devUrl + id)
 						.map(this.extractData)
 						.catch(this.handleError);
 	}
@@ -39,7 +39,7 @@ export class FactureGlobalService {
 	 * @param factureGlobal : Facture global body
 	 */
 	public addFactureGlobal(factureGlobal: FactureGlobal): Observable<FactureGlobal> {
-		return this.http.post(apiUrl, factureGlobal)
+		return this.http.post(devUrl, factureGlobal)
 					.map(this.extractData)
 					.catch(this.handleError);
 	}
@@ -50,7 +50,7 @@ export class FactureGlobalService {
 	 * @param id : Facture Global id
 	 */
 	public updateFactureGlobal(factureGlobal: FactureGlobal, id): Observable<FactureGlobal> {
-		return this.http.put(apiUrl + id, factureGlobal)
+		return this.http.put(devUrl + id, factureGlobal)
                     .map(this.extractData)
                     .catch(this.handleError);
     }
@@ -60,7 +60,7 @@ export class FactureGlobalService {
 	 * @param id_fact : Facture Global id
 	 */
 	public deleteFactureGlobal(id_fact: number): Observable<null> {
-		return this.http.delete(apiUrl + id_fact)
+		return this.http.delete(devUrl + id_fact)
 					.map(this.extractData)
 					.catch(this.handleError);
 	}

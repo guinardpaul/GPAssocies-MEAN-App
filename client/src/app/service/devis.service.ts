@@ -8,9 +8,9 @@ import 'rxjs/add/observable/throw';
 import { Devis } from '../models/devis';
 
 /**
- * Set api url accessing app/routes/ url
+ * Set dev url accessing app/routes/ url
  */ 
-const apiUrl = 'http://localhost:3000/api/devis/'
+const devUrl = 'http://localhost:3000/api/devis/'
 
 @Injectable()
 export class DevisService {
@@ -19,7 +19,7 @@ export class DevisService {
 	 * Get All Devis
 	 */
 	public getAllDevis(): Observable<Devis[]> {
-		return this.http.get(apiUrl)
+		return this.http.get(devUrl)
 					.map(this.extractData)
 					.catch(this.handleError);
 	}
@@ -29,7 +29,7 @@ export class DevisService {
 	 * @param client_id : client id set to devis model as client
 	 */
 	public getAllDevisByClient(client_id: number): Observable<Devis[]> {
-		return this.http.get(apiUrl + 'client/' + client_id)
+		return this.http.get(devUrl + 'client/' + client_id)
 					.map(this.extractData)
 					.catch(this.handleError);
 	};
@@ -39,7 +39,7 @@ export class DevisService {
 	 * @param id : devis id
 	 */
 	public getOneDevis(id: number): Observable<Devis> {
-		return this.http.get(apiUrl + id)
+		return this.http.get(devUrl + id)
 						.map(this.extractData)
 						.catch(this.handleError);
 	}
@@ -49,7 +49,7 @@ export class DevisService {
 	 * @param devis : devis to add
 	 */
 	public addDevis(devis: Devis): Observable<Devis> {
-		return this.http.post(apiUrl, devis)
+		return this.http.post(devUrl, devis)
 					.map(this.extractData)
 					.catch(this.handleError);
 	}
@@ -60,7 +60,7 @@ export class DevisService {
 	 * @param id: id of devis
 	 */
 	public updateDevis(devis: Devis, id): Observable<Devis> {
-		return this.http.put(apiUrl + id, devis)
+		return this.http.put(devUrl + id, devis)
                     .map(this.extractData)
                     .catch(this.handleError);
   	}
@@ -70,7 +70,7 @@ export class DevisService {
 	 * @param id_dev : devis id 
 	 */
 	public deleteDevis(id_dev: number): Observable<null> {
-		return this.http.delete(apiUrl + id_dev)
+		return this.http.delete(devUrl + id_dev)
 					.map(this.extractData)
 					.catch(this.handleError);
 	}

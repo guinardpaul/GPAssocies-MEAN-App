@@ -4,7 +4,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 
 import { Client } from '../../models/client';
 import { ClientService } from '../../service/client.service';
-import { PassValueService } from '../../service/pass-value.service';
 
 @Component({
   selector: 'app-client',
@@ -16,6 +15,8 @@ export class ClientComponent implements OnInit {
   client: any = {};
   mode: boolean = false;
   clientForm: FormGroup;
+  message: string;
+  messageClass: string;
   
   /**
   * Get All Clients
@@ -23,7 +24,7 @@ export class ClientComponent implements OnInit {
   public getAllClients() {
     this.clientService.getAllClients()
     .subscribe(
-      clients => this.clients = clients,
+      data => this.clients = data,
       error => console.log(error)
     );
   };
@@ -47,21 +48,29 @@ export class ClientComponent implements OnInit {
     this.client = this.clientForm.value;
     if(this.client._id == null || this.client._id == 0 || this.client._id == '') {
 			this.clientService.addClient(this.client)
-      .subscribe(
-        client => { console.log('Client saved' + client),
-        this.onSuccess()
-      },
-        error => console.log('Erreur '+ error)
-      );
+        .subscribe(
+          data => {
+            this.messageClass = 'alert alert-success',
+            this.message = 'Client créé',
+            console.log('Client saved' + data),
+            this.onSuccess()
+          },
+          err => {
+            console.log('Erreur '+ err),
+            this.message = 'Erreur',
+            this.messageClass = 'alert alert-danger'
+          }
+        );
     } else {
       this.clientService.updateClient(this.client._id, this.client)
-      .subscribe(
-      client => { console.log('Client saved' + client),
-      this.onSuccess()
-    },
-      error => console.log('Erreur '+ error)
-  );
-}  
+        .subscribe(
+          data => {
+            console.log('Client saved' + data),
+            this.onSuccess()
+          },
+          err => console.log('Erreur '+ err)
+        );
+    }
 };
 
 /**
@@ -71,7 +80,7 @@ public onSuccess() {
   this.mode = false;
   this.client = {};
   this.getAllClients();
-}
+};
 
 /**
 * Diplay view of add form
@@ -179,7 +188,6 @@ public numTelValidation(controls) {
     numTelValidation: true
   };
 };
-
 
 /**
 * 

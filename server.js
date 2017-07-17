@@ -1,6 +1,4 @@
 const express = require('express');
-// Set app
-const app = express();
 const router = express.Router();
 const path = require('path');
 const favicon = require('serve-favicon');
@@ -23,6 +21,9 @@ mongoose.connection.on('open', () => {
 mongoose.connection.on('error', (err) => {
     console.log('Error trying to connect to mongoDB: ' + err);
 });
+
+// Set app
+const app = express();
 
 // set routes
 const client = require('./app/routes/client')(router);

@@ -1,6 +1,5 @@
-{{client.nom}}
-{{client.prenom}}
-{{client._id}}
+<h4>{{client.nom}}
+{{client.prenom}}, {{client.email}}, {{client.numTel}}</h4>
 <div class="container">
 <table class="table table-striped">
 	<thead>
@@ -41,27 +40,37 @@
 <form class="form-horizontal" [formGroup]="devisForm" (submit)="addDevis()">
 	<div class="form-group">
 		<label class="control-label" for="ref_devis">Ref :</label>
-		<input type="text" class="form-control" name="ref_devis" id="ref_devis" formControlName="ref_devis" autofocus required />
+		<input type="text" class="form-control" name="ref_devis" id="ref_devis" 
+			formControlName="ref_devis" value="{{devis.ref_devis}}" autofocus required />
 	</div>
 	<div class="form-group">
 		<label class="control-label" for="date_creation">Date création :</label>
-		<input type="date" class="form-control" name="date_creation" id="date_creation" formControlName="date_creation" />
+		<input type="date" class="form-control" name="date_creation" id="date_creation" 
+			formControlName="date_creation" value="{{devis.date_creation}}" />
 	</div>
 	<div class="form-group">
 		<label class="control-label" for="montantHt">Montant HT :</label>
-		<input type="text" class="form-control" name="montantHt" id="montantHt" formControlName="montantHt" (keyup.enter)="calculMontant()" (blur)="calculMontant()"  required />
+		<input type="text" class="form-control" name="montantHt" id="montantHt" 
+			formControlName="montantHt" value="{{devis.montantHt}}" (blur)="calculMontant()" required />
 	</div>
 	<div class="form-group">
 		<label class="control-label" for="tauxTva">Taux TVA :</label>
-		<input type="text" class="form-control" name="tauxTva" id="tauxTva" formControlName="tauxTva" (keyup.enter)="calculMontant()" (blur)="calculMontant()"  required />
+		<input type="text" class="form-control" name="tauxTva" id="tauxTva" 
+			formControlName="tauxTva" value="{{devis.tauxTva}}" (blur)="calculMontant()" required />
 	</div>
 	<div class="form-group">
 		<label class="control-label" for="montantTtc">Montant TTC :</label>
-		<input type="text" class="form-control" name="montantTtc" id="montantTtc" formControlName="montantTtc" />
+		<input type="text" class="form-control" name="montantTtc" id="montantTtc" 
+			formControlName="montantTtc" value="{{devis.montantTtc}}" />
 	</div>
 	<div class="form-group">
 		<label class="control-label" for="client">Id client :</label>
-		<input type="text" class="form-control" name="client" id="client" formControlName="client" required />
+		<select class="form-control" id="client" name="client" formControlName="client" 
+			value="{{devis.client}}" required>
+        	<option *ngFor="let client of listClient" [ngValue]="devis.client">{{client.nom}} {{client.prenom}}</option>
+      	</select>
+		<!-- <input type="text" class="form-control" name="client" id="client" 
+			formControlName="client" value="{{devis.client}}" required /> -->
 	</div>
 	<div class="form-group">
 		<button [disabled]="!devisForm.valid" type="submit" class="btn btn-success">Sauver</button>

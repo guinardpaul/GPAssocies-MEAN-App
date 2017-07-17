@@ -8,9 +8,9 @@ import 'rxjs/add/observable/throw';
 import { FactureMois } from '../models/factureMois';
 
 /**
- * Set api url accessing app/routes/ url
+ * Set dev url accessing app/routes/ url
  */
-const apiUrl = 'http://localhost:3000/api/facture-mois/';
+const devUrl = 'http://localhost:3000/api/facture-mois/';
 
 @Injectable()
 export class FactureMoisService {
@@ -19,7 +19,7 @@ export class FactureMoisService {
 	 * Get All Facture Mois
 	 */
   	public getAllFactureMois(): Observable<FactureMois[]> {
-		return this.http.get(apiUrl)
+		return this.http.get(devUrl)
 					.map(this.extractData)
 					.catch(this.handleError);
 	}
@@ -29,7 +29,7 @@ export class FactureMoisService {
 	 * @param id : Facture Mois id
 	 */
 	public getOneFactureMois(id: number): Observable<FactureMois> {
-		return this.http.get(apiUrl + id)
+		return this.http.get(devUrl + id)
 						.map(this.extractData)
 						.catch(this.handleError);
 	}
@@ -39,7 +39,7 @@ export class FactureMoisService {
 	 * @param factureMois : Facture Mois body
 	 */
 	public addFactureMois(factureMois: FactureMois): Observable<FactureMois> {
-		return this.http.post(apiUrl, factureMois)
+		return this.http.post(devUrl, factureMois)
 					.map(this.extractData)
 					.catch(this.handleError);
 	}
@@ -50,7 +50,7 @@ export class FactureMoisService {
 	 * @param id : Facture Mois id
 	 */
 	public updateFactureMois(factureMois: FactureMois, id): Observable<FactureMois> {
-		return this.http.put(apiUrl + id, factureMois)
+		return this.http.put(devUrl + id, factureMois)
                     .map(this.extractData)
                     .catch(this.handleError);
   }
@@ -60,7 +60,7 @@ export class FactureMoisService {
    * @param id_fact : Facture Mois id
    */
 	public deleteFactureMois(id_fact: number): Observable<null> {
-		return this.http.delete(apiUrl + id_fact)
+		return this.http.delete(devUrl + id_fact)
 					.map(this.extractData)
 					.catch(this.handleError);
 	}
