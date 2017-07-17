@@ -11,10 +11,14 @@ import { ClientService } from '../../service/client.service';
   styleUrls: ['./client.component.css']
 })
 export class ClientComponent implements OnInit {
-  clients: Client[] = [];
-  client: any = {};
+  clients: Client[];
+  client: any;
   mode: boolean = false;
   clientForm: FormGroup;
+
+  message: string;
+  messageClass: string;
+
 
   /**
   * Get All Clients
@@ -22,7 +26,7 @@ export class ClientComponent implements OnInit {
   public getAllClients() {
     this.clientService.getAllClients()
     .subscribe(
-      clients => this.clients = clients,
+      data => this.clients = data,
       error => console.log(error)
     );
   };
@@ -44,63 +48,79 @@ export class ClientComponent implements OnInit {
   */
   public addClient() {
     this.client = this.clientForm.value;
-    if(this.client._id == null || this.client._id == 0 || this.client._id == '') {
+    if(this.client._id == null || this.client._id == 0) {
 			this.clientService.addClient(this.client)
       .subscribe(
-        client => { console.log('Client saved' + client),
-        this.onSuccess()
-      },
-        error => console.log('Erreur '+ error)
+        data => {
+          this.messageClass = 'alert alert-success',
+          this.message = 'Client créé',
+          console.log('Client saved' + data),
+          this.onSuccess()
+        },
+        error => {
+          console.log('Erreur '+ error),
+          this.message = 'Erreur',
+          this.messageClass = 'alert alert-danger'
+        }
       );
     } else {
       this.clientService.updateClient(this.client._id, this.client)
       .subscribe(
-      client => { console.log('Client saved' + client),
-      this.onSuccess()
-    },
-      error => console.log('Erreur '+ error)
-  );
-}
-};
 
-/**
-* Success function called when request to api successfull
-*/
-public onSuccess() {
-  this.mode = false;
-  this.client = {};
-  this.getAllClients();
-}
+        data => {
+          this.messageClass = 'alert alert-success',
+          this.message = 'Client modifié',
+          console.log('Client updated' + data),
+          this.onSuccess()
+        },
+        error => {
+          console.log('Erreur '+ error),
+          this.message = 'Erreur',
+          this.messageClass = 'alert alert-danger'
+        }
+      );
+    }
+  };
 
-/**
-* Diplay view of add form
-*/
-public onAdd() {
-  this.mode = true;
-};
 
-/**
-* Display view of update form and set values
-* @param client : client
-*/
-public onUpdate(client) {
-  this.client = client;
-  client = {};
-  this.mode = true;
-};
-
-/**
-* Delete client
-* @param id : client id
-*/
-public onDelete(id: number) {
-  this.clientService.deleteClient(id)
-  .subscribe(
-    () => { console.log('Client deleted'),
+  /**
+  * Success function called when request to api successfull
+  */
+  public onSuccess() {
+    this.mode = false;
+    this.client = null;
     this.getAllClients();
-  },
-  error => console.log(error)
-);
+  };
+
+  /**
+  * Diplay view of add form
+  */
+  public onAdd() {
+    this.mode = true;
+  };
+
+  /**
+  * Display view of update form and set values
+  * @param client : client
+  */
+  public onUpdate(client: Client) {
+    this.client = client;
+    client = null;
+    this.mode = true;
+  };
+
+  /**
+  * Delete client
+  * @param id : client id
+  */
+  public onDelete(id: number) {
+    this.clientService.deleteClient(id)
+    .subscribe(
+      () => { console.log('Client deleted'),
+      this.getAllClients();
+    },
+    error => console.log(error)
+  );
 };
 
 /**
@@ -138,9 +158,9 @@ public generateForm() {
 
 // Input Validation
 /**
- * nom et prenom validation using RegExp
- * @param controls : form controls
- */
+* nom et prenom validation using RegExp
+* @param controls : form controls
+*/
 public nomPrenomValidation(controls){
   const regExp = new RegExp(/[a-zA-z-_éè]+$/);
   if (regExp.test(controls.value)) {
@@ -152,9 +172,9 @@ public nomPrenomValidation(controls){
 };
 
 /**
- * email validation using RegExp
- * @param controls : form controls
- */
+* email validation using RegExp
+* @param controls : form controls
+*/
 public emailValidation(controls) {
   const regExp = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
   if (regExp.test(controls.value)) {
@@ -166,9 +186,9 @@ public emailValidation(controls) {
 };
 
 /**
- * num tel validation using RegExp
- * @param controls : form controls
- */
+* num tel validation using RegExp
+* @param controls : form controls
+*/
 public numTelValidation(controls) {
   const regExp = new RegExp(/[0-9-_.]+$/);
   if (regExp.test(controls.value)) {
@@ -178,7 +198,6 @@ public numTelValidation(controls) {
     numTelValidation: true
   };
 };
-
 
 /**
 *

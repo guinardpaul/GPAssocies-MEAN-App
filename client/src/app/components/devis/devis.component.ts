@@ -6,6 +6,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Devis } from '../../models/devis';
 import { Client } from '../../models/client';
 import { DevisService } from '../../service/devis.service';
+import { ClientService } from '../../service/client.service';
 
 @Component({
 	selector: 'app-devis',
@@ -14,36 +15,62 @@ import { DevisService } from '../../service/devis.service';
 })
 export class DevisComponent implements OnInit {
 	listDevis: Devis[] = [];
+	listClient: Client[] = [];
 	devis: any = {};
 	client: any = {};
 	id_client: number;
 	mode: boolean = false;
 	devisForm: FormGroup;
-	montantHt;
-	tauxTva;
-	montantTtc;
+	message: string;
+	messageClass: string;
 	
 	/**
+	 * Get ALL Client.
+	 * Used for Select Option on add/update Devis Form
+	 */
+	public getAllClient() {
+		this.clientService.getAllClients()
+			.subscribe(
+				clients => this.listClient = clients,
+				error => console.log('Erreur ' + error)
+			);
+	};
+
+	/**
 	* GET ALL DEVIS
+	* Set Devis from db to listDevis
 	*/
 	public getAllDevis() {
 		this.devisService.getAllDevis()
-		.subscribe(
-			devis => this.listDevis = devis,
-			error => console.log('Erreur ' + error)
-		);
+			.subscribe(
+				devis => this.listDevis = devis,
+				error => console.log('Erreur ' + error)
+			);
 	};
 	
 	/**
 	* GET ALL DEVIS BY CLIENT
+	* Set Devis by Client from db to listDevis
 	*/
 	public getAllDevisByClient() {
-		console.log(this.id_client);
+		this.getClient(this.id_client);
 		this.devisService.getAllDevisByClient(this.id_client)
-		.subscribe(
-			devis => this.listDevis = devis,
-			error => console.log('Erreur ' + error)
-		);
+			.subscribe(
+				devis => this.listDevis = devis,
+				error => console.log('Erreur ' + error)
+			);
+	};
+
+	/**
+	 * GET ONE CLIENT
+	 * Set current Client informations
+	 */
+	public getClient(id) {
+		this.clientService.getOneClient(id)
+			.subscribe(
+				client => this.client = client,
+				error => console.log('Erreur ' + error)
+			);
 	};
 	
 	/**
@@ -52,39 +79,70 @@ export class DevisComponent implements OnInit {
 	*/
 	public getOneDevis(id: number) {
 		this.devisService.getOneDevis(id)
-		.subscribe(
-			devis => this.devis = devis,
-			error => console.log('Erreur ' + error)
-		);
-	}
+			.subscribe(
+				devis => this.devis = devis,
+				error => console.log('Erreur ' + error)
+			);
+	};
 	
 	/**
 	* ADD/UPDATE DEVIS
 	*/
 	public addDevis() {
+		const newDevis = this.devisForm.value;
 		if(this.devis._id == null || this.devis._id == 0 || this.devis._id == '') {
-			this.devis.montantTtc = this.devis.montantHt * (1 + this.devis.tauxTva/100);
-			// set id_client 
-			if (this.id_client != null || this.id_client !== 0){
+			// set client 
+			/* if (this.id_client != null || this.id_client !== 0){
 				this.devis.client = this.client;
-			}
-			this.devisService.addDevis(this.devis)
-			.subscribe(
-				devis => { console.log('Devis saved' + devis),
-				this.onSuccess()
-			},
-			error => console.log('Erreur '+ error)
-		);
-	} else {
-		this.devis.montantTtc = this.devis.montantHt * (1 + this.devis.tauxTva/100);
-		this.devisService.updateDevis(this.devis, this.devis._id)
-		.subscribe(
-			devis => { console.log('Devis updated' + devis),
-			this.onSuccess()
-		},
-		error => console.log('Erreur '+ error)
-	);
-}
+			} */
+			 /* const newDevis = new Devis({
+				ref_devis: this.devisForm.get('ref_devis').value,
+				date_creation: this.devisForm.get('date_creation').value,
+				montantHt: this.devisForm.get('montantHt').value,
+				tauxTva: this.devisForm.get('tauxTva').value,
+				montantTtc: this.devisForm.get('montantTtc').value,
+				client: this.devisForm.get('client').value
+			});  */
+			this.devisService.addDevis(newDevis)
+				.subscribe(
+					data => {
+						console.log('Devis saved' + data),
+						this.message = 'Devis créé',
+						this.messageClass = 'alert alert-success',
+						this.onSuccess()
+					},
+					error => {
+						console.log('Erreur '+ error),
+						this.message = 'Erreur création Devis',
+						this.messageClass = 'alert alert-danger'
+					}
+				);
+		} else {
+			this.getClient(this.devis.client);
+			const newDevis = new Devis({
+				_id: this.devis._id,
+				ref_devis: this.devis.ref_devis,
+				date_creation: this.devis.date_creation,
+				montantHt: this.devis.montantHt,
+				tauxTva: this.devis.tauxTva,
+				montantTtc: this.devis.montantTtc,
+				client: this.devis.client,
+			});
+			this.devisService.updateDevis(newDevis, this.devis._id)
+				.subscribe(
+					data => {
+						console.log('Devis updated' + data),
+						this.message = 'Devis modifié',
+						this.messageClass = 'alert alert-success',
+						this.onSuccess()
+					},
+					error => {
+						console.log('Erreur '+ error),
+						this.message = 'Erreur modification Devis',
+						this.messageClass = 'alert alert-danger'
+					}
+				);
+		}
 };
 
 /**
@@ -93,26 +151,28 @@ export class DevisComponent implements OnInit {
 onSuccess() {
 	this.mode = false;
 	this.devis = {};
-	this.getAllDevis();
-}
+	this.getAllDevisByClient();
+};
 
 /**
 * Display view to add Devis form
 */
 public onAdd() {
 	this.mode = true;
-}
+};
 
 /**
 * Display view to update Devis form and set values
 * @param d : devis
 */
 public onUpdate(d) {
+	this.getClient(d.client);
 	this.devis = d;
 	let latest_date = this.datepipe.transform(this.devis.date_creation, 'yyyy-MM-dd');
 	this.devis.date_creation = latest_date;
+	this.devis.client = this.client._id;
 	this.mode = true;
-}
+};
 
 /**
 * delete client
@@ -121,26 +181,27 @@ public onUpdate(d) {
 public onDelete(id: number) {
 	this.devisService.deleteDevis(id)
 	.subscribe(
-		msg => { console.log('Devis deleted'),
-		this.getAllDevis()
-	},
-	error => console.log(error)
-);
-}
+		msg => { 
+			console.log('Devis deleted'),
+			this.getAllDevis()
+		},
+		error => console.log(error)
+	);
+};
 
 public generateForm() {
 	this.devisForm = this.formBuilder.group({
 		ref_devis: ['', Validators.compose([
 			Validators.required
 		])],
-		date_creation: [''],
-		montantHt: [this.montantHt, Validators.compose([
+		date_creation: [Date.now],
+		montantHt: ['', Validators.compose([
 			Validators.required
 		])],
-		tauxTva: [this.tauxTva, Validators.compose([
+		tauxTva: ['', Validators.compose([
 			Validators.required
 		])],
-		montantTtc: [this.montantTtc],
+		montantTtc: [''],
 		client: ['', Validators.compose([
 			Validators.required
 		])],
@@ -148,11 +209,11 @@ public generateForm() {
 };
 
 calculMontant() {
-	let montantTTC = Number(this.montantHt) * (1 + Number(this.tauxTva) / 100);
-	this.montantTtc = montantTTC;
-	console.log(montantTTC);
-	console.log(this.montantTtc);
-}
+	if (!(this.devisForm.controls['montantHt'].value === '') && !(this.devisForm.controls['tauxTva'].value === '')) {
+		let montantTTC = this.devisForm.controls['montantHt'].value * (1 + this.devisForm.controls['tauxTva'].value / 100);
+		this.devisForm.controls['montantTtc'].setValue(Number(montantTTC));
+	}	 
+};
 
 /**
 * Constructor
@@ -160,17 +221,20 @@ calculMontant() {
 * @param datepipe : allow to format date
 * @param activatedRoute : request params of routes
 * @param formBuilder : Angular FormBuilder Module
+* @param clientService : client service
 */
 constructor(
 	private devisService: DevisService,
 	private datepipe: DatePipe,
 	private activatedRoute: ActivatedRoute,
-	private formBuilder: FormBuilder
+	private formBuilder: FormBuilder,
+	private clientService: ClientService
 ) { 
 	this.generateForm()
 }
 
 ngOnInit() {
+	this.getAllClient();
 	if (this.activatedRoute.snapshot.params['id_client'] !== undefined) {
 		this.id_client = this.activatedRoute.snapshot.params['id_client'];
 		this.getAllDevisByClient();

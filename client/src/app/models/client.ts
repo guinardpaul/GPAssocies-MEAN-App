@@ -1,5 +1,5 @@
 export class Client {
-    id_client: number;
+    _id: number;
     statutClient: boolean;
     civilite: string;
     nom: string;

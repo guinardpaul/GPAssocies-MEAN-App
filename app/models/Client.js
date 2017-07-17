@@ -77,8 +77,4 @@ const ClientSchema = new mongoose.Schema({
     numTel: String
 });
 
-ClientSchema.pre('save', function(next) {
-    next();
-});
-
 module.exports = mongoose.model('Client', ClientSchema);

@@ -1,6 +1,4 @@
 const express = require('express');
-// Set app
-const app = express();
 const router = express.Router();
 const path = require('path');
 const favicon = require('serve-favicon');
@@ -21,6 +19,9 @@ promise.then((db, err) => {
     if (err) return console.log(err);
     console.log('Successfully connected to mongoDb:' + database);
 });
+
+// Set app
+const app = express();
 
 // set routes
 const client = require('./app/routes/client')(router);
