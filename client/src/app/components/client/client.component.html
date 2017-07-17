@@ -1,163 +1,152 @@
 <div class="container">
-<!-- Flash messages -->
-<div class="row show-hide-message">
-    <div [ngClass]="messageClass">
-        {{ message }}
+    <!-- Flash messages -->
+    <div class="row show-hide-message">
+        <div [ngClass]="messageClass">
+            {{ message }}
+        </div>
     </div>
-</div>
-  
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th>Nom</th>
-      <th>Prénom</th>
-      <th>Adresse Facturation</th>
-      <th>Adresse Chantier</th>
-      <th>Email</th>
-      <th>Tél</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let client of clients">
-      <td>{{client.nom}}</td>
-      <td>{{client.prenom}}</td>
-      <td>{{client.adresseFacturation}} {{client.complAdresseFact}} <br/>
-        {{client.cpFact}} {{client.villeFact}}</td>
-      <td>{{client.adresseChantier}} {{client.complAdresseChantier}} <br/>
-        {{client.cpChantier}} {{client.villeChantier}}</td>
-      <td>{{client.email}}</td>
-      <td>{{client.numTel}}</td>
-      <td>
-        <a class="btn btn-success" [routerLink]="['/devis/client', client._id]">Consulter</a>
-        <button class="btn btn-warning" (click)="onUpdate(client)">Modifier</button>
-        <button class="btn btn-danger" (click)="onDelete(client._id)">Supprimer</button>
-      </td>
-    </tr>
-  </tbody>
-</table>
-<button class="btn btn-primary" (click)="onAdd()">Ajouter client</button>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Adresse Facturation</th>
+                <th>Adresse Chantier</th>
+                <th>Email</th>
+                <th>Tél</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let client of clients">
+                <td>{{client.nom}}</td>
+                <td>{{client.prenom}}</td>
+                <td>{{client.adresseFact}} {{client.complAdresseFact}} <br/> {{client.cpFact}} {{client.villeFact}}</td>
+                <td>{{client.adresseChantier}} {{client.complAdresseChantier}} <br/> {{client.cpChantier}} {{client.villeChantier}}</td>
+                <td>{{client.email}}</td>
+                <td>{{client.numTel}}</td>
+                <td>
+                    <a class="btn btn-success" [routerLink]="['/devis/client', client._id]">Consulter</a>
+                    <button class="btn btn-warning" (click)="onUpdate(client)">Modifier</button>
+                    <button class="btn btn-danger" (click)="onDelete(client._id)">Supprimer</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <button class="btn btn-primary" (click)="onAdd()">Ajouter client</button>
 </div>
 <br/>
 
 <div class="container" *ngIf="mode">
-<div class="panel-group">
-  <form class="form-horizontal" [formGroup]="clientForm" (submit)="addClient()">
-  <div class="panel-info col-sm-4">
-    <div class="panel-heading">Client</div>
-    <div class="panel-body">
-	      <div class="form-group">
-		      <label for="civilite">Civilité :</label>
-          <label class="radio-inline"><input type="radio" id="civilite" name="civilite" 
-            formControlName="civilite" value="M.">M.</label>
-          <label class="radio-inline"><input type="radio" id="civilite" name="civilite" 
-            formControlName="civilite" value="Mme/Mlle">Mme/Mlle</label>
-	      </div>
-        <div class="form-group" 
-            [ngClass]="{'has-error': (clientForm.controls.nom.errors && clientForm.controls.nom.dirty), 
-                      'has-success': (!clientForm.controls.nom.errors)}">
-          <label for="nom">Nom :</label>
-          <input type="text" class="form-control" name="nom" value="{{client.nom}}" id="nom" 
-            formControlName="nom" autofocus required />
-          <ul class="list-group">
-            <li class="list-group-item list-group-item-danger" *ngIf="clientForm.controls.nom.errors?.required && clientForm.controls.nom.dirty">
-                Ce champ est requis
-            </li>
-            <li class="list-group-item list-group-item-danger" 
-              *ngIf="clientForm.controls.nom.errors?.nomPrenomValidation && clientForm.controls.nom.dirty 
-              && !clientForm.controls.nom.errors?.required">
-              Le nom doit être composé uniquement de lettres
-            </li>
-          </ul> 
-        </div>
-        <div class="form-group" [ngClass]="{'has-error': (clientForm.controls.prenom.errors && clientForm.controls.prenom.dirty), 
-                                          'has-success': (!clientForm.controls.prenom.errors)}">
-          <label for="prenom">Prénom :</label>
-          <input type="text" class="form-control" name="prenom" value="{{client.prenom}}" id="prenom" formControlName="prenom" required />
-          <ul class="list-group">
-            <li class="list-group-item list-group-item-danger" 
-                *ngIf="clientForm.controls.prenom.errors?.required && clientForm.controls.prenom.dirty">Ce champ est requis</li>
-            <li class="list-group-item list-group-item-danger" 
-                *ngIf="clientForm.controls.prenom.errors?.nomPrenomValidation && clientForm.controls.prenom.dirty 
-                && !clientForm.controls.prenom.errors?.required">
-                Le prénom doit être composé uniquement de lettres
-            </li>
-          </ul> 
-        </div>
-        <div class="form-group" [ngClass]="{'has-error': (clientForm.controls.email.errors && clientForm.controls.email.dirty), 
-                                          'has-success': (!clientForm.controls.email.errors)}">
-          <label for="email">Email :</label>
-          <input type="text" class="form-control" name="email" value="{{client.email}}" id="email" formControlName="email" required />
-          <ul class="list-group">
-            <li class="list-group-item list-group-item-danger" 
-                *ngIf="clientForm.controls.email.errors?.required && clientForm.controls.email.dirty">Ce champ est requis</li>
-            <li class="list-group-item list-group-item-danger" 
-                *ngIf="clientForm.controls.email.errors?.emailValidation && clientForm.controls.email.dirty 
-                && !clientForm.controls.email.errors?.required">
-                L'email n'est pas valide
-            </li>
-          </ul> 
-        </div>
-        <div class="form-group" [ngClass]="{'has-error': (clientForm.controls.numTel.errors && clientForm.controls.numTel.dirty), 'has-success': (!clientForm.controls.numTel.errors)}">
-          <label for="numTel">Tél :</label>
-          <input type="text" class="form-control" name="numTel" value="{{client.numTel}}" id="numTel" formControlName="numTel" />
-          <ul class="list-group">
-            <li class="list-group-item list-group-item-danger" 
-              *ngIf="clientForm.controls.numTel.errors?.numTelValidation && clientForm.controls.numTel.dirty">Le tel doit être composé de chiffre, '-' ou '.'</li>
-            <li class="list-group-item list-group-item-danger" 
-              *ngIf="clientForm.controls.numTel.errors?.minlength && clientForm.controls.numTel.dirty 
-              && !clientForm.controls.numTel.errors?.numTelValidation">
-              Le tel doit être composé de 10 chiffres
-            </li>
-          </ul> 
-        </div>
-        <div class="form-group">
-          <button [disabled]="!clientForm.valid" type="submit" class="btn btn-success">Sauver</button>
-        </div>
+    <div class="panel-group">
+        <form class="form-horizontal" [formGroup]="clientForm" (submit)="addClient()">
+            <div class="panel-info col-sm-4">
+                <div class="panel-heading">Client</div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="civilite">Civilité :</label>
+                        <label class="radio-inline"><input type="radio" id="civilite" name="civilite"
+              formControlName="civilite" value="M.">M.</label>
+                        <label class="radio-inline"><input type="radio" id="civilite" name="civilite"
+                formControlName="civilite" value="Mme/Mlle">Mme/Mlle</label>
+                    </div>
+                    <div class="form-group" [ngClass]="{'has-error': (clientForm.controls.nom.errors && clientForm.controls.nom.dirty),
+              'has-success': (!clientForm.controls.nom.errors)}">
+                        <label for="nom">Nom :</label>
+                        <input type="text" class="form-control" name="nom" value="{{client.nom}}" id="nom" formControlName="nom" autofocus required />
+                        <ul class="list-group">
+                            <li class="list-group-item list-group-item-danger" *ngIf="clientForm.controls.nom.errors?.required && clientForm.controls.nom.dirty">
+                                Ce champ est requis
+                            </li>
+                            <li class="list-group-item list-group-item-danger" *ngIf="clientForm.controls.nom.errors?.nomPrenomValidation && clientForm.controls.nom.dirty
+                && !clientForm.controls.nom.errors?.required">
+                                Le nom doit être composé uniquement de lettres
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="form-group" [ngClass]="{'has-error': (clientForm.controls.prenom.errors && clientForm.controls.prenom.dirty),
+          'has-success': (!clientForm.controls.prenom.errors)}">
+                        <label for="prenom">Prénom :</label>
+                        <input type="text" class="form-control" name="prenom" value="{{client.prenom}}" id="prenom" formControlName="prenom" required />
+                        <ul class="list-group">
+                            <li class="list-group-item list-group-item-danger" *ngIf="clientForm.controls.prenom.errors?.required && clientForm.controls.prenom.dirty">Ce champ est requis</li>
+                            <li class="list-group-item list-group-item-danger" *ngIf="clientForm.controls.prenom.errors?.nomPrenomValidation && clientForm.controls.prenom.dirty
+            && !clientForm.controls.prenom.errors?.required">
+                                Le prénom doit être composé uniquement de lettres
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="form-group" [ngClass]="{'has-error': (clientForm.controls.email.errors && clientForm.controls.email.dirty),
+      'has-success': (!clientForm.controls.email.errors)}">
+                        <label for="email">Email :</label>
+                        <input type="text" class="form-control" name="email" value="{{client.email}}" id="email" formControlName="email" required />
+                        <ul class="list-group">
+                            <li class="list-group-item list-group-item-danger" *ngIf="clientForm.controls.email.errors?.required && clientForm.controls.email.dirty">Ce champ est requis</li>
+                            <li class="list-group-item list-group-item-danger" *ngIf="clientForm.controls.email.errors?.emailValidation && clientForm.controls.email.dirty
+        && !clientForm.controls.email.errors?.required">
+                                L'email n'est pas valide
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="form-group" [ngClass]="{'has-error': (clientForm.controls.numTel.errors && clientForm.controls.numTel.dirty), 'has-success': (!clientForm.controls.numTel.errors)}">
+                        <label for="numTel">Tél :</label>
+                        <input type="text" class="form-control" name="numTel" value="{{client.numTel}}" id="numTel" formControlName="numTel" />
+                        <ul class="list-group">
+                            <li class="list-group-item list-group-item-danger" *ngIf="clientForm.controls.numTel.errors?.numTelValidation && clientForm.controls.numTel.dirty">Le tel doit être composé de chiffre, '-' ou '.'</li>
+                            <li class="list-group-item list-group-item-danger" *ngIf="clientForm.controls.numTel.errors?.minlength && clientForm.controls.numTel.dirty
+      && !clientForm.controls.numTel.errors?.numTelValidation">
+                                Le tel doit être composé de 10 chiffres
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="form-group">
+                        <button [disabled]="!clientForm.valid" type="submit" class="btn btn-success">Sauver</button>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-info col-sm-4">
+                <div class="panel-heading">Adresse Facturation</div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="adresseFact">Adresse :</label>
+                        <input type="text" class="form-control" name="adresseFact" value="{{client.adresseFact}}" id="adresseFact" formControlName="adresseFact" />
+                    </div>
+                    <div class="form-group">
+                        <label for="complAdresseFact">Complément adresse :</label>
+                        <input type="text" class="form-control" name="complAdresseFact" value="{{client.complAdresseFact}}" id="complAdresseFact" formControlName="complAdresseFact" />
+                    </div>
+                    <div class="form-group">
+                        <label for="cpFact">Code postal :</label>
+                        <input type="text" class="form-control" name="cpFact" value="{{client.cpFact}}" id="cpFact" formControlName="cpFact" />
+                    </div>
+                    <div class="form-group">
+                        <label for="villeFact">Ville :</label>
+                        <input type="text" class="form-control" name="villeFact" value="{{client.villeFact}}" id="villeFact" formControlName="villeFact" />
+                    </div>
+                </div>
+            </div>
+            <div class="panel-info col-sm-4">
+                <div class="panel-heading">Adresse Chantier</div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="adresseChantier">Adresse :</label>
+                        <input type="text" class="form-control" name="adresseChantier" value="{{client.adresseChantier}}" id="adresseChantier" formControlName="adresseChantier" />
+                    </div>
+                    <div class="form-group">
+                        <label for="complAdresseChantier">Complément adresse :</label>
+                        <input type="text" class="form-control" name="complAdresseChantier" value="{{client.complAdresseChantier}}" id="complAdresseChantier" formControlName="complAdresseChantier" />
+                    </div>
+                    <div class="form-group">
+                        <label for="cpChantier">Code postal :</label>
+                        <input type="text" class="form-control" name="cpChantier" value="{{client.cpChantier}}" id="cpChantier" formControlName="cpChantier" />
+                    </div>
+                    <div class="form-group">
+                        <label for="villeChantier">Ville :</label>
+                        <input type="text" class="form-control" name="villeChantier" value="{{client.villeChantier}}" id="villeChantier" formControlName="villeChantier" />
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
-  </div>
-  <div class="panel-default col-sm-4">
-    <div class="panel-heading">Adresse Facturation</div>
-    <div class="panel-body">
-      <div class="form-group">
-       <label for="adresseFact">Adresse :</label>
-        <input type="text" class="form-control" name="adresseFact" value="{{client.adresseFact}}" id="adresseFact" formControlName="adresseFact" />
-      </div>
-      <div class="form-group">
-       <label for="complAdresseFact">Complément adresse :</label>
-        <input type="text" class="form-control" name="complAdresseFact" value="{{client.complAdresseFact}}" id="complAdresseFact" formControlName="complAdresseFact" />
-      </div>
-      <div class="form-group">
-       <label for="cpFact">Code postal :</label>
-        <input type="text" class="form-control" name="cpFact" value="{{client.cpFact}}" id="cpFact" formControlName="cpFact" />
-      </div>
-      <div class="form-group">
-       <label for="villeFact">Ville :</label>
-        <input type="text" class="form-control" name="villeFact" value="{{client.villeFact}}" id="villeFact" formControlName="villeFact" />
-      </div>
-    </div>
-  </div>
-    <div class="panel-default col-sm-4">
-      <div class="panel-heading">Adresse Chantier</div>
-      <div class="panel-body">
-        <div class="form-group">
-          <label for="adresseChantier">Adresse :</label>
-          <input type="text" class="form-control" name="adresseChantier" value="{{client.adresseChantier}}" id="adresseChantier" formControlName="adresseChantier" />
-        </div>
-        <div class="form-group">
-          <label for="complAdresseChantier">Complément adresse :</label>
-          <input type="text" class="form-control" name="complAdresseChantier" value="{{client.complAdresseChantier}}" id="complAdresseChantier" formControlName="complAdresseChantier" />
-        </div>
-        <div class="form-group">
-          <label for="cpChantier">Code postal :</label>
-          <input type="text" class="form-control" name="cpChantier" value="{{client.cpChantier}}" id="cpChantier" formControlName="cpChantier" />
-        </div>
-        <div class="form-group">
-          <label for="villeChantier">Ville :</label>
-          <input type="text" class="form-control" name="villeChantier" value="{{client.villeChantier}}" id="villeChantier" formControlName="villeChantier" />
-        </div>
-      </div>
-      </div>    
-    </form>
-  </div>
 </div>

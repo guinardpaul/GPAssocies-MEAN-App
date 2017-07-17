@@ -21,6 +21,8 @@ export class DevisComponent implements OnInit {
 	id_client: number;
 	mode: boolean = false;
 	devisForm: FormGroup;
+	message: string;
+	messageClass: string;
 	
 	/**
 	 * Get ALL Client.
@@ -87,27 +89,33 @@ export class DevisComponent implements OnInit {
 	* ADD/UPDATE DEVIS
 	*/
 	public addDevis() {
+		const newDevis = this.devisForm.value;
 		if(this.devis._id == null || this.devis._id == 0 || this.devis._id == '') {
 			// set client 
 			/* if (this.id_client != null || this.id_client !== 0){
 				this.devis.client = this.client;
 			} */
-			const newDevis = new Devis({
+			 /* const newDevis = new Devis({
 				ref_devis: this.devisForm.get('ref_devis').value,
 				date_creation: this.devisForm.get('date_creation').value,
 				montantHt: this.devisForm.get('montantHt').value,
 				tauxTva: this.devisForm.get('tauxTva').value,
 				montantTtc: this.devisForm.get('montantTtc').value,
 				client: this.devisForm.get('client').value
-			});
+			});  */
 			this.devisService.addDevis(newDevis)
 				.subscribe(
-					data => { 
-						console.log(data),
+					data => {
 						console.log('Devis saved' + data),
+						this.message = 'Devis créé',
+						this.messageClass = 'alert alert-success',
 						this.onSuccess()
 					},
-					error => console.log('Erreur '+ error)
+					error => {
+						console.log('Erreur '+ error),
+						this.message = 'Erreur création Devis',
+						this.messageClass = 'alert alert-danger'
+					}
 				);
 		} else {
 			this.getClient(this.devis.client);
@@ -122,11 +130,17 @@ export class DevisComponent implements OnInit {
 			});
 			this.devisService.updateDevis(newDevis, this.devis._id)
 				.subscribe(
-					devis => { 
-						console.log('Devis updated' + devis),
+					data => {
+						console.log('Devis updated' + data),
+						this.message = 'Devis modifié',
+						this.messageClass = 'alert alert-success',
 						this.onSuccess()
 					},
-					error => console.log('Erreur '+ error)
+					error => {
+						console.log('Erreur '+ error),
+						this.message = 'Erreur modification Devis',
+						this.messageClass = 'alert alert-danger'
+					}
 				);
 		}
 };
@@ -137,7 +151,7 @@ export class DevisComponent implements OnInit {
 onSuccess() {
 	this.mode = false;
 	this.devis = {};
-	this.getAllDevis();
+	this.getAllDevisByClient();
 };
 
 /**

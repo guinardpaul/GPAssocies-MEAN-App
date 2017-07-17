@@ -1,6 +1,13 @@
 <h4>{{client.nom}}
 {{client.prenom}}, {{client.email}}, {{client.numTel}}</h4>
 <div class="container">
+<!-- Flash messages -->
+<div class="row show-hide-message">
+    <div [ngClass]="messageClass">
+        {{ message }}
+    </div>
+</div>
+
 <table class="table table-striped">
 	<thead>
 	<tr>
@@ -67,7 +74,7 @@
 		<label class="control-label" for="client">Id client :</label>
 		<select class="form-control" id="client" name="client" formControlName="client" 
 			value="{{devis.client}}" required>
-        	<option *ngFor="let client of listClient" [ngValue]="devis.client">{{client.nom}} {{client.prenom}}</option>
+        	<option *ngFor="let client of listClient" [ngValue]="client">{{client.nom}} {{client.prenom}}</option>
       	</select>
 		<!-- <input type="text" class="form-control" name="client" id="client" 
 			formControlName="client" value="{{devis.client}}" required /> -->

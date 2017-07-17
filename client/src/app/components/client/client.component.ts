@@ -11,13 +11,13 @@ import { ClientService } from '../../service/client.service';
   styleUrls: ['./client.component.css']
 })
 export class ClientComponent implements OnInit {
-  clients: Client[] = [];
-  client: any = {};
+  clients: Client[];
+  client: any;
   mode: boolean = false;
   clientForm: FormGroup;
   message: string;
   messageClass: string;
-  
+
   /**
   * Get All Clients
   */
@@ -28,7 +28,7 @@ export class ClientComponent implements OnInit {
       error => console.log(error)
     );
   };
-  
+
   /**
   * Get One Client
   * @param id : client id
@@ -40,77 +40,83 @@ export class ClientComponent implements OnInit {
       error => console.log('Erreur ' + error)
     );
   };
-  
+
   /**
   * Save Client or update client if client id == 0
   */
   public addClient() {
     this.client = this.clientForm.value;
-    if(this.client._id == null || this.client._id == 0 || this.client._id == '') {
+    if(this.client._id == null || this.client._id == 0) {
 			this.clientService.addClient(this.client)
-        .subscribe(
-          data => {
-            this.messageClass = 'alert alert-success',
-            this.message = 'Client créé',
-            console.log('Client saved' + data),
-            this.onSuccess()
-          },
-          err => {
-            console.log('Erreur '+ err),
-            this.message = 'Erreur',
-            this.messageClass = 'alert alert-danger'
-          }
-        );
+      .subscribe(
+        data => {
+          this.messageClass = 'alert alert-success',
+          this.message = 'Client créé',
+          console.log('Client saved' + data),
+          this.onSuccess()
+        },
+        error => {
+          console.log('Erreur '+ error),
+          this.message = 'Erreur',
+          this.messageClass = 'alert alert-danger'
+        }
+      );
     } else {
       this.clientService.updateClient(this.client._id, this.client)
-        .subscribe(
-          data => {
-            console.log('Client saved' + data),
-            this.onSuccess()
-          },
-          err => console.log('Erreur '+ err)
-        );
+      .subscribe(
+        data => {
+          this.messageClass = 'alert alert-success',
+          this.message = 'Client modifié',
+          console.log('Client updated' + data),
+          this.onSuccess()
+        },
+        error => {
+          console.log('Erreur '+ error),
+          this.message = 'Erreur',
+          this.messageClass = 'alert alert-danger'
+        }
+      );
     }
-};
+  };
 
-/**
-* Success function called when request to api successfull
-*/
-public onSuccess() {
-  this.mode = false;
-  this.client = {};
-  this.getAllClients();
-};
-
-/**
-* Diplay view of add form
-*/
-public onAdd() {
-  this.mode = true;
-};
-
-/**
-* Display view of update form and set values
-* @param client : client
-*/
-public onUpdate(client) {
-  this.client = client;
-  client = {};
-  this.mode = true;
-};
-
-/**
-* Delete client
-* @param id : client id
-*/
-public onDelete(id: number) {
-  this.clientService.deleteClient(id)
-  .subscribe(
-    () => { console.log('Client deleted'),
+  /**
+  * Success function called when request to api successfull
+  */
+  public onSuccess() {
+    this.mode = false;
+    this.client = null;
     this.getAllClients();
-  },
-  error => console.log(error)
-);
+  };
+
+  /**
+  * Diplay view of add form
+  */
+  public onAdd() {
+    this.mode = true;
+  };
+
+  /**
+  * Display view of update form and set values
+  * @param client : client
+  */
+  public onUpdate(client: Client) {
+    this.client = client;
+    client = null;
+    this.mode = true;
+  };
+
+  /**
+  * Delete client
+  * @param id : client id
+  */
+  public onDelete(id: number) {
+    this.clientService.deleteClient(id)
+    .subscribe(
+      () => { console.log('Client deleted'),
+      this.getAllClients();
+    },
+    error => console.log(error)
+  );
 };
 
 /**
@@ -148,9 +154,9 @@ public generateForm() {
 
 // Input Validation
 /**
- * nom et prenom validation using RegExp
- * @param controls : form controls
- */
+* nom et prenom validation using RegExp
+* @param controls : form controls
+*/
 public nomPrenomValidation(controls){
   const regExp = new RegExp(/[a-zA-z-_éè]+$/);
   if (regExp.test(controls.value)) {
@@ -162,9 +168,9 @@ public nomPrenomValidation(controls){
 };
 
 /**
- * email validation using RegExp
- * @param controls : form controls
- */
+* email validation using RegExp
+* @param controls : form controls
+*/
 public emailValidation(controls) {
   const regExp = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
   if (regExp.test(controls.value)) {
@@ -176,9 +182,9 @@ public emailValidation(controls) {
 };
 
 /**
- * num tel validation using RegExp
- * @param controls : form controls
- */
+* num tel validation using RegExp
+* @param controls : form controls
+*/
 public numTelValidation(controls) {
   const regExp = new RegExp(/[0-9-_.]+$/);
   if (regExp.test(controls.value)) {
@@ -190,7 +196,7 @@ public numTelValidation(controls) {
 };
 
 /**
-* 
+*
 * @param clientService : client service
 * @param formBuilder : Angular reactive Forms
 */
