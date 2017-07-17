@@ -15,8 +15,10 @@ export class ClientComponent implements OnInit {
   client: any;
   mode: boolean = false;
   clientForm: FormGroup;
+
   message: string;
   messageClass: string;
+
 
   /**
   * Get All Clients
@@ -64,6 +66,7 @@ export class ClientComponent implements OnInit {
     } else {
       this.clientService.updateClient(this.client._id, this.client)
       .subscribe(
+
         data => {
           this.messageClass = 'alert alert-success',
           this.message = 'Client modifié',
@@ -78,6 +81,7 @@ export class ClientComponent implements OnInit {
       );
     }
   };
+
 
   /**
   * Success function called when request to api successfull
