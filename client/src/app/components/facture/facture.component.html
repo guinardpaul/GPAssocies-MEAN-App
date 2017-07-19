@@ -1,3 +1,37 @@
-<p>
-  facture works!
-</p>
+<div class="container-fluid">
+    <!-- Flash messages -->
+    <div class="row show-hide-message">
+        <div [ngClass]="messageClass">
+            {{ message }}
+        </div>
+    </div>
+</div>
+<h4 style="text-align: center;">Factures</h4>
+<table class="container-fluid table table-striped">
+    <thead>
+        <tr>
+            <th>Ref</th>
+            <th>Date</th>
+            <th>Montant HT</th>
+            <th>Taux TVA</th>
+            <th>Montant TTC</th>
+            <th>Client</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let f of ListFactureGlobal">
+            <td>{{f.ref_factureGlobal}}</td>
+            <td>{{f.date_creation | date: 'dd/MM/yyyy'}}</td>
+            <td>{{f.montantHt}}</td>
+            <td>{{f.tauxTva}}</td>
+            <td>{{f.montantTtc}}</td>
+            <td>{{f.client}}</td>
+            <td>
+                <a class="btn btn-success" [routerLink]="['valider-devis', f._id]">Valider</a>
+                <button class="btn btn-warning" (click)="onUpdate(f)">Modifier</button>
+                <button class="btn btn-danger" (click)="onDelete(f._id)">Supprimer</button>
+            </td>
+        </tr>
+    </tbody>
+</table>

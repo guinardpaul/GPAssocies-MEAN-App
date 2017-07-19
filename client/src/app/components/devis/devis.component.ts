@@ -23,7 +23,7 @@ export class DevisComponent implements OnInit {
 	devisForm: FormGroup;
 	message: string;
 	messageClass: string;
-	
+
 	/**
 	 * Get ALL Client.
 	 * Used for Select Option on add/update Devis Form
@@ -47,7 +47,7 @@ export class DevisComponent implements OnInit {
 				error => console.log('Erreur ' + error)
 			);
 	};
-	
+
 	/**
 	* GET ALL DEVIS BY CLIENT
 	* Set Devis by Client from db to listDevis
@@ -72,7 +72,7 @@ export class DevisComponent implements OnInit {
 				error => console.log('Erreur ' + error)
 			);
 	};
-	
+
 	/**
 	*  GET ONE DEVIS
 	* @param id : devis id
@@ -84,25 +84,13 @@ export class DevisComponent implements OnInit {
 				error => console.log('Erreur ' + error)
 			);
 	};
-	
+
 	/**
 	* ADD/UPDATE DEVIS
 	*/
 	public addDevis() {
 		const newDevis = this.devisForm.value;
 		if(this.devis._id == null || this.devis._id == 0 || this.devis._id == '') {
-			// set client 
-			/* if (this.id_client != null || this.id_client !== 0){
-				this.devis.client = this.client;
-			} */
-			 /* const newDevis = new Devis({
-				ref_devis: this.devisForm.get('ref_devis').value,
-				date_creation: this.devisForm.get('date_creation').value,
-				montantHt: this.devisForm.get('montantHt').value,
-				tauxTva: this.devisForm.get('tauxTva').value,
-				montantTtc: this.devisForm.get('montantTtc').value,
-				client: this.devisForm.get('client').value
-			});  */
 			this.devisService.addDevis(newDevis)
 				.subscribe(
 					data => {
@@ -150,8 +138,12 @@ export class DevisComponent implements OnInit {
 */
 onSuccess() {
 	this.mode = false;
-	this.devis = {};
-	this.getAllDevisByClient();
+  this.devis = {};
+  if (this.activatedRoute.snapshot.params['id_client'] !== undefined) {
+    this.getAllDevisByClient();
+  } else {
+    this.getAllDevis();
+  }
 };
 
 /**
@@ -181,11 +173,17 @@ public onUpdate(d) {
 public onDelete(id: number) {
 	this.devisService.deleteDevis(id)
 	.subscribe(
-		msg => { 
-			console.log('Devis deleted'),
-			this.getAllDevis()
+		msg => {
+      console.log('Devis deleted'),
+      this.message = 'Devis Supprimé',
+      this.messageClass = 'alert alert-success',
+			this.onSuccess()
 		},
-		error => console.log(error)
+    error => {
+      console.log(error),
+      this.message = 'Erreur suppresion devis',
+      this.messageClass = 'alert alert-danger'
+    }
 	);
 };
 
@@ -211,8 +209,8 @@ public generateForm() {
 calculMontant() {
 	if (!(this.devisForm.controls['montantHt'].value === '') && !(this.devisForm.controls['tauxTva'].value === '')) {
 		let montantTTC = this.devisForm.controls['montantHt'].value * (1 + this.devisForm.controls['tauxTva'].value / 100);
-		this.devisForm.controls['montantTtc'].setValue(Number(montantTTC));
-	}	 
+    this.devisForm.controls['montantTtc'].setValue(Number(montantTTC).toFixed(2));
+	}
 };
 
 /**
@@ -229,7 +227,7 @@ constructor(
 	private activatedRoute: ActivatedRoute,
 	private formBuilder: FormBuilder,
 	private clientService: ClientService
-) { 
+) {
 	this.generateForm()
 }
 

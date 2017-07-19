@@ -12,9 +12,11 @@ import { FactureGlobalService } from '../../service/facture-global.service';
   styleUrls: ['./facture.component.css']
 })
 export class FactureComponent implements OnInit {
-  FactureGlobal: any = {};
-  ListFactureGlobal: FactureGlobal[] = [];
+  FactureGlobal: FactureGlobal;
+  ListFactureGlobal: FactureGlobal[];
   mode: boolean = false;
+  message: string;
+  messageClass: string;
 
   /**
    * Get all Facture Global
@@ -27,8 +29,13 @@ export class FactureComponent implements OnInit {
                       );
   };
 
+  onUpdate(facture: FactureGlobal) {
 
+  };
 
+  onDelete(id: number) {
+
+  };
 
   constructor(
     private activatedRoute: ActivatedRoute,
