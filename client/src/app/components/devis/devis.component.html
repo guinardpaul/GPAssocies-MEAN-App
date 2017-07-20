@@ -30,7 +30,7 @@
                 <td>{{d.montantTtc}}</td>
                 <td>{{d.client}}</td>
                 <td>
-                    <a class="btn btn-success" [routerLink]="['valider-devis', d._id]">Valider</a>
+                    <a class="btn btn-success" [routerLink]="['/devis/valider-devis', d._id]">Valider</a>
                     <button class="btn btn-warning" (click)="onUpdate(d)">Modifier</button>
                     <button class="btn btn-danger" (click)="onDelete(d._id)">Supprimer</button>
                 </td>

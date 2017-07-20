@@ -1,4 +1,45 @@
-<p>
-  valider devis
-</p>
-{{devis.ref_devis}}
+<div class="container-fluid">
+    <!-- Flash messages -->
+    <div class="row show-hide-message">
+        <div [ngClass]="messageClass">
+            {{ message }}
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="panel panel-info">
+        <div class="panel-heading">Valider Devis</div>
+        <div class="panel-body">
+            <form class="form-horizontal" [formGroup]="validerDevisForm" (submit)="validerDevis()">
+                <div class="form-group">
+                    <label class="control-label" for="ref_factureGlobal">Ref :</label>
+                    <input type="text" class="form-control" name="ref_factureGlobal" id="ref_factureGlobal" formControlName="ref_factureGlobal" value="{{devis.ref_devis}}" autofocus required />
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="date_creation">Date création :</label>
+                    <input type="date" class="form-control" name="date_creation" id="date_creation" formControlName="date_creation" value="{{devis.date_creation}}" />
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="montantHt">Montant HT :</label>
+                    <input type="text" class="form-control" name="montantHt" id="montantHt" formControlName="montantHt" value="{{devis.montantHt}}" (blur)="calculMontant()" required />
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="tauxTva">Taux TVA :</label>
+                    <input type="text" class="form-control" name="tauxTva" id="tauxTva" formControlName="tauxTva" value="{{devis.tauxTva}}" (blur)="calculMontant()" required />
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="montantTtc">Montant TTC :</label>
+                    <input type="text" class="form-control" name="montantTtc" id="montantTtc" formControlName="montantTtc" value="{{devis.montantTtc}}" />
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="client">Id client :</label>
+                    <input type="text" class="form-control" name="client" id="client" formControlName="client" value="{{devis.client}}" />
+                </div>
+                <div class="form-group">
+                    <button [disabled]="!validerDevisForm.valid" type="submit" class="btn btn-success">Sauver</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{{validerDevisForm.value}}
