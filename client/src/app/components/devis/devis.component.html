@@ -28,7 +28,7 @@
                 <td>{{d.montantHt}}</td>
                 <td>{{d.tauxTva}}</td>
                 <td>{{d.montantTtc}}</td>
-                <td>{{d.client}}</td>
+                <td>{{client.nom}} {{client.prenom}}</td>
                 <td>
                     <a class="btn btn-success" [routerLink]="['/devis/valider-devis', d._id]">Valider</a>
                     <button class="btn btn-warning" (click)="onUpdate(d)">Modifier</button>
@@ -68,9 +68,10 @@
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="client">Id client :</label>
-                        <select class="form-control" id="client" name="client" formControlName="client" value="{{devis.client}}" required>
+                        <input type="text" name="client" id="client" formControlName="client" value="{{client.nom}} {{client.prenom}}">
+                        <!-- <select class="form-control" id="client" name="client" formControlName="client" value="{{devis.client}}" required>
                               <option *ngFor="let client of listClient" [ngValue]="client">{{client.nom}} {{client.prenom}}</option>
-                            </select>
+                        </select> -->
                     </div>
                     <div class="form-group">
                         <button [disabled]="!devisForm.valid" type="submit" class="btn btn-success">Sauver</button>

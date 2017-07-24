@@ -14,10 +14,10 @@ import { ClientService } from '../../service/client.service';
 	styleUrls: ['./devis.component.css']
 })
 export class DevisComponent implements OnInit {
-	listDevis: Devis[] = [];
-	listClient: Client[] = [];
+	listDevis: Devis[];
+	listClient: Client[];
 	devis: any = {};
-	client: any = {};
+	client = new Client();
 	id_client: number;
 	mode: boolean = false;
 	devisForm: FormGroup;
@@ -52,9 +52,9 @@ export class DevisComponent implements OnInit {
 	* GET ALL DEVIS BY CLIENT
 	* Set Devis by Client from db to listDevis
 	*/
-	public getAllDevisByClient() {
-		this.getClient(this.id_client);
-		this.devisService.getAllDevisByClient(this.id_client)
+	public getAllDevisByClient(id) {
+		this.getClient(id);
+		this.devisService.getAllDevisByClient(id)
 			.subscribe(
 				devis => this.listDevis = devis,
 				error => console.log('Erreur ' + error)
@@ -137,10 +137,12 @@ export class DevisComponent implements OnInit {
 * function success for all request to service
 */
 onSuccess() {
-	this.mode = false;
+  this.mode = false;
+  this.devisForm.reset();
   this.devis = {};
+  // Différente route à implémenter dans le dashboard
   if (this.activatedRoute.snapshot.params['id_client'] !== undefined) {
-    this.getAllDevisByClient();
+    this.getAllDevisByClient(this.id_client);
   } else {
     this.getAllDevis();
   }
@@ -200,7 +202,7 @@ public generateForm() {
 			Validators.required
 		])],
 		montantTtc: [''],
-		client: ['', Validators.compose([
+		client: [this.id_client, Validators.compose([
 			Validators.required
 		])],
 	});
@@ -232,10 +234,12 @@ constructor(
 }
 
 ngOnInit() {
-	this.getAllClient();
+  this.getAllClient();
+  // différentes routes à implémenter pour le dashboard
 	if (this.activatedRoute.snapshot.params['id_client'] !== undefined) {
 		this.id_client = this.activatedRoute.snapshot.params['id_client'];
-		this.getAllDevisByClient();
+    this.getAllDevisByClient(this.id_client);
+    this.getClient(this.id_client);
 	} else {
 		this.getAllDevis();
 	}

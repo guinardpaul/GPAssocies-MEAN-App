@@ -7,6 +7,7 @@ import 'rxjs/add/operator/switchMap';
 // Models
 import { Devis } from '../../models/devis';
 import { Client } from '../../models/client';
+import { FactureGlobal } from '../../models/factureGlobal';
 
 // Services
 import { DevisService } from '../../service/devis.service';
@@ -21,11 +22,13 @@ import { FactureGlobalService } from '../../service/facture-global.service';
 export class ValiderDevisComponent implements OnInit {
   listClient: Client[];
   devis: any = {};
-  id_client: number;
+  //id_client: number;
   id_devis: number;
-  client: any = {};
+  client = new Client();
   message: string;
   messageClass: string;
+  validationRef: boolean;
+  factureGlobal = new FactureGlobal();
   validerDevisForm: FormGroup;
 
   constructor(
@@ -43,17 +46,17 @@ export class ValiderDevisComponent implements OnInit {
   generateForm() {
     this.validerDevisForm = this.formBuilder.group({
       ref_factureGlobal: ['', Validators.required],
-      date_creation: [''],
-      montantHt: ['', Validators.required],
-      tauxTva: ['', Validators.required],
-      montantTtc: [''],
-      client: ['', Validators.required]
+      date_creation: [this.devis.date_creation],
+      montantHt: [this.devis.montantHt],
+      tauxTva: [this.devis.tauxTva],
+      montantTtc: [this.devis.montantTtc],
+      client: [this.devis.client]
     });
   }
 
   validerDevis() {
     const newFacture = this.validerDevisForm.value;
-			this.factureGlobalService.addFactureGlobal(newFacture)
+      this.factureGlobalService.addFactureGlobal(newFacture)
 				.subscribe(
 					data => {
 						console.log('Devis validé' + data),
@@ -62,17 +65,39 @@ export class ValiderDevisComponent implements OnInit {
 						this.onSuccess()
 					},
 					error => {
-						console.log('Erreur '+ error),
-						this.message = 'Erreur validation Devis',
-						this.messageClass = 'alert alert-danger'
+            console.log('Erreur '+ error),
+            this.message = 'Erreur validation Devis',
+            this.messageClass = 'alert alert-danger'
 					});
 }
+
+  /**
+   * (blur) verification de la ref.
+   * si data == ref utilisée => validationRef = true
+   * si error == ref disponible/non utilisée => validationRef = false
+   */
+  verifRef() {
+    this.factureGlobal = new FactureGlobal();
+    this.factureGlobalService.getOneFactureGlobalByRef(this.validerDevisForm.get('ref_factureGlobal').value)
+      .subscribe(
+        data => {
+          if (!data.success) {
+            this.validationRef = false;
+          } else {
+            this.validationRef = true;
+          }
+        },
+        error => {
+          console.log(error)
+        }
+      );
+  }
 
   /**
   * function success for all request to service
   */
   onSuccess() {
-    this.router.navigate(['/devis/client/:id_client', this.id_client]);
+    this.router.navigate(['/devis/client/:id_client', { id_client: this.devis.client }]);
   }
 
   calculMontant() {
@@ -107,7 +132,10 @@ export class ValiderDevisComponent implements OnInit {
   };
 
   /**
-	*  GET ONE DEVIS
+  * GET ONE DEVIS
+  * une fois le devis obtenu de la db:
+  * - set date_creation au format géré par l'input type="date"
+  * - cherche client à partir de id_client du devis
 	* @param id : devis id
 	*/
 	public getOneDevis(id: number) {
@@ -115,7 +143,10 @@ export class ValiderDevisComponent implements OnInit {
 			.subscribe(
 				(devis) => {
           this.devis = devis;
+          let latest_date = this.datePipe.transform(this.devis.date_creation, 'yyyy-MM-dd');
+          this.devis.date_creation = latest_date;
           this.getOneClient(this.devis.client);
+          this.generateForm();
         },
 				(error) => console.log('Erreur ' + error)
 			);
@@ -141,8 +172,6 @@ export class ValiderDevisComponent implements OnInit {
     if (this.activatedRoute.snapshot.params['id_devis'] !== undefined) {
       this.id_devis = this.activatedRoute.snapshot.params['id_devis'];
       this.getOneDevis(this.id_devis);
-      let latest_date = this.datePipe.transform(this.devis.date_creation, 'yyyy-MM-dd');
-      this.devis.date_creation = latest_date;
     }
   }
 

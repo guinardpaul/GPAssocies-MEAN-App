@@ -19,7 +19,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let client of clients">
+            <tr *ngFor="let client of listClient">
                 <td>{{client.nom}}</td>
                 <td>{{client.prenom}}</td>
                 <td>{{client.adresseFact}} {{client.complAdresseFact}} <br/> {{client.cpFact}} {{client.villeFact}}</td>
@@ -101,7 +101,8 @@
                         </ul>
                     </div>
                     <div class="form-group">
-                        <button [disabled]="!clientForm.valid" type="submit" class="btn btn-success">Sauver</button>
+                        <button [disabled]="!clientForm.valid || processing" type="submit" class="btn btn-success">Sauver</button>
+                        <button [disabled]="processing" (click)="onCancel()" class="btn btn-success">Annuler</button>
                     </div>
                 </div>
             </div>

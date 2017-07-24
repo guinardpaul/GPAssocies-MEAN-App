@@ -12,14 +12,14 @@ import { PageNotFoundComponent } from './components/page-not-found/page-not-foun
  * Const routes
  */
 const routes: Routes = [
-  { path: 'dashboard', component: DashboardComponent },
+  //{ path: 'dashboard', component: DashboardComponent },
   { path: 'client', component: ClientComponent },
   { path: 'devis', component: DevisComponent },
   { path: 'devis/client/:id_client', component: DevisComponent },
   { path: 'devis', component: DevisComponent },
   { path: 'facture', component: FactureComponent },
   { path: 'devis/valider-devis/:id_devis', component: ValiderDevisComponent },
-  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+  { path: '', redirectTo: 'client', pathMatch: 'full' },
   { path: '**', component: PageNotFoundComponent }
 ];
 

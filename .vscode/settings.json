@@ -1,0 +1,8 @@
+{
+    "terminal.integrated.shell.windows": "C:\\Windows\\Sysnative\\cmd.exe",
+    "git.enableSmartCommit": true,
+    "editor.renderWhitespace": "none",
+    "editor.renderControlCharacters": true,
+    "window.zoomLevel": 0,
+    "editor.autoIndent": true
+}

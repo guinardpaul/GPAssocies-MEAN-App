@@ -4,7 +4,7 @@ mongoose.Promise = global.Promise;
 // BackEnd Validators Definition
 // Validators Function
 let validNomChecker = (nom) => {
-    if(!nom) {
+    if (!nom) {
         return false;
     } else {
         const regExp = new RegExp(/[a-zA-z]+$/);
@@ -13,7 +13,7 @@ let validNomChecker = (nom) => {
 };
 
 let validPrenomChecker = (prenom) => {
-    if(!prenom) {
+    if (!prenom) {
         return false;
     } else {
         const regExp = new RegExp(/^[a-zA-z]+$/);
@@ -22,7 +22,7 @@ let validPrenomChecker = (prenom) => {
 };
 
 let validEmailChecker = (email) => {
-    if(!email) {
+    if (!email) {
         return false;
     } else {
         const regExp = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
@@ -59,12 +59,12 @@ const ClientSchema = new mongoose.Schema({
         required: true,
         validate: prenomValidator
     },
-        email: {
+    email: {
         type: String,
         lowercase: true,
         required: true,
         unique: true,
-        validate: emailValidator   
+        validate: emailValidator
     },
     adresseFact: String,
     complAdresseFact: String,

@@ -14,7 +14,7 @@ const devUrl = 'http://localhost:3000/api/facture-global/';
 
 @Injectable()
 export class FactureGlobalService {
-  
+
 	/**
 	 * GET ALL FACTURE GLOBAL
 	 */
@@ -25,13 +25,31 @@ export class FactureGlobalService {
 	}
 
 	/**
-	 * Get One Facture Global
+	 * Get One Facture Global by ID
 	 * @param id : facture global id
 	 */
-	public getOneFactureGlobal(id: number): Observable<FactureGlobal> {
+	public getOneFactureGlobalById(id: number): Observable<FactureGlobal> {
 		return this.http.get(devUrl + id)
 						.map(this.extractData)
 						.catch(this.handleError);
+  }
+
+  /**
+	 * Get One Facture Global by ref
+	 * @param ref : facture global ref
+	 */
+	public getOneFactureGlobalByClient(client: number): Observable<any> {
+		return this.http.get(devUrl + 'client/' + client)
+						.map(res => res.json());
+  }
+
+	/**
+	 * Get One Facture Global by ref
+	 * @param ref : facture global ref
+	 */
+	public getOneFactureGlobalByRef(ref: string): Observable<any> {
+		return this.http.get(devUrl + 'ref/' + ref)
+						.map(res => res.json());
 	}
 
 	/**
@@ -73,7 +91,7 @@ export class FactureGlobalService {
       	let body = res.json();
       	return body || { };
   	}
-  
+
 	/**
 	 * Generic Error handler Method
 	 * @param error : error

@@ -11,11 +11,11 @@ import { ClientService } from '../../service/client.service';
   styleUrls: ['./client.component.css']
 })
 export class ClientComponent implements OnInit {
-  clients: Client[];
-  client: any;
+  listClient: Client[];
+  client = new Client();
   mode: boolean = false;
   clientForm: FormGroup;
-
+  processing: boolean = false;
   message: string;
   messageClass: string;
 
@@ -26,7 +26,7 @@ export class ClientComponent implements OnInit {
   public getAllClients() {
     this.clientService.getAllClients()
     .subscribe(
-      data => this.clients = data,
+      data => this.listClient = data,
       error => console.log(error)
     );
   };
@@ -47,6 +47,7 @@ export class ClientComponent implements OnInit {
   * Save Client or update client if client id == 0
   */
   public addClient() {
+    this.processing = true;
     this.client = this.clientForm.value;
     if(this.client._id == null || this.client._id == 0) {
 			this.clientService.addClient(this.client)
@@ -60,13 +61,13 @@ export class ClientComponent implements OnInit {
         error => {
           console.log('Erreur '+ error),
           this.message = 'Erreur',
-          this.messageClass = 'alert alert-danger'
+          this.messageClass = 'alert alert-danger',
+          this.processing = false;
         }
       );
     } else {
       this.clientService.updateClient(this.client._id, this.client)
       .subscribe(
-
         data => {
           this.messageClass = 'alert alert-success',
           this.message = 'Client modifié',
@@ -87,8 +88,10 @@ export class ClientComponent implements OnInit {
   * Success function called when request to api successfull
   */
   public onSuccess() {
+    this.clientForm.reset();
+    this.processing = false;
     this.mode = false;
-    this.client = null;
+    this.client = new Client();
     this.getAllClients();
   };
 
@@ -122,6 +125,11 @@ export class ClientComponent implements OnInit {
     error => console.log(error)
   );
 };
+
+onCancel() {
+  this.mode = false;
+  this.client = null;
+}
 
 /**
 * Form Generator
