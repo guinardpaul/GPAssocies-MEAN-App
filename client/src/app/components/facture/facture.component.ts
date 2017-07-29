@@ -11,6 +11,7 @@ import { Client } from '../../models/client';
 // Services
 import { FactureGlobalService } from '../../service/facture-global.service';
 import { ClientService } from '../../service/client.service';
+import { FlashMessagesService } from 'ngx-flash-messages';
 
 @Component({
   selector: 'app-facture',
@@ -22,9 +23,8 @@ export class FactureComponent implements OnInit {
   ListFactureGlobal: FactureGlobal[];
   client = new Client();
   mode: boolean = false;
-  message: string;
-  messageClass: string;
   id_client: number;
+  processing: boolean = false;
   factureForm: FormGroup;
 
   /**
@@ -34,13 +34,15 @@ export class FactureComponent implements OnInit {
    * @param datePipe format date to display in <input type="date"/>
    * @param formBuilder builder used for Reactive forms
    * @param clientService client Service
+   * @param flashMessages Flash Messages service
    */
   constructor(
     private activatedRoute: ActivatedRoute,
     private factureGlobalService: FactureGlobalService,
     private clientService: ClientService,
     private datePipe: DatePipe,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private flashMessages: FlashMessagesService
   ) {
     this.generateForm()
   }
@@ -105,6 +107,8 @@ export class FactureComponent implements OnInit {
    * Update Facture Global
    */
   updateFacture() {
+    this.disableForm();
+    this.processing = true;
     const newFacture = this.factureForm.value;
     newFacture._id = this.factureGlobal._id;
     newFacture.montantTtc = this.factureGlobal.montantTtc;
@@ -115,13 +119,19 @@ export class FactureComponent implements OnInit {
       data => {
         this.onSuccess();
         console.log('Facture Modifiée');
-        this.message = 'Facture modifiée';
-        this.messageClass = 'alert alert-success';
+        this.flashMessages.show('Facture modifiée', {
+          classes: [ 'alert', 'alert-success' ],
+          timeout: 3000
+        });
       },
       error => {
         console.log('Erreur ' + error);
-        this.message = 'Erreur modification facture';
-        this.messageClass = 'alert alert-danger';
+        this.flashMessages.show('Erreur : Facture non modifiée', {
+          classes: [ 'alert', 'alert-danger' ],
+          timeout: 3000
+        });
+        this.processing = false;
+        this.enableForm();
       }
       );
   }
@@ -135,14 +145,18 @@ export class FactureComponent implements OnInit {
       .subscribe(
       msg => {
         console.log('Facture Global deleted');
-        this.message = 'Facture Global Supprimé';
-        this.messageClass = 'alert alert-success';
+        this.flashMessages.show('Facture supprimée', {
+          classes: [ 'alert', 'alert-warning' ],
+          timeout: 3000
+        });
         this.onSuccess();
       },
       error => {
         console.log(error);
-        this.message = 'Erreur suppresion Facture Global';
-        this.messageClass = 'alert alert-danger';
+        this.flashMessages.show('Erreur: Facture non supprimée', {
+          classes: [ 'alert', 'alert-danger' ],
+          timeout: 3000
+        });
       }
       );
   }
@@ -155,6 +169,8 @@ export class FactureComponent implements OnInit {
     this.factureForm.reset();
     this.mode = false;
     this.factureGlobal = {};
+    this.processing = false;
+    this.enableForm();
   }
 
   /**
@@ -169,6 +185,20 @@ export class FactureComponent implements OnInit {
       montantTtc: [ { value: this.factureGlobal.montantTtc, disabled: true }],
       client: [ { value: this.factureGlobal.client, disabled: true }, Validators.required ]
     });
+  }
+
+  /**
+	 * Enable form controls
+	 */
+  enableForm() {
+    this.factureForm.enable();
+  }
+
+	/**
+	 * Disable form controls
+	 */
+  disableForm() {
+    this.factureForm.disable();
   }
 
   /**

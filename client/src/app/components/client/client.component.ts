@@ -7,6 +7,7 @@ import { Client } from '../../models/client';
 
 // Services
 import { ClientService } from '../../service/client.service';
+import { FlashMessagesService } from 'ngx-flash-messages';
 
 @Component({
 	selector: 'app-client',
@@ -19,17 +20,17 @@ export class ClientComponent implements OnInit {
 	mode: boolean = false;
 	clientForm: FormGroup;
 	processing: boolean = false;
-	message: string;
-	messageClass: string;
 
 	/**
 	* Constructor
-	* @param clientService : client service
-	* @param formBuilder : Angular reactive Forms
+	* @param clientService client service
+	* @param formBuilder Angular reactive Forms
+	* @param flashMessages Flash Message Service
 	*/
 	constructor(
 		private clientService: ClientService,
-		private formBuilder: FormBuilder
+		private formBuilder: FormBuilder,
+		private flashMessages: FlashMessagesService
 	) {
 		this.generateForm()
 	}
@@ -65,68 +66,52 @@ export class ClientComponent implements OnInit {
 	*/
 	addClient() {
 		this.processing = true;
+		this.disableForm();
 		this.client = this.clientForm.value;
+		console.log(this.client);
 		if (this.client._id == null || this.client._id == 0) {
 			this.clientService.addClient(this.client)
 				.subscribe(
 				data => {
-					this.messageClass = 'alert alert-success',
-						this.message = 'Client créé',
-						console.log('Client saved' + data),
-						this.onSuccess()
+					this.flashMessages.show('Client créé', {
+						classes: [ 'alert', 'alert-success' ],
+						timeout: 3000
+					});
+					console.log('Client saved' + data);
+					this.onSuccess();
 				},
 				error => {
-					console.log('Erreur ' + error),
-						this.message = 'Erreur',
-						this.messageClass = 'alert alert-danger',
-						this.processing = false;
+					console.log('Erreur ' + error);
+					this.flashMessages.show('Erreur : Client non créé', {
+						classes: [ 'alert', 'alert-danger' ],
+						timeout: 3000
+					});
+					this.processing = false;
+					this.enableForm();
 				}
 				);
 		} else {
 			this.clientService.updateClient(this.client._id, this.client)
 				.subscribe(
 				data => {
-					this.messageClass = 'alert alert-success',
-						this.message = 'Client modifié',
-						console.log('Client updated' + data),
-						this.onSuccess()
+					this.flashMessages.show('Client créé', {
+						classes: [ 'alert', 'alert-success' ],
+						timeout: 3000
+					});
+					console.log('Client updated' + data);
+					this.onSuccess();
 				},
 				error => {
-					console.log('Erreur ' + error),
-						this.message = 'Erreur',
-						this.messageClass = 'alert alert-danger'
+					console.log('Erreur ' + error);
+					this.flashMessages.show('Erreur : Client non modifié', {
+						classes: [ 'alert', 'alert-danger' ],
+						timeout: 3000
+					});
+					this.processing = false;
+					this.enableForm();
 				}
 				);
 		}
-	}
-
-	/**
-	* Success function called when request to api successfull
-	* Fetch data from database to update table
-	*/
-	onSuccess() {
-		this.clientForm.reset();
-		this.processing = false;
-		this.mode = false;
-		this.client = new Client();
-		this.getAllClients();
-	}
-
-	/**
-	* Diplay clientForm
-	*/
-	onAdd() {
-		this.mode = true;
-	}
-
-	/**
-	* Display clientForm and set values to be updated
-	* @param client : client
-	*/
-	onUpdate(client: Client) {
-		this.client = client;
-		client = null;
-		this.mode = true;
 	}
 
 	/**
@@ -138,11 +123,51 @@ export class ClientComponent implements OnInit {
 			.subscribe(
 			() => {
 				console.log('Client deleted');
+				this.flashMessages.show('Client supprimé', {
+					classes: [ 'alert', 'alert-warning' ],
+					timeout: 3000
+				});
 				this.getAllClients();
 			},
-			error => console.log(error)
+			error => {
+				console.log(error);
+				this.flashMessages.show('Erreur: Client non supprimé', {
+					classes: [ 'alert', 'alert-danger' ],
+					timeout: 3000
+				});
+			}
 			);
-	};
+	}
+
+	/**
+	* Success function called when request to api successfull
+	* Fetch data from database to update table
+	*/
+	onSuccess() {
+		this.clientForm.reset();
+		this.processing = false;
+		this.enableForm();
+		this.mode = false;
+		this.client = new Client();
+		this.getAllClients();
+	}
+
+	/**
+	* Display clientForm
+	*/
+	onAdd() {
+		this.mode = true;
+	}
+
+	/**
+	* Display clientForm and set values to be updated
+	* @param client client
+	*/
+	onUpdate(client: Client) {
+		this.client = client;
+		client = null;
+		this.mode = true;
+	}
 
 	/**
 	 * Cancel button
@@ -183,7 +208,15 @@ export class ClientComponent implements OnInit {
 			cpChantier: '',
 			villeChantier: '',
 		});
-	};
+	}
+
+	enableForm() {
+		this.clientForm.enable();
+	}
+
+	disableForm() {
+		this.clientForm.disable();
+	}
 
 	// Input Validation
 	/**
@@ -198,7 +231,7 @@ export class ClientComponent implements OnInit {
 		return {
 			nomPrenomValidation: true
 		}
-	};
+	}
 
 	/**
 	* email validation using RegExp
@@ -212,7 +245,7 @@ export class ClientComponent implements OnInit {
 		return {
 			emailValidation: true
 		}
-	};
+	}
 
 	/**
 	* num tel validation using RegExp
@@ -226,7 +259,7 @@ export class ClientComponent implements OnInit {
 		return {
 			numTelValidation: true
 		};
-	};
+	}
 
 	/**
 	 * Fetch All Clients from database

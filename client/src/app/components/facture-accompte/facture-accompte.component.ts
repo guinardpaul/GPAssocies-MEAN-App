@@ -10,6 +10,7 @@ import { FactureMois } from '../../models/factureMois';
 // Services
 import { FactureGlobalService } from '../../service/facture-global.service';
 import { FactureMoisService } from '../../service/facture-mois.service';
+import { FlashMessagesService } from 'ngx-flash-messages';
 
 @Component({
   selector: 'app-facture-accompte',
@@ -21,8 +22,6 @@ export class FactureAccompteComponent implements OnInit {
   factureGlobal: any = {};
   listFactureAccompte: FactureMois[];
   mode: boolean = false;
-  message: string;
-  messageClass: string;
   factureForm: FormGroup;
 
   /**
@@ -32,13 +31,15 @@ export class FactureAccompteComponent implements OnInit {
    * @param datePipe format date to display in <input type="date"/>
    * @param formBuilder builder used for Reactive forms
    * @param factureMoisService facture mois service
+   * @param flashMessages Flash messages service
    */
   constructor(
     private activatedRoute: ActivatedRoute,
     private factureGlobalService: FactureGlobalService,
     private factureMoisService: FactureMoisService,
     private datePipe: DatePipe,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private flashMessages: FlashMessagesService
   ) {
     this.generateForm()
   }
