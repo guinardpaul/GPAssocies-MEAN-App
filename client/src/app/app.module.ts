@@ -20,6 +20,7 @@ import { ClientService } from './service/client.service';
 import { DevisService } from './service/devis.service';
 import { FactureGlobalService } from './service/facture-global.service';
 import { FactureMoisService } from './service/facture-mois.service';
+import { FactureAccompteComponent } from './components/facture-accompte/facture-accompte.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { FactureMoisService } from './service/facture-mois.service';
     DashboardComponent,
     NavbarComponent,
     ValiderDevisComponent,
-    PageNotFoundComponent
+    PageNotFoundComponent,
+    FactureAccompteComponent
   ],
   imports: [
     BrowserModule,

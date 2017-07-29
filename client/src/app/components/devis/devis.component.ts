@@ -11,7 +11,7 @@ import { ClientService } from '../../service/client.service';
 @Component({
 	selector: 'app-devis',
 	templateUrl: './devis.component.html',
-	styleUrls: ['./devis.component.css']
+	styleUrls: [ './devis.component.css' ]
 })
 export class DevisComponent implements OnInit {
 	listDevis: Devis[];
@@ -26,223 +26,236 @@ export class DevisComponent implements OnInit {
 
 	/**
 	 * Get ALL Client.
-	 * Used for Select Option on add/update Devis Form
+	 * Method used for <select options>.
+	 * Used for Select Option on add/update Devis Form.
 	 */
 	public getAllClient() {
 		this.clientService.getAllClients()
 			.subscribe(
-				clients => this.listClient = clients,
-				error => console.log('Erreur ' + error)
+			clients => this.listClient = clients,
+			error => console.log('Erreur ' + error)
 			);
 	};
 
 	/**
-	* GET ALL DEVIS
-	* Set Devis from db to listDevis
+	* GET ALL DEVIS.
+	* Method used when params['id_client'] NOT set into url.
 	*/
 	public getAllDevis() {
 		this.devisService.getAllDevis()
 			.subscribe(
-				devis => this.listDevis = devis,
-				error => console.log('Erreur ' + error)
+			devis => this.listDevis = devis,
+			error => console.log('Erreur ' + error)
 			);
 	};
 
 	/**
-	* GET ALL DEVIS BY CLIENT
-	* Set Devis by Client from db to listDevis
+	* GET ALL DEVIS BY CLIENT.
+	* Method used when params['id_client']  set into url.
 	*/
 	public getAllDevisByClient(id) {
 		this.getClient(id);
 		this.devisService.getAllDevisByClient(id)
 			.subscribe(
-				devis => this.listDevis = devis,
-				error => console.log('Erreur ' + error)
+			devis => this.listDevis = devis,
+			error => console.log('Erreur ' + error)
 			);
 	};
 
 	/**
-	 * GET ONE CLIENT
-	 * Set current Client informations
+	 * GET ONE CLIENT.
+	 * Set current Client informations for view.
 	 */
 	public getClient(id) {
 		this.clientService.getOneClient(id)
 			.subscribe(
-				client => this.client = client,
-				error => console.log('Erreur ' + error)
+			client => this.client = client,
+			error => console.log('Erreur ' + error)
 			);
 	};
 
 	/**
-	*  GET ONE DEVIS
+	* GET ONE DEVIS.
+	* Method not used.
 	* @param id : devis id
 	*/
 	public getOneDevis(id: number) {
 		this.devisService.getOneDevis(id)
 			.subscribe(
-				devis => this.devis = devis,
-				error => console.log('Erreur ' + error)
+			devis => this.devis = devis,
+			error => console.log('Erreur ' + error)
 			);
 	};
 
 	/**
-	* ADD/UPDATE DEVIS
+	* ADD/UPDATE DEVIS.
+	* - Si this.devis._id exists : updateDevis().
+	* - Si this.devis._id == null || 0 : addDevis().
 	*/
 	public addDevis() {
 		const newDevis = this.devisForm.value;
-		if(this.devis._id == null || this.devis._id == 0 || this.devis._id == '') {
+		newDevis.client = this.id_client;
+		if (this.devis._id == null || this.devis._id == 0 || this.devis._id == '') {
 			this.devisService.addDevis(newDevis)
 				.subscribe(
-					data => {
-						console.log('Devis saved' + data),
-						this.message = 'Devis créé',
-						this.messageClass = 'alert alert-success',
-						this.onSuccess()
-					},
-					error => {
-						console.log('Erreur '+ error),
-						this.message = 'Erreur création Devis',
-						this.messageClass = 'alert alert-danger'
-					}
+				data => {
+					console.log('Devis saved' + data);
+					this.message = 'Devis créé';
+					this.messageClass = 'alert alert-success';
+					this.onSuccess();
+				},
+				error => {
+					console.log('Erreur ' + error);
+					this.message = 'Erreur création Devis';
+					this.messageClass = 'alert alert-danger';
+				}
 				);
 		} else {
-			this.getClient(this.devis.client);
-			const newDevis = new Devis({
-				_id: this.devis._id,
-				ref_devis: this.devis.ref_devis,
-				date_creation: this.devis.date_creation,
-				montantHt: this.devis.montantHt,
-				tauxTva: this.devis.tauxTva,
-				montantTtc: this.devis.montantTtc,
-				client: this.devis.client,
-			});
+			const newDevis = this.devisForm.value;
+			newDevis.client = this.id_client;
 			this.devisService.updateDevis(newDevis, this.devis._id)
 				.subscribe(
-					data => {
-						console.log('Devis updated' + data),
-						this.message = 'Devis modifié',
-						this.messageClass = 'alert alert-success',
-						this.onSuccess()
-					},
-					error => {
-						console.log('Erreur '+ error),
-						this.message = 'Erreur modification Devis',
-						this.messageClass = 'alert alert-danger'
-					}
+				data => {
+					console.log('Devis updated' + data);
+					this.message = 'Devis modifié';
+					this.messageClass = 'alert alert-success';
+					this.onSuccess();
+				},
+				error => {
+					console.log('Erreur ' + error);
+					this.message = 'Erreur modification Devis';
+					this.messageClass = 'alert alert-danger';
+				}
 				);
 		}
-};
+	};
 
-/**
-* function success for all request to service
-*/
-onSuccess() {
-  this.mode = false;
-  this.devisForm.reset();
-  this.devis = {};
-  // Différente route à implémenter dans le dashboard
-  if (this.activatedRoute.snapshot.params['id_client'] !== undefined) {
-    this.getAllDevisByClient(this.id_client);
-  } else {
-    this.getAllDevis();
-  }
-};
+	/**
+	* Function success for all request to service.
+	* Reset table by fetching data from database.
+	*/
+	onSuccess() {
+		this.mode = false;
+		this.devisForm.reset();
+		this.devis = {};
+		// Différente route à utiliser une fois le dashboard implémenté
+		if (this.activatedRoute.snapshot.params[ 'id_client' ] !== undefined) {
+			this.getAllDevisByClient(this.id_client);
+		} else {
+			this.getAllDevis();
+		}
+	};
 
-/**
-* Display view to add Devis form
-*/
-public onAdd() {
-	this.mode = true;
-};
+	/**
+	* Display devisForm
+	*/
+	public onAdd() {
+		this.mode = true;
+		// Set controls['client'] touched for Validators.required
+		this.devisForm.controls[ 'client' ].markAsTouched;
+	};
 
-/**
-* Display view to update Devis form and set values
-* @param d : devis
-*/
-public onUpdate(d) {
-	this.getClient(d.client);
-	this.devis = d;
-	let latest_date = this.datepipe.transform(this.devis.date_creation, 'yyyy-MM-dd');
-	this.devis.date_creation = latest_date;
-	this.devis.client = this.client._id;
-	this.mode = true;
-};
+	/**
+	* Display devisForm and set devis values to update
+	* @param d : devis
+	*/
+	public onUpdate(d) {
+		this.getClient(d.client);
+		this.devis = d;
+		let latest_date = this.datepipe.transform(this.devis.date_creation, 'yyyy-MM-dd');
+		this.devis.date_creation = latest_date;
+		this.devis.client = this.client._id;
+		this.mode = true;
+	};
 
-/**
-* delete client
-* @param id : devis id
-*/
-public onDelete(id: number) {
-	this.devisService.deleteDevis(id)
-	.subscribe(
-		msg => {
-      console.log('Devis deleted'),
-      this.message = 'Devis Supprimé',
-      this.messageClass = 'alert alert-success',
-			this.onSuccess()
-		},
-    error => {
-      console.log(error),
-      this.message = 'Erreur suppresion devis',
-      this.messageClass = 'alert alert-danger'
-    }
-	);
-};
+	/**
+	* Delete client
+	* @param id : devis id
+	*/
+	public onDelete(id: number) {
+		this.devisService.deleteDevis(id)
+			.subscribe(
+			msg => {
+				console.log('Devis deleted'),
+					this.message = 'Devis Supprimé',
+					this.messageClass = 'alert alert-success',
+					this.onSuccess()
+			},
+			error => {
+				console.log(error),
+					this.message = 'Erreur suppresion devis',
+					this.messageClass = 'alert alert-danger'
+			}
+			);
+	};
 
-public generateForm() {
-	this.devisForm = this.formBuilder.group({
-		ref_devis: ['', Validators.compose([
-			Validators.required
-		])],
-		date_creation: [Date.now],
-		montantHt: ['', Validators.compose([
-			Validators.required
-		])],
-		tauxTva: ['', Validators.compose([
-			Validators.required
-		])],
-		montantTtc: [''],
-		client: [this.id_client, Validators.compose([
-			Validators.required
-		])],
-	});
-};
+	/**
+	 * Generate Reactive Form
+	 */
+	public generateForm() {
+		this.devisForm = this.formBuilder.group({
+			ref_devis: [ '', Validators.compose([
+				Validators.required
+			]) ],
+			date_creation: [ Date.now ],
+			montantHt: [ '', Validators.compose([
+				Validators.required
+			]) ],
+			tauxTva: [ '', Validators.compose([
+				Validators.required
+			]) ],
+			montantTtc: [ { value: '', disabled: true }],
+			client: [ { value: this.id_client, disabled: true }, Validators.compose([
+				Validators.required
+			]) ],
+		});
+	};
 
-calculMontant() {
-	if (!(this.devisForm.controls['montantHt'].value === '') && !(this.devisForm.controls['tauxTva'].value === '')) {
-		let montantTTC = this.devisForm.controls['montantHt'].value * (1 + this.devisForm.controls['tauxTva'].value / 100);
-    this.devisForm.controls['montantTtc'].setValue(Number(montantTTC).toFixed(2));
+	/**
+   	* Calcul montantTTC using tauxTva and montantHt values of validerDevisForm and send new montantTtc
+   	*/
+	calculMontant() {
+		if (!(this.devisForm.controls[ 'montantHt' ].value === '') && !(this.devisForm.controls[ 'tauxTva' ].value === '')) {
+			let montantTTC = this.devisForm.controls[ 'montantHt' ].value * (1 + this.devisForm.controls[ 'tauxTva' ].value / 100);
+			this.devisForm.controls[ 'montantTtc' ].setValue(Number(montantTTC).toFixed(2));
+		}
+	};
+
+	/**
+	* Constructor
+	* @param devisService : devis service
+	* @param datepipe : allow to format date
+	* @param activatedRoute : request params of routes
+	* @param formBuilder : Angular FormBuilder Module
+	* @param clientService : client service
+	*/
+	constructor(
+		private devisService: DevisService,
+		private datepipe: DatePipe,
+		private activatedRoute: ActivatedRoute,
+		private formBuilder: FormBuilder,
+		private clientService: ClientService
+	) {
+		this.generateForm()
 	}
-};
 
-/**
-* Constructor
-* @param devisService : devis service
-* @param datepipe : allow to format date
-* @param activatedRoute : request params of routes
-* @param formBuilder : Angular FormBuilder Module
-* @param clientService : client service
-*/
-constructor(
-	private devisService: DevisService,
-	private datepipe: DatePipe,
-	private activatedRoute: ActivatedRoute,
-	private formBuilder: FormBuilder,
-	private clientService: ClientService
-) {
-	this.generateForm()
-}
-
-ngOnInit() {
-  this.getAllClient();
-  // différentes routes à implémenter pour le dashboard
-	if (this.activatedRoute.snapshot.params['id_client'] !== undefined) {
-		this.id_client = this.activatedRoute.snapshot.params['id_client'];
-    this.getAllDevisByClient(this.id_client);
-    this.getClient(this.id_client);
-	} else {
-		this.getAllDevis();
-	}
-};
+	/**
+	* OnInit :
+	* check if params['id_client'] set into url.
+	* - set this.id_client = params['id_client'].
+	* - get Client using this.id_client.
+	*/
+	ngOnInit() {
+		// used for <select> client options
+		this.getAllClient();
+		// différentes routes à utiliser quand le dashboard sera implémenté
+		if (this.activatedRoute.snapshot.params[ 'id_client' ] !== undefined) {
+			this.id_client = this.activatedRoute.snapshot.params[ 'id_client' ];
+			this.getAllDevisByClient(this.id_client);
+			this.getClient(this.id_client);
+		} else {
+			this.getAllDevis();
+		}
+	};
 
 }

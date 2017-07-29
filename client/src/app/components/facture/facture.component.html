@@ -26,11 +26,13 @@
             <td>{{f.montantHt}}</td>
             <td>{{f.tauxTva}}</td>
             <td>{{f.montantTtc}}</td>
-            <td>{{f.client}}</td>
+            <td>{{client.nom}} {{client.prenom}}</td>
             <td>
-                <a class="btn btn-success" [routerLink]="['valider-factureGlobal', f._id]">Valider</a>
-                <button class="btn btn-warning" (click)="onUpdate(f)">Modifier</button>
-                <button class="btn btn-danger" (click)="onDelete(f._id)">Supprimer</button>
+                <div class="btn-group-vertical">
+                    <a class="btn btn-success" [routerLink]="['/facture/facture-accompte', f._id]">Consulter</a>
+                    <button class="btn btn-warning" (click)="onUpdate(f)">Modifier</button>
+                    <button class="btn btn-danger" (click)="onDelete(f._id)">Supprimer</button>
+                </div>
             </td>
         </tr>
     </tbody>
@@ -51,22 +53,22 @@
                 </div>
                 <div class="form-group">
                     <label class="control-label" for="montantHt">Montant HT :</label>
-                    <input type="text" class="form-control" name="montantHt" id="montantHt" formControlName="montantHt" value="{{factureGlobal.montantHt}}" required />
+                    <input type="text" class="form-control" name="montantHt" id="montantHt" formControlName="montantHt" (blur)="calculMontant()" value="{{factureGlobal.montantHt}}" required />
                 </div>
                 <div class="form-group">
                     <label class="control-label" for="tauxTva">Taux TVA :</label>
-                    <input type="text" class="form-control" name="tauxTva" id="tauxTva" formControlName="tauxTva" value="{{factureGlobal.tauxTva}}" required />
+                    <input type="text" class="form-control" name="tauxTva" id="tauxTva" formControlName="tauxTva" (blur)="calculMontant()" value="{{factureGlobal.tauxTva}}" required />
                 </div>
                 <div class="form-group">
                     <label class="control-label" for="montantTtc">Montant TTC :</label>
                     <input type="text" class="form-control" name="montantTtc" id="montantTtc" formControlName="montantTtc" value="{{factureGlobal.montantTtc}}" />
                 </div>
                 <div class="form-group">
-                    <label class="control-label" for="client">Id client :</label>
-
+                    <label class="control-label" for="client">Client :</label>
+                    <input type="text" class="form-control" name="client" id="client" formControlName="client" value="{{client.nom}} {{client.prenom}}" required />
                 </div>
                 <div class="form-group">
-                    <button [disabled]="!factureGlobalForm.valid" type="submit" class="btn btn-success">Sauver</button>
+                    <button [disabled]="!factureForm.valid" type="submit" class="btn btn-success">Modifier</button>
                 </div>
             </form>
         </div>

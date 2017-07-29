@@ -5,106 +5,103 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
 
+// Models
 import { FactureGlobal } from '../models/factureGlobal';
 
 /**
- * Set dev url accessing app/routes/ url
- */
+* Set dev url accessing app/routes/ url
+*/
 const devUrl = 'http://localhost:3000/api/facture-global/';
 
 @Injectable()
 export class FactureGlobalService {
 
 	/**
-	 * GET ALL FACTURE GLOBAL
-	 */
-  public getAllFactureGlobal(): Observable<FactureGlobal[]> {
+	* GET ALL FACTURE GLOBAL.
+	*/
+	getAllFactureGlobal() {
 		return this.http.get(devUrl)
-					.map(this.extractData)
-					.catch(this.handleError);
+			.map(res => res.json());
 	}
 
 	/**
-	 * Get One Facture Global by ID
-	 * @param id : facture global id
-	 */
-	public getOneFactureGlobalById(id: number): Observable<FactureGlobal> {
+	* Get One Facture Global by ID.
+	* @param id factureGlobal._id
+	*/
+	getOneFactureGlobalById(id: number) {
 		return this.http.get(devUrl + id)
-						.map(this.extractData)
-						.catch(this.handleError);
-  }
-
-  /**
-	 * Get One Facture Global by ref
-	 * @param ref : facture global ref
-	 */
-	public getOneFactureGlobalByClient(client: number): Observable<any> {
-		return this.http.get(devUrl + 'client/' + client)
-						.map(res => res.json());
-  }
+			.map(res => res.json());
+	}
 
 	/**
-	 * Get One Facture Global by ref
-	 * @param ref : facture global ref
+	 * Get All Facture Global by Client.
+	 * @param client client_id
 	 */
-	public getOneFactureGlobalByRef(ref: string): Observable<any> {
+	getAllFactureGlobalByClient(id_client: number) {
+		return this.http.get(devUrl + 'client/' + id_client)
+			.map(res => res.json());
+	}
+
+	/**
+	* Get One Facture Global by ref.
+	* Method to check unique key of ref_factureGlobal.
+	* @param ref factureGlobal.ref_factureGlobal
+	*/
+	getOneFactureGlobalByRef(ref: string) {
 		return this.http.get(devUrl + 'ref/' + ref)
-						.map(res => res.json());
+			.map(res => res.json());
 	}
 
 	/**
-	 * Add Facture Global
-	 * @param factureGlobal : Facture global body
-	 */
-	public addFactureGlobal(factureGlobal: FactureGlobal): Observable<FactureGlobal> {
+	* Add Facture Global.
+	* @param factureGlobal : Facture global body
+	*/
+	addFactureGlobal(factureGlobal: FactureGlobal) {
 		return this.http.post(devUrl, factureGlobal)
-					.map(this.extractData)
-					.catch(this.handleError);
+			.map(res => res.json());
 	}
 
 	/**
-	 * Update Facture Global
-	 * @param factureGlobal : Facture Global body
-	 * @param id : Facture Global id
-	 */
-	public updateFactureGlobal(factureGlobal: FactureGlobal, id): Observable<FactureGlobal> {
+	* Update Facture Global.
+	* @param factureGlobal : Facture Global body
+	* @param id : factureGlobal._id
+	*/
+	updateFactureGlobal(factureGlobal: FactureGlobal, id) {
 		return this.http.put(devUrl + id, factureGlobal)
-                    .map(this.extractData)
-                    .catch(this.handleError);
-    }
-
-	/**
-	 * Delete Facture Global
-	 * @param id_fact : Facture Global id
-	 */
-	public deleteFactureGlobal(id_fact: number): Observable<null> {
-		return this.http.delete(devUrl + id_fact)
-					.map(this.extractData)
-					.catch(this.handleError);
+			.map(res => res.json());
 	}
 
 	/**
-	 * Generic Extract Data Method
-	 * @param res : Response
-	 */
+	* Delete Facture Global.
+	* @param id_fact : factureGlobal._id
+	*/
+	deleteFactureGlobal(id_fact: number) {
+		return this.http.delete(devUrl + id_fact)
+			.map(res => res.json());
+	}
+
+	/**
+	* Generic Extract Data Method.
+	* @param res : Response
+	*/
 	private extractData(res: Response) {
-      	let body = res.json();
-      	return body || { };
-  	}
+		let body = res.json();
+		return body || {};
+	}
 
 	/**
-	 * Generic Error handler Method
-	 * @param error : error
-	 */
-  	private handleError (error: Response | any) {
-      	console.error('ApiService::handleError', error);
-      	return Observable.throw(error);
-  	}
+	* Generic Error handler Method.
+	* @param error : error
+	*/
+	private handleError(error: Response | any) {
+		console.error('ApiService::handleError', error);
+		return Observable.throw(error);
+	}
 
 	/**
-	 * Constructor
-	 * @param http : Http module
-	 */
-  	constructor(private http: Http) { }
+	* Constructor
+	* @param http : Http module
+	*/
+	constructor(private http: Http) { }
 
 }

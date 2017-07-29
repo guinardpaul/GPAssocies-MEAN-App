@@ -5,6 +5,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
 
+// Models
 import { FactureMois } from '../models/factureMois';
 
 /**
@@ -14,79 +15,83 @@ const devUrl = 'http://localhost:3000/api/facture-mois/';
 
 @Injectable()
 export class FactureMoisService {
-  
+
 	/**
-	 * Get All Facture Mois
+	 * Get All Facture Mois.
 	 */
-  	public getAllFactureMois(): Observable<FactureMois[]> {
+	public getAllFactureMois() {
 		return this.http.get(devUrl)
-					.map(this.extractData)
-					.catch(this.handleError);
+			.map(res => res.json());
 	}
 
 	/**
-	 * Get One Facture Mois
-	 * @param id : Facture Mois id
+	 * Get All Facture Mois by factureGlobal._id.
+	 * @param id_fact factureGlobal._id
 	 */
-	public getOneFactureMois(id: number): Observable<FactureMois> {
+	getAllFactureMoisByFactureGlobal(id_fact: number) {
+		return this.http.get(devUrl + 'facture-global/' + id_fact)
+			.map(res => res.json());
+	}
+
+	/**
+	 * Get One Facture Mois by Id.
+	 * @param id factureMois._id
+	 */
+	public getOneFactureMois(id: number) {
 		return this.http.get(devUrl + id)
-						.map(this.extractData)
-						.catch(this.handleError);
+			.map(res => res.json());
 	}
 
 	/**
-	 * Add Facture Mois
-	 * @param factureMois : Facture Mois body
+	 * Add Facture Mois.
+	 * @param factureMois Facture Mois body
 	 */
-	public addFactureMois(factureMois: FactureMois): Observable<FactureMois> {
+	public addFactureMois(factureMois: FactureMois) {
 		return this.http.post(devUrl, factureMois)
-					.map(this.extractData)
-					.catch(this.handleError);
+			.map(res => res.json());
 	}
 
 	/**
-	 * Update Facture Mois
-	 * @param factureMois : Facture Mois body
-	 * @param id : Facture Mois id
+	 * Update Facture Mois.
+	 * @param factureMois Facture Mois body
+	 * @param id factureMois._id
 	 */
-	public updateFactureMois(factureMois: FactureMois, id): Observable<FactureMois> {
+	public updateFactureMois(factureMois: FactureMois, id: number) {
 		return this.http.put(devUrl + id, factureMois)
-                    .map(this.extractData)
-                    .catch(this.handleError);
-  }
-
-  /**
-   * Delete Facture Mois
-   * @param id_fact : Facture Mois id
-   */
-	public deleteFactureMois(id_fact: number): Observable<null> {
-		return this.http.delete(devUrl + id_fact)
-					.map(this.extractData)
-					.catch(this.handleError);
+			.map(res => res.json());
 	}
 
 	/**
-	 * Generic Extract Data Method
+	 * Delete Facture Mois.
+	 * @param id : factureMois._id
+	 */
+	public deleteFactureMois(id: number) {
+		return this.http.delete(devUrl + id)
+			.map(res => res.json());
+	}
+
+	/**
+	 * Generic Extract Data Method.
 	 * @param res : Response
 	 */
 	private extractData(res: Response) {
-      	let body = res.json();
-      	return body || { };
-  	}
+		let body = res.json();
+		return body || {};
+	}
 
 	/**
-	 * Generic Handle Error Method
+	 * Generic Handle Error Method.
 	 * @param error : error
 	 */
-  	private handleError (error: Response | any) {
-      	console.error('ApiService::handleError', error);
-      	return Observable.throw(error);
-  	}
+	private handleError(error: Response | any) {
+		console.error('ApiService::handleError', error);
+		return Observable.throw(error);
+	}
 
 	/**
 	 * Constructor
 	 * @param http : Http module
 	 */
-  	constructor(private http: Http) { }
+	constructor(private http: Http) { }
 
 }

@@ -1,5 +1,7 @@
 <div class="container-fluid">
     <h4>{{client.nom}} {{client.prenom}}</h4>
+    <a class="btn btn-default" [routerLink]="['/client']">Retour page client</a>
+    <br/>
     <!-- Flash messages -->
     <div class="row show-hide-message">
         <div [ngClass]="messageClass">
@@ -30,16 +32,18 @@
                 <td>{{d.montantTtc}}</td>
                 <td>{{client.nom}} {{client.prenom}}</td>
                 <td>
-                    <a class="btn btn-success" [routerLink]="['/devis/valider-devis', d._id]">Valider</a>
-                    <button class="btn btn-warning" (click)="onUpdate(d)">Modifier</button>
-                    <button class="btn btn-danger" (click)="onDelete(d._id)">Supprimer</button>
+                    <div class="btn-group-vertical">
+                        <a class="btn btn-success" [routerLink]="['/devis/client/valider-devis', d._id]">Valider</a>
+                        <button class="btn btn-warning" (click)="onUpdate(d)">Modifier</button>
+                        <button class="btn btn-danger" (click)="onDelete(d._id)">Supprimer</button>
+                    </div>
                 </td>
             </tr>
         </tbody>
     </table>
     <button class="btn btn-primary" (click)="onAdd()">Ajouter devis</button>
 
-    <br/>
+    <br/><br/>
 
     <div class="container-fluid" *ngIf="mode">
         <div class="panel panel-info">
@@ -67,8 +71,8 @@
                         <input type="text" class="form-control" name="montantTtc" id="montantTtc" formControlName="montantTtc" value="{{devis.montantTtc}}" />
                     </div>
                     <div class="form-group">
-                        <label class="control-label" for="client">Id client :</label>
-                        <input type="text" name="client" id="client" formControlName="client" value="{{client.nom}} {{client.prenom}}">
+                        <label class="control-label" for="client">Client :</label>
+                        <input type="text" name="client" id="client" formControlName="client" value="{{client.nom}} {{client.prenom}}" />
                         <!-- <select class="form-control" id="client" name="client" formControlName="client" value="{{devis.client}}" required>
                               <option *ngFor="let client of listClient" [ngValue]="client">{{client.nom}} {{client.prenom}}</option>
                         </select> -->

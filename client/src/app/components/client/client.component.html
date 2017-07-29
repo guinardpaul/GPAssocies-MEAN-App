@@ -27,9 +27,11 @@
                 <td>{{client.email}}</td>
                 <td>{{client.numTel}}</td>
                 <td>
-                    <a class="btn btn-success" [routerLink]="['/devis/client', client._id]">Consulter</a>
-                    <button class="btn btn-warning" (click)="onUpdate(client)">Modifier</button>
-                    <button class="btn btn-danger" (click)="onDelete(client._id)">Supprimer</button>
+                    <div class="btn-group-vertical">
+                        <a class="btn btn-success" [routerLink]="['/devis/client', client._id]">Consulter</a>
+                        <button class="btn btn-warning" (click)="onUpdate(client)">Modifier</button>
+                        <button class="btn btn-danger" (click)="onDelete(client._id)">Supprimer</button>
+                    </div>
                 </td>
             </tr>
         </tbody>

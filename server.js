@@ -5,12 +5,12 @@ const favicon = require('serve-favicon');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-mongoose.Promise = global.Promise;
 const cors = require('cors');
 const port = process.env.PORT || 3000;
 
 const database = 'mongodb://localhost:27017/GPSuivieFact';
 
+mongoose.Promise = global.Promise;
 // mongoDB connection
 const promise = mongoose.connect(database, {
     useMongoClient: true,

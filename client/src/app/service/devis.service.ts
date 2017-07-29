@@ -5,98 +5,93 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
 
+// Models
 import { Devis } from '../models/devis';
 
 /**
  * Set dev url accessing app/routes/ url
- */ 
+ */
 const devUrl = 'http://localhost:3000/api/devis/'
 
 @Injectable()
 export class DevisService {
 
 	/**
-	 * Get All Devis
+	 * Get All Devis.
 	 */
-	public getAllDevis(): Observable<Devis[]> {
+	getAllDevis() {
 		return this.http.get(devUrl)
-					.map(this.extractData)
-					.catch(this.handleError);
+			.map(res => res.json());
 	}
 
 	/**
-	 * Get one devis
-	 * @param client_id : client id set to devis model as client
+	 * Get All Devis By Client.
+	 * @param client_id : client._id
 	 */
-	public getAllDevisByClient(client_id: number): Observable<Devis[]> {
+	getAllDevisByClient(client_id: number) {
 		return this.http.get(devUrl + 'client/' + client_id)
-					.map(this.extractData)
-					.catch(this.handleError);
+			.map(res => res.json());
 	};
 
 	/**
-	 * Get one devis
-	 * @param id : devis id
+	 * Get one devis.
+	 * @param id : devis._id
 	 */
-	public getOneDevis(id: number): Observable<Devis> {
+	getOneDevis(id: number) {
 		return this.http.get(devUrl + id)
-						.map(this.extractData)
-						.catch(this.handleError);
+			.map(res => res.json());
 	}
 
 	/**
-	 * Add Devis
-	 * @param devis : devis to add
+	 * Add Devis.
+	 * @param devis : devis body
 	 */
-	public addDevis(devis: Devis): Observable<Devis> {
+	addDevis(devis: Devis) {
 		return this.http.post(devUrl, devis)
-					.map(this.extractData)
-					.catch(this.handleError);
+			.map(res => res.json());
 	}
 
 	/**
-	 * Update Devis
-	 * @param devis: devis to update
-	 * @param id: id of devis
+	 * Update Devis.
+	 * @param devis: devis body
+	 * @param id: devis._id
 	 */
-	public updateDevis(devis: Devis, id): Observable<Devis> {
+	updateDevis(devis: Devis, id: number) {
 		return this.http.put(devUrl + id, devis)
-                    .map(this.extractData)
-                    .catch(this.handleError);
-  	}
-
-	/**
-	 * Delete devis
-	 * @param id_dev : devis id 
-	 */
-	public deleteDevis(id_dev: number): Observable<null> {
-		return this.http.delete(devUrl + id_dev)
-					.map(this.extractData)
-					.catch(this.handleError);
+			.map(res => res.json());
 	}
 
 	/**
-	 * generic to extract Data Method
+	 * Delete devis.
+	 * @param id_dev : devis._id 
+	 */
+	deleteDevis(id_dev: number) {
+		return this.http.delete(devUrl + id_dev)
+			.map(res => res.json());
+	}
+
+	/**
+	 * generic to extract Data Method.
 	 * @param res : Response
 	 */
 	private extractData(res: Response) {
-      	let body = res.json();
-      	return body || { };
-  	}
-  
+		let body = res.json();
+		return body || {};
+	}
+
 	/**
-	 * generic to handle error Method
+	 * generic to handle error Method.
 	 * @param error : error
 	 */
-  	private handleError (error: Response | any) {
-      	console.error('ApiService::handleError', error);
-      	return Observable.throw(error);
-  	}
+	private handleError(error: Response | any) {
+		console.error('ApiService::handleError', error);
+		return Observable.throw(error);
+	}
 
 	/**
 	 * Constructor
 	 * @param http : Http Module
 	 */
-  	constructor(private http: Http) { }
+	constructor(private http: Http) { }
 
 }

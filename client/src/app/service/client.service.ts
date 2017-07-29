@@ -5,6 +5,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
 
+// Models
 import { Client } from '../models/client';
 
 /**
@@ -16,71 +17,66 @@ const devUrl = 'http://localhost:3000/api/clients/';
 export class ClientService {
 
   /**
-   * Get all clients
+   * Get all clients.
    */
-  getAllClients(): Observable<Client[]> {
-      return this.http.get(devUrl)
-                      .map(this.extractData)
-                      .catch(this.handleError);
+  getAllClients() {
+    return this.http.get(devUrl)
+      .map(res => res.json());
   }
 
   /**
-   * Get one client
-   * @param id : client id
+   * Get one client.
+   * @param id : client._id
    */
-  getOneClient(id: number): Observable<Client> {
+  getOneClient(id: number) {
     return this.http.get(devUrl + id)
-                    .map(this.extractData)
-                    .catch(this.handleError);
+      .map(res => res.json());
   }
 
   /**
-   * Save client
-   * @param client : client to save
+   * Save client.
+   * @param client : client body
    */
-  addClient(client: Client): Observable<any> {
+  addClient(client: Client) {
     return this.http.post(devUrl, client)
-                    .map(this.extractData)
-                    .catch(this.handleError);
+      .map(res => res.json());
   };
 
   /**
-   * Update client
-   * @param id client id
-   * @param client client body: any
+   * Update client.
+   * @param id client._id
+   * @param client client body
    */
-  updateClient(id: number, client: Client): Observable<any> {
+  updateClient(id: number, client: Client) {
     return this.http.put(devUrl + id, client)
-                    .map(this.extractData)
-                    .catch(this.handleError);
+      .map(res => res.json());
   };
 
   /**
-   * Delete client
-   * @param id : client id
+   * Delete client.
+   * @param id : client._id
    */
-  deleteClient(id: number): Observable<any> {
+  deleteClient(id: number) {
     return this.http.delete(devUrl + id)
-                    .map(response => null)
-                    .catch(this.handleError);
+      .map(res => res.json());
   };
-  
+
   /**
 	 * function generic to extract Data
 	 * @param res : Response
 	 */
   private extractData(res: Response) {
-      let body = res.json();
-      return body || { };
+    let body = res.json();
+    return body || {};
   }
-  
+
   /**
 	 * function generic to handle error
 	 * @param error : error
 	 */
-  private handleError (error: Response | any) {
-      console.error('ApiService::handleError', error);
-      return Observable.throw(error);
+  private handleError(error: Response | any) {
+    console.error('ApiService::handleError', error);
+    return Observable.throw(error);
   }
 
   /**
