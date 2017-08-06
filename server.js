@@ -6,7 +6,7 @@ const logger = require('morgan');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 
 const database = 'mongodb://localhost:27017/GPSuivieFact';
 
@@ -52,7 +52,7 @@ app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, './dist', 'index.html'));
 });
 
-// Start Server: Listen on port 3000
+// Start Server: Listen on port
 app.listen(port, () => {
     console.log('Listening on port ' + port);
 });

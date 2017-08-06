@@ -7,7 +7,7 @@ let validNomChecker = (nom) => {
     if (!nom) {
         return false;
     } else {
-        const regExp = new RegExp(/[a-zA-z]+$/);
+        const regExp = new RegExp(/^[A-Za-z]+([ \-']?[A-Za-z]+[ \-']?[A-Za-z]+[ \-']?)[A-Za-z]+$/);
         return regExp.test(nom);
     }
 };
@@ -16,7 +16,7 @@ let validPrenomChecker = (prenom) => {
     if (!prenom) {
         return false;
     } else {
-        const regExp = new RegExp(/^[a-zA-z]+$/);
+        const regExp = new RegExp(/^[A-Za-z]+([ \-']?[A-Za-z]+[ \-']?[A-Za-z]+[ \-']?)[A-Za-z]+$/);
         return regExp.test(prenom);
     }
 };
@@ -43,7 +43,7 @@ const prenomValidator = [{
 
 const emailValidator = [{
     validator: validEmailChecker,
-    message: 'Doit être un Email valide'
+    message: 'Email invalide'
 }];
 
 const ClientSchema = new mongoose.Schema({
@@ -51,13 +51,11 @@ const ClientSchema = new mongoose.Schema({
     statutClient: Boolean,
     nom: {
         type: String,
-        required: true,
-        validate: nomValidator
+        required: true
     },
     prenom: {
         type: String,
-        required: true,
-        validate: prenomValidator
+        required: true
     },
     email: {
         type: String,

@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const Client = require('./Client');
-const DetailsDevis = require('./DetailsDevis');
 
 let validMontantHtChecker = (montantHt) => {
 	if (!montantHt) {
@@ -46,13 +45,13 @@ const DevisSchema = new mongoose.Schema({
 	},
 });
 
-DevisSchema.pre('save', function(next) {
+DevisSchema.pre('save', function (next) {
 	// Calcul MontantTTC
 	let montantTTC = this.montantHt + this.tauxTva;
 	montantTTC = montantTTC.toFixed(2);
 	this.montantTtc = montantTTC;
-	
+
 	next();
-});  
+});
 
 module.exports = mongoose.model('Devis', DevisSchema);

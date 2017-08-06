@@ -24,7 +24,8 @@ module.exports = (router) => {
                 } else {
                     res.json({
                         success: false,
-                        message: 'Client not found'
+                        message: 'Client not found',
+                        err: err
                     });
                 }
             });
@@ -41,26 +42,22 @@ module.exports = (router) => {
         } else {
             Client.create(req.body, (err, data) => {
                 if (err) {
-                    if (err.errors.nom) {
+                    if (err.code === 11000) {
                         res.json({
                             success: false,
-                            message: err.errors.nom.properties.message
-                        });
-                    } else if (err.errors.prenom) {
-                        res.json({
-                            success: false,
-                            message: err.errors.prenom.properties.message
+                            message: 'Email déjà utilisé'
                         });
                     } else if (err.errors.email) {
                         res.json({
                             success: false,
-                            message: err.errors.email.properties.message
+                            message: err.errors.email.message
                         });
                     } else {
                         console.log(err);
                         res.json({
                             success: false,
-                            message: 'Error trying to save Client'
+                            message: 'Error trying to save Client',
+                            err: err
                         });
                     }
                 }
@@ -83,26 +80,17 @@ module.exports = (router) => {
         } else {
             Client.findByIdAndUpdate(req.params.id, req.body, (err, data) => {
                 if (err) {
-                    if (err.errors.nom) {
+                    if (err.errors.email) {
                         res.json({
                             success: false,
-                            message: err.errors.nom.properties.message
-                        });
-                    } else if (err.errors.prenom) {
-                        res.json({
-                            success: false,
-                            message: err.errors.prenom.properties.message
-                        });
-                    } else if (err.errors.email) {
-                        res.json({
-                            success: false,
-                            message: err.errors.email.properties.message
+                            message: err.errors.email.message
                         });
                     } else {
                         console.log(err);
                         res.json({
                             success: false,
-                            message: 'Error trying to update Client'
+                            message: 'Error trying to update Client',
+                            err: err
                         });
                     }
                 } else {
@@ -135,7 +123,8 @@ module.exports = (router) => {
                 } else {
                     res.json({
                         success: false,
-                        msg: 'Error. Client doesn\'t exist'
+                        msg: 'Error. Client doesn\'t exist',
+                        err: err
                     });
                 }
             });

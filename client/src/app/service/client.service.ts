@@ -11,13 +11,22 @@ import { Client } from '../models/client';
 /**
  * Set dev url accessing app/routes/ url
  */
-const devUrl = 'http://localhost:3000/api/clients/';
+const devUrl = 'http://localhost:3001/api/clients/';
 
+/**
+ *
+ * @author Paul GUINARD
+ * @export ClientService
+ * @class ClientService
+ */
 @Injectable()
 export class ClientService {
 
   /**
    * Get all clients.
+   *
+   * @returns
+   * @memberof ClientService
    */
   getAllClients() {
     return this.http.get(devUrl)
@@ -26,7 +35,10 @@ export class ClientService {
 
   /**
    * Get one client.
-   * @param id : client._id
+   *
+   * @param {number} id client._id
+   * @returns
+   * @memberof ClientService
    */
   getOneClient(id: number) {
     return this.http.get(devUrl + id)
@@ -35,7 +47,10 @@ export class ClientService {
 
   /**
    * Save client.
-   * @param client : client body
+   *
+   * @param {Client} client client body
+   * @returns
+   * @memberof ClientService
    */
   addClient(client: Client) {
     return this.http.post(devUrl, client)
@@ -44,8 +59,11 @@ export class ClientService {
 
   /**
    * Update client.
-   * @param id client._id
-   * @param client client body
+   *
+   * @param {number} id client._id
+   * @param {Client} client client body
+   * @returns
+   * @memberof ClientService
    */
   updateClient(id: number, client: Client) {
     return this.http.put(devUrl + id, client)
@@ -54,7 +72,10 @@ export class ClientService {
 
   /**
    * Delete client.
-   * @param id : client._id
+   *
+   * @param {number} id client._id
+   * @returns
+   * @memberof ClientService
    */
   deleteClient(id: number) {
     return this.http.delete(devUrl + id)
@@ -62,26 +83,36 @@ export class ClientService {
   };
 
   /**
-	 * function generic to extract Data
-	 * @param res : Response
-	 */
+   * function generic to extract Data
+   *
+   * @private
+   * @param {Response} res
+   * @returns
+   * @memberof ClientService
+   */
   private extractData(res: Response) {
     let body = res.json();
     return body || {};
   }
 
   /**
-	 * function generic to handle error
-	 * @param error : error
-	 */
+   * function generic to handle error
+   *
+   * @private
+   * @param {(Response | any)} error
+   * @returns
+   * @throws {error} error
+   * @memberof ClientService
+   */
   private handleError(error: Response | any) {
     console.error('ApiService::handleError', error);
     return Observable.throw(error);
   }
 
   /**
-   * Constructor
-   * @param http : Http Module
+   * Creates an instance of ClientService.
+   * @param {Http} http http module
+   * @memberof ClientService client service
    */
   constructor(private http: Http) { }
 

@@ -3,16 +3,13 @@ const Devis = require('./Devis');
 
 const DetailsDevisSchema = mongoose.Schema({
     montantHt: {
-        type: Number,
-        required: true
+        type: Number
     },
     tauxTva: {
-        type: Number,
-        required: true
+        type: Number
     },
     montantTtc: {
-        type: Number,
-        required: true
+        type: Number
     },
     devis: {
         type: mongoose.Schema.Types.ObjectId,
@@ -21,7 +18,7 @@ const DetailsDevisSchema = mongoose.Schema({
     },
 });
 
-DetailsDevisSchema.pre('save', function(next) {
+DetailsDevisSchema.pre('save', function (next) {
     next();
 });
 

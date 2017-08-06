@@ -1,3 +1,9 @@
+/**
+ * Client model
+ *
+ * @export
+ * @class Client
+ */
 export class Client {
     _id: number;
     statutClient: boolean;
@@ -15,6 +21,11 @@ export class Client {
     email: string;
     numTel: string;
 
+    /**
+     * Creates an instance of Client.
+     * @param {Object} [value={}]
+     * @memberof Client
+     */
     constructor(value: Object = {}){
         Object.assign(this, value);
     }

@@ -1,3 +1,9 @@
+/**
+ * FactureGlobal model
+ *
+ * @export
+ * @class FactureGlobal
+ */
 export class FactureGlobal {
     _id: number;
     ref_factureGlobal: string;
@@ -7,6 +13,11 @@ export class FactureGlobal {
     montantTtc: number;
     client: number;
 
+    /**
+     * Creates an instance of FactureGlobal.
+     * @param {Object} [value={}]
+     * @memberof FactureGlobal
+     */
     constructor(value: Object = {}){
         Object.assign(this, value);
     }

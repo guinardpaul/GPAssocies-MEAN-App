@@ -1,4 +1,5 @@
 const Devis = require('../models/Devis');
+const DetailsDevis = require('../models/DetailsDevis');
 
 module.exports = (router) => {
 

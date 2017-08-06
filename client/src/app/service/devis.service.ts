@@ -11,87 +11,127 @@ import { Devis } from '../models/devis';
 /**
  * Set dev url accessing app/routes/ url
  */
-const devUrl = 'http://localhost:3000/api/devis/'
+const devUrl = 'http://localhost:3001/api/devis/'
 
+/**
+ *
+ * @author Paul GUINARD
+ * @export DevisService
+ * @class DevisService
+ */
 @Injectable()
 export class DevisService {
 
 	/**
-	 * Get All Devis.
-	 */
-	getAllDevis() {
-		return this.http.get(devUrl)
-			.map(res => res.json());
-	}
+   * Get All Devis.
+   *
+   * @returns devis
+   * @memberof DevisService
+   */
+  getAllDevis() {
+    return this.http.get(devUrl)
+      .map(res => res.json());
+  }
 
 	/**
-	 * Get All Devis By Client.
-	 * @param client_id : client._id
-	 */
-	getAllDevisByClient(client_id: number) {
-		return this.http.get(devUrl + 'client/' + client_id)
-			.map(res => res.json());
-	};
+   * Get All Devis By Client.
+   *
+   * @param {number} client_id client._id
+   * @returns
+   * @memberof DevisService
+   */
+  getAllDevisByClient(client_id: number) {
+    return this.http.get(devUrl + 'client/' + client_id)
+      .map(res => res.json());
+  };
+
 
 	/**
-	 * Get one devis.
-	 * @param id : devis._id
-	 */
-	getOneDevis(id: number) {
-		return this.http.get(devUrl + id)
-			.map(res => res.json());
-	}
+   * Get one devis.
+   *
+   * @param {number} id devis._id
+   * @returns
+   * @memberof DevisService
+   */
+  getOneDevis(id: number) {
+    return this.http.get(devUrl + id)
+      .map(res => res.json());
+  }
+
 
 	/**
-	 * Add Devis.
-	 * @param devis : devis body
-	 */
-	addDevis(devis: Devis) {
-		return this.http.post(devUrl, devis)
-			.map(res => res.json());
-	}
+   * Add Devis.
+   *
+   * @param {Devis} devis devis body
+   * @returns
+   * @memberof DevisService
+   */
+  addDevis(devis: Devis) {
+    return this.http.post(devUrl, devis)
+      .map(res => res.json());
+  }
+
 
 	/**
-	 * Update Devis.
-	 * @param devis: devis body
-	 * @param id: devis._id
-	 */
-	updateDevis(devis: Devis, id: number) {
-		return this.http.put(devUrl + id, devis)
-			.map(res => res.json());
-	}
+   * Update Devis.
+   *
+   * @param {Devis} devis devis body
+   * @param {number} id_dev devis._id
+   * @returns
+   * @memberof DevisService
+   */
+  updateDevis(devis: Devis, id_dev: number) {
+    return this.http.put(devUrl + id_dev, devis)
+      .map(res => res.json());
+  }
+
 
 	/**
-	 * Delete devis.
-	 * @param id_dev : devis._id 
-	 */
-	deleteDevis(id_dev: number) {
-		return this.http.delete(devUrl + id_dev)
-			.map(res => res.json());
-	}
+   * Delete devis.
+   *
+   * @param {number} id_dev devis._id
+   * @returns
+   * @memberof DevisService
+   */
+  deleteDevis(id_dev: number) {
+    return this.http.delete(devUrl + id_dev)
+      .map(res => res.json());
+  }
+
 
 	/**
-	 * generic to extract Data Method.
-	 * @param res : Response
-	 */
-	private extractData(res: Response) {
-		let body = res.json();
-		return body || {};
-	}
+   * generic to extract Data Method.
+   *
+   * @private
+   * @param {Response} res response
+   * @returns
+   * @memberof DevisService
+   */
+  private extractData(res: Response) {
+    let body = res.json();
+    return body || {};
+  }
+
 
 	/**
-	 * generic to handle error Method.
-	 * @param error : error
-	 */
-	private handleError(error: Response | any) {
-		console.error('ApiService::handleError', error);
-		return Observable.throw(error);
-	}
+   * generic to handle error Method.
+   *
+   * @private
+   * @param {(Response | any)} error error
+   * @returns
+   * @memberof DevisService
+   */
+  private handleError(error: Response | any) {
+    console.error('ApiService::handleError', error);
+    return Observable.throw(error);
+  }
+
 
 	/**
-	 * Constructor
-	 * @param http : Http Module
-	 */
-	constructor(private http: Http) { }
+   * Creates an instance of DevisService.
+   * @param {Http} http http module
+   * @memberof DevisService devis service
+   */
+  constructor(private http: Http) { }
 
 }

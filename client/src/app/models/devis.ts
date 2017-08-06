@@ -1,3 +1,9 @@
+/**
+ * Devis model
+ *
+ * @export
+ * @class Devis
+ */
 export class Devis {
 	_id: number;
 	ref_devis: string;
@@ -7,7 +13,12 @@ export class Devis {
 	montantTtc: number;
 	client: number;
 
-	constructor(values: Object = {}) {
+	/**
+   * Creates an instance of Devis.
+   * @param {Object} [values={}]
+   * @memberof Devis
+   */
+  constructor(values: Object = {}) {
 		Object.assign(this, values);
 	}
 }

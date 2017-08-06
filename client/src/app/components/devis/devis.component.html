@@ -1,91 +1,128 @@
 <div class="container-fluid">
-    <h4>{{client.nom}} {{client.prenom}}</h4>
-    <a class="btn btn-default" [routerLink]="['/client']">Retour page client</a>
-    <br/>
-    <!-- Flash messages -->
-    <div class="row show-hide-message">
-        <div [ngClass]="messageClass">
-            {{ message }}
-        </div>
-    </div>
+  <h4>{{client.nom}} {{client.prenom}}</h4>
+  <a class="btn btn-default" [routerLink]="['/client']">Retour page client</a>
 </div>
 <div class="container-fluid col-sm-6 col-md-6">
-    <h4 style="text-align: center;">Devis</h4>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Ref</th>
-                <th>Date</th>
-                <th>Montant HT</th>
-                <th>Taux TVA</th>
-                <th>Montant TTC</th>
-                <th>Client</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let d of listDevis">
-                <td>{{d.ref_devis}}</td>
-                <td>{{d.date_creation | date: 'dd/MM/yyyy'}}</td>
-                <td>{{d.montantHt}}</td>
-                <td>{{d.tauxTva}}</td>
-                <td>{{d.montantTtc}}</td>
-                <td>{{client.nom}} {{client.prenom}}</td>
-                <td>
-                    <div class="btn-group-vertical">
-                        <a class="btn btn-success" [routerLink]="['/devis/client/valider-devis', d._id]">Valider</a>
-                        <button class="btn btn-warning" (click)="onUpdate(d)">Modifier</button>
-                        <button class="btn btn-danger" (click)="onDelete(d._id)">Supprimer</button>
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <button class="btn btn-primary" (click)="onAdd()">Ajouter devis</button>
+  <h4 style="text-align: center;">Devis</h4>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Ref</th>
+        <th>Date</th>
+        <th>Montant HT</th>
+        <th>Taux TVA</th>
+        <th>Montant TTC</th>
+        <th>Client</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let d of listDevis">
+        <td>{{d.ref_devis}}</td>
+        <td>{{d.date_creation | date: 'dd/MM/yyyy'}}</td>
+        <td>{{d.montantHt}}</td>
+        <td>{{d.tauxTva}}</td>
+        <td>{{d.montantTtc}}</td>
+        <td>{{client.nom}} {{client.prenom}}</td>
+        <td>
+          <div class="btn-group-vertical">
+            <a class="btn btn-success" [routerLink]="['/devis/client/valider-devis', d._id]">Valider</a>
+            <button class="btn btn-warning" (click)="onUpdate(d)">Modifier</button>
+            <button class="btn btn-danger" (click)="onDelete(d._id)">Supprimer</button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <button class="btn btn-primary" (click)="onAdd()">Ajouter devis</button>
 
-    <br/><br/>
+  <br/><br/>
 
-    <div class="container-fluid" *ngIf="mode">
-        <div class="panel panel-info">
-            <div class="panel-heading">Devis</div>
-            <div class="panel-body">
-                <form class="form-horizontal" [formGroup]="devisForm" (submit)="addDevis()">
-                    <div class="form-group">
-                        <label class="control-label" for="ref_devis">Ref :</label>
-                        <input type="text" class="form-control" name="ref_devis" id="ref_devis" formControlName="ref_devis" value="{{devis.ref_devis}}" autofocus required />
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" for="date_creation">Date création :</label>
-                        <input type="date" class="form-control" name="date_creation" id="date_creation" formControlName="date_creation" value="{{devis.date_creation}}" />
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" for="montantHt">Montant HT :</label>
-                        <input type="text" class="form-control" name="montantHt" id="montantHt" formControlName="montantHt" value="{{devis.montantHt}}" (blur)="calculMontant()" required />
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" for="tauxTva">Taux TVA :</label>
-                        <input type="text" class="form-control" name="tauxTva" id="tauxTva" formControlName="tauxTva" value="{{devis.tauxTva}}" (blur)="calculMontant()" required />
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" for="montantTtc">Montant TTC :</label>
-                        <input type="text" class="form-control" name="montantTtc" id="montantTtc" formControlName="montantTtc" value="{{devis.montantTtc}}" />
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" for="client">Client :</label>
-                        <input type="text" name="client" id="client" formControlName="client" value="{{client.nom}} {{client.prenom}}" />
-                        <!-- <select class="form-control" id="client" name="client" formControlName="client" value="{{devis.client}}" required>
-                              <option *ngFor="let client of listClient" [ngValue]="client">{{client.nom}} {{client.prenom}}</option>
-                        </select> -->
-                    </div>
-                    <div class="form-group">
-                        <button [disabled]="!devisForm.valid || processing" type="submit" class="btn btn-success">Sauver</button>
-                    </div>
-                </form>
-            </div>
-        </div>
+  <div class="container-fluid" *ngIf="mode">
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <h4>Devis</h4>
+      </div>
+      <div class="panel-body">
+        <form class="form-horizontal" [formGroup]="devisForm" (submit)="addDevis()">
+          <div class="form-group">
+            <label class="control-label" for="ref_devis">Ref :</label>
+            <input type="text" class="form-control" name="ref_devis" id="ref_devis" formControlName="ref_devis" value="{{devis.ref_devis}}"
+              autofocus required />
+          </div>
+          <div class="form-group">
+            <label class="control-label" for="date_creation">Date création :</label>
+            <input type="date" class="form-control" name="date_creation" id="date_creation" formControlName="date_creation" value="{{devis.date_creation}}"
+            />
+          </div>
+          <!-- Details Devis -->
+          <div class="form-inline">
+            <span><h4>Détails devis</h4></span><br/>
+            <label class="control-label" for="montantHt1">Montant HT :</label>
+            <input type="text" class="form-control" name="montantHt1" id="montantHt1" formControlName="montantHt1" value="{{detailsDevis1.montantHt}}"
+              (blur)="calculMontant1()" (blur)="calculMontantHt()" (blur)="calculTauxTva()" (blur)="calculMontantTtc()" size="8"
+              required />
+            <label class="control-label" for="tauxTva1">Taux TVA (%) :</label>
+            <input type="text" class="form-control" name="tauxTva1" id="tauxTva1" formControlName="tauxTva1" value="{{detailsDevis1.tauxTva}}"
+              size="8" required />
+            <label class="control-label" for="montantTtc1">Montant TTC :</label>
+            <input type="text" class="form-control" name="montantTtc1" id="montantTtc1" formControlName="montantTtc1" value="{{detailsDevis1.montantTtc}}"
+              size="8" />
+          </div>
+          <br/>
+          <div class="form-inline">
+            <label class="control-label" for="montantHt2">Montant HT :</label>
+            <input type="text" class="form-control" name="montantHt2" id="montantHt2" formControlName="montantHt2" value="{{detailsDevis2.montantHt}}"
+              (blur)="calculMontant2()" (blur)="calculMontantHt()" (blur)="calculTauxTva()" (blur)="calculMontantTtc()" size="8"
+              required />
+            <label class="control-label" for="tauxTva2">Taux TVA (%) :</label>
+            <input type="text" class="form-control" name="tauxTva2" id="tauxTva2" formControlName="tauxTva2" value="{{detailsDevis2.tauxTva}}"
+              size="8" required />
+            <label class="control-label" for="montantTtc2">Montant TTC :</label>
+            <input type="text" class="form-control" name="montantTtc2" id="montantTtc2" formControlName="montantTtc2" value="{{detailsDevis2.montantTtc}}"
+              size="8" />
+          </div>
+          <br/>
+          <div class="form-inline">
+            <label class="control-label" for="montantHt3">Montant HT :</label>
+            <input type="text" class="form-control" name="montantHt3" id="montantHt3" formControlName="montantHt3" value="{{detailsDevis3.montantHt}}"
+              (blur)="calculMontant3()" (blur)="calculMontantHt()" (blur)="calculTauxTva()" (blur)="calculMontantTtc()" size="8"
+              required />
+            <label class="control-label" for="tauxTva3">Taux TVA (%) :</label>
+            <input type="text" class="form-control" name="tauxTva3" id="tauxTva3" formControlName="tauxTva3" value="{{detailsDevis3.tauxTva}}"
+              size="8" required />
+            <label class="control-label" for="montantTtc3">Montant TTC :</label>
+            <input type="text" class="form-control" name="montantTtc3" id="montantTtc3" formControlName="montantTtc3" value="{{detailsDevis3.montantTtc}}"
+              size="8" />
+          </div>
+          <!-- Devis input -->
+          <div class="form-group">
+            <label class="control-label" for="montantHt">Montant HT :</label>
+            <input type="text" class="form-control" name="montantHt" id="montantHt" formControlName="montantHt" value="{{devis.montantHt}}"
+              required />
+          </div>
+          <div class="form-group">
+            <label class="control-label" for="tauxTva">Taux TVA (€) :</label>
+            <input type="text" class="form-control" name="tauxTva" id="tauxTva" formControlName="tauxTva" value="{{devis.tauxTva}}" (blur)="calculMontant()"
+              required />
+          </div>
+          <div class="form-group">
+            <label class="control-label" for="montantTtc">Montant TTC :</label>
+            <input type="text" class="form-control" name="montantTtc" id="montantTtc" formControlName="montantTtc" value="{{devis.montantTtc}}"
+            />
+          </div>
+          <div class="form-group">
+            <label class="control-label" for="client">Client :</label>
+            <input type="text" name="client" id="client" formControlName="client" value="{{client.nom}} {{client.prenom}}" />
+          </div>
+          <div class="form-group">
+            <button [disabled]="!devisForm.valid || processing" type="submit" class="btn btn-success">Sauver</button>
+          </div>
+        </form>
+      </div>
     </div>
+  </div>
 </div>
 <div class="container-fluid col-sm-6 col-md-6">
-    <br/>
-    <app-facture></app-facture>
+  <app-facture></app-facture>
 </div>
