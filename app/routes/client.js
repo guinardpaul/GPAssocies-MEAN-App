@@ -86,7 +86,6 @@ module.exports = (router) => {
                             message: err.errors.email.message
                         });
                     } else {
-                        console.log(err);
                         res.json({
                             success: false,
                             message: 'Error trying to update Client',

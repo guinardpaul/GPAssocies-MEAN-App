@@ -25,6 +25,7 @@ import { ClientService } from './service/client.service';
 import { DevisService } from './service/devis.service';
 import { FactureGlobalService } from './service/facture-global.service';
 import { FactureMoisService } from './service/facture-mois.service';
+import { DetailsDevisService } from './service/details-devis.service';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { FactureMoisService } from './service/facture-mois.service';
     DevisService,
     DatePipe,
     FactureMoisService,
-    FactureGlobalService
+    FactureGlobalService,
+    DetailsDevisService
   ],
   bootstrap: [ AppComponent ],
   exports: [ ClientComponent ]

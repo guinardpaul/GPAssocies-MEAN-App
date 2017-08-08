@@ -62,11 +62,11 @@ export class DevisService {
 	/**
    * Add Devis.
    *
-   * @param {Devis} devis devis body
+   * @param {any} devis devis body
    * @returns
    * @memberof DevisService
    */
-  addDevis(devis: Devis) {
+  addDevis(devis: any) {
     return this.http.post(devUrl, devis)
       .map(res => res.json());
   }
@@ -75,12 +75,12 @@ export class DevisService {
 	/**
    * Update Devis.
    *
-   * @param {Devis} devis devis body
+   * @param {any} devis devis body
    * @param {number} id_dev devis._id
    * @returns
    * @memberof DevisService
    */
-  updateDevis(devis: Devis, id_dev: number) {
+  updateDevis(devis: any, id_dev: number) {
     return this.http.put(devUrl + id_dev, devis)
       .map(res => res.json());
   }

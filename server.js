@@ -28,6 +28,7 @@ const client = require('./app/routes/client')(router);
 const devis = require('./app/routes/devis')(router);
 const factureGlobal = require('./app/routes/factureGlobal')(router);
 const factureMois = require('./app/routes/factureMois')(router);
+const detailsDevis = require('./app/routes/detailsDevis')(router);
 
 // MIDDLEWARE
 // log into console (dev)
@@ -45,6 +46,7 @@ app.use('/api', client);
 app.use('/api', devis);
 app.use('/api', factureGlobal);
 app.use('/api', factureMois);
+app.use('/api', detailsDevis);
 
 // allow to refresh page
 // send back to dist/index.html

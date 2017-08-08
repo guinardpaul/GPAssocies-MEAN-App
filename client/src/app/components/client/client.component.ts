@@ -7,6 +7,7 @@ import { Client } from '../../models/client';
 
 // Services
 import { ClientService } from '../../service/client.service';
+import { DevisService } from '../../service/devis.service';
 import { FlashMessagesService } from 'ngx-flash-messages';
 
 /**
@@ -22,22 +23,25 @@ import { FlashMessagesService } from 'ngx-flash-messages';
   styleUrls: [ './client.component.css' ]
 })
 export class ClientComponent implements OnInit {
-  listClient: Client[];
-  client = new Client();
+  listClient: any[];
+  client: any = {};
+  client_id: number;
   mode: boolean = false;
-  clientForm: FormGroup;
   processing: boolean = false;
+  clientForm: FormGroup;
 
 	/**
    * Creates an instance of ClientComponent.
    *
    * @param {ClientService} clientService client service
+   * @param {DevisService} devisService devis service
    * @param {FormBuilder} formBuilder Reactive forms builder
    * @param {FlashMessagesService} flashMessages Angular flash messages
    * @memberof ClientComponent
    */
   constructor(
     private clientService: ClientService,
+    private devisService: DevisService,
     private formBuilder: FormBuilder,
     private flashMessages: FlashMessagesService
   ) {
@@ -83,7 +87,7 @@ export class ClientComponent implements OnInit {
     this.processing = true;
     this.disableForm();
     this.client = this.clientForm.value;
-    console.log(this.client);
+    this.client._id = this.client_id;
     if (this.client._id == null || this.client._id == 0) {
       this.clientService.addClient(this.client)
         .subscribe(
@@ -110,7 +114,7 @@ export class ClientComponent implements OnInit {
         .subscribe(
         data => {
           if (data.success) {
-            this.flashMessages.show('Client créé', {
+            this.flashMessages.show('Client mis à jour', {
               classes: [ 'alert', 'alert-success' ],
               timeout: 3000
             });
@@ -121,6 +125,7 @@ export class ClientComponent implements OnInit {
               classes: [ 'alert', 'alert-danger' ],
               timeout: 3000
             });
+            console.log('Erreur update client :' + data);
             this.processing = false;
             this.enableForm();
           }
@@ -163,11 +168,12 @@ export class ClientComponent implements OnInit {
    * @memberof ClientComponent
    */
   onSuccess() {
-    this.clientForm.reset();
+    this.generateForm();
     this.processing = false;
     this.enableForm();
     this.mode = false;
-    this.client = new Client();
+    this.client = {};
+    this.client_id = null;
     this.getAllClients();
   }
 
@@ -183,12 +189,30 @@ export class ClientComponent implements OnInit {
 	/**
    * Display clientForm and set values to be updated
    *
-   * @param {Client} client
+   * @param {*} client client
    * @memberof ClientComponent
    */
-  onUpdate(client: Client) {
+  onUpdate(client: any) {
+    // Set this.client values (fecth _id)
     this.client = client;
-    client = null;
+    this.client_id = client._id;
+
+    // Set clientForm values
+    this.clientForm.get('civilite').setValue(client.civilite);
+    this.clientForm.get('nom').setValue(client.nom);
+    this.clientForm.get('prenom').setValue(client.prenom);
+    this.clientForm.get('email').setValue(client.email);
+    this.clientForm.get('numTel').setValue(client.numTel);
+    this.clientForm.get('adresseFact').setValue(client.adresseFact);
+    this.clientForm.get('complAdresseFact').setValue(client.complAdresseFact);
+    this.clientForm.get('cpFact').setValue(client.cpFact);
+    this.clientForm.get('villeFact').setValue(client.villeFact);
+    this.clientForm.get('adresseChantier').setValue(client.adresseChantier);
+    this.clientForm.get('complAdresseChantier').setValue(client.complAdresseChantier);
+    this.clientForm.get('cpChantier').setValue(client.cpChantier);
+    this.clientForm.get('villeChantier').setValue(client.villeChantier);
+
+    client = {};
     this.mode = true;
   }
 
@@ -199,7 +223,9 @@ export class ClientComponent implements OnInit {
    */
   onCancel() {
     this.mode = false;
-    this.client = null;
+    this.client_id = null;
+    this.client = {};
+    this.generateForm();
   }
 
 	/**
@@ -237,7 +263,7 @@ export class ClientComponent implements OnInit {
     });
   }
 
-	/**
+  /**
    * enable form
    *
    * @memberof ClientComponent
@@ -246,7 +272,7 @@ export class ClientComponent implements OnInit {
     this.clientForm.enable();
   }
 
-	/**
+  /**
    * disable form
    *
    * @memberof ClientComponent
@@ -256,7 +282,7 @@ export class ClientComponent implements OnInit {
   }
 
   // Input Validation
-	/**
+  /**
    * nom et prenom validation using RegExp
    *
    * @param {any} controls
@@ -273,7 +299,7 @@ export class ClientComponent implements OnInit {
     }
   }
 
-	/**
+  /**
    * email validation using RegExp
    *
    * @param {any} controls
@@ -290,7 +316,7 @@ export class ClientComponent implements OnInit {
     }
   }
 
-	/**
+  /**
    * num tel validation using RegExp
    *
    * @param {any} controls
@@ -307,7 +333,7 @@ export class ClientComponent implements OnInit {
     };
   }
 
-	/**
+  /**
    * Fetch All Clients from database
    *
    * @memberof ClientComponent

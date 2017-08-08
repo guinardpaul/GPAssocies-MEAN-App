@@ -66,22 +66,29 @@ module.exports = (router) => {
      */
     router.post('/devis', (req, res, next) => {
         if (!req.body) {
-            res.json({
-                success: false,
-                message: 'data not provided'
-            });
+            if (req.body.ref_devis === '') {
+                res.json({
+                    success: false,
+                    message: 'Ref Devis not provided'
+                });
+            } else {
+                res.json({
+                    success: false,
+                    message: 'data not provided'
+                });
+            }
         } else {
             Devis.create(req.body, (err, data) => {
                 if (err) {
                     res.json({
                         success: false,
-                        error: err
+                        message: 'erreur' + err
                     });
                 } else {
                     res.json({
                         success: true,
                         obj: data,
-                        msg: 'Devis created'
+                        message: 'Devis created'
                     });
                 }
             });

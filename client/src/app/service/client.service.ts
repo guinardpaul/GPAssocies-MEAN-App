@@ -48,11 +48,11 @@ export class ClientService {
   /**
    * Save client.
    *
-   * @param {Client} client client body
+   * @param {*} client client body
    * @returns
    * @memberof ClientService
    */
-  addClient(client: Client) {
+  addClient(client: any) {
     return this.http.post(devUrl, client)
       .map(res => res.json());
   };

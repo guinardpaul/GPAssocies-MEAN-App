@@ -12,6 +12,7 @@ import { Client } from '../../models/client';
 import { DevisService } from '../../service/devis.service';
 import { ClientService } from '../../service/client.service';
 import { FlashMessagesService } from 'ngx-flash-messages';
+import { DetailsDevisService } from '../../service/details-devis.service';
 
 /**
  *
@@ -46,6 +47,7 @@ export class DevisComponent implements OnInit {
    * @param {FormBuilder} formBuilder reactive forms builder
    * @param {ClientService} clientService client service
    * @param {FlashMessagesService} flashMessages angular flash messages
+   * @param {DetailsDevisService} detailsDevisService Details Devis service
    * @memberof DevisComponent
    */
   constructor(
@@ -54,7 +56,8 @@ export class DevisComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private formBuilder: FormBuilder,
     private clientService: ClientService,
-    private flashMessages: FlashMessagesService
+    private flashMessages: FlashMessagesService,
+    private detailsDevisService: DetailsDevisService
   ) {
     this.generateForm()
   }
@@ -144,33 +147,52 @@ export class DevisComponent implements OnInit {
   addDevis() {
     this.processing = true;
     this.disableForm();
-    const newDevis = this.devisForm.value;
-    newDevis.client = this.id_client;
+    // Set Devis data to save
+    var newDevis = {
+      ref_devis: this.devisForm.get('ref_devis').value,
+      date_creation: this.devisForm.get('date_creation').value,
+      montantHt: this.devisForm.get('montantHt').value,
+      tauxTva: this.devisForm.get('tauxTva').value,
+      montantTtc: this.devisForm.get('montantTtc').value,
+      client: this.id_client,
+    };
     if (this.devis._id == null || this.devis._id == 0 || this.devis._id == '') {
       this.devisService.addDevis(newDevis)
         .subscribe(
         data => {
-          console.log('Devis saved' + data);
-          this.flashMessages.show('Devis créé', {
-            classes: [ 'alert', 'alert-success' ],
-            timeout: 3000
-          });
-          this.onSuccess();
+          if (data.success) {
+            console.log('Devis saved' + data);
+            this.flashMessages.show('Devis créé', {
+              classes: [ 'alert', 'alert-success' ],
+              timeout: 3000
+            });
+            this.addDetailsDevis(data.obj);
+          } else {
+            console.log(data.message);
+            this.flashMessages.show(data.message, {
+              classes: [ 'alert', 'alert-danger' ],
+              timeout: 3000
+            });
+            this.processing = false;
+            this.enableForm();
+          }
         },
         error => {
           console.log('Erreur ' + error);
-          this.flashMessages.show('Erreur création devis', {
-            classes: [ 'alert', 'alert-danger' ],
-            timeout: 3000
-          });
-          this.processing = false;
-          this.enableForm();
         }
         );
     } else {
-      const newDevis = this.devisForm.value;
-      newDevis.client = this.id_client;
-      this.devisService.updateDevis(newDevis, this.devis._id)
+      // Set Devis data to update
+      var udpateDevis = {
+        _id: this.devis._id,
+        ref_devis: this.devisForm.get('ref_devis').value,
+        date_creation: this.devisForm.get('date_creation').value,
+        montantHt: this.devisForm.get('montantHt').value,
+        tauxTva: this.devisForm.get('tauxTva').value,
+        montantTtc: this.devisForm.get('montantTtc').value,
+        client: this.id_client,
+      };
+      this.devisService.updateDevis(udpateDevis, udpateDevis._id)
         .subscribe(
         data => {
           console.log('Devis updated' + data);
@@ -178,7 +200,7 @@ export class DevisComponent implements OnInit {
             classes: [ 'alert', 'alert-success' ],
             timeout: 3000
           });
-          this.onSuccess();
+          this.updateDetailsDevis(data.obj);
         },
         error => {
           console.log('Erreur ' + error);
@@ -194,12 +216,183 @@ export class DevisComponent implements OnInit {
   }
 
   /**
-   * Delete client
+   * onAddDevis() success :
+   * - set detailsDevis.devis = devis._id : get from data.obj
+   * - save all DetailsDevis to database
+   * 
+   * @param {any} devis devis data
+   * @memberof DevisComponent
+   */
+  addDetailsDevis(devis) {
+    // Set DetailsDevis data from devisForm
+    this.detailsDevis1 = {
+      tauxTva: this.devisForm.get('tauxTva1').value,
+      montantHt: this.devisForm.get('montantHt1').value,
+      montantTtc: this.devisForm.get('montantTtc1').value,
+      devis: devis._id
+    };
+    this.detailsDevis2 = {
+      tauxTva: this.devisForm.get('tauxTva2').value,
+      montantHt: this.devisForm.get('montantHt2').value,
+      montantTtc: this.devisForm.get('montantTtc2').value,
+      devis: devis._id
+    };
+    this.detailsDevis3 = {
+      tauxTva: this.devisForm.get('tauxTva3').value,
+      montantHt: this.devisForm.get('montantHt3').value,
+      montantTtc: this.devisForm.get('montantTtc3').value,
+      devis: devis._id
+    };
+
+    // Save DetailsDevis
+    this.detailsDevisService.saveDetailsDevis(this.detailsDevis1)
+      .subscribe(
+      data => {
+        console.log('Details Devis saved ' + this.detailsDevis1);
+        this.detailsDevis1 = { tauxTva: 5.5 };
+
+        this.detailsDevisService.saveDetailsDevis(this.detailsDevis2)
+          .subscribe(
+          data => {
+            console.log('Details Devis saved ' + this.detailsDevis2);
+            this.detailsDevis2 = {};
+            this.detailsDevis2 = { tauxTva: 10 };
+
+            this.detailsDevisService.saveDetailsDevis(this.detailsDevis3)
+              .subscribe(
+              data => {
+                console.log('Details Devis saved ' + this.detailsDevis3);
+                this.detailsDevis3 = {};
+                this.detailsDevis3 = { tauxTva: 20 };
+                this.onSuccess();
+              }, (err) => {
+                console.log(err);
+                this.enableForm();
+              }
+              );
+          }, (err) => {
+            console.log(err);
+            this.enableForm();
+          }
+          );
+      }, (err) => {
+        console.log(err);
+        this.enableForm();
+      }
+      );
+  }
+
+  /**
+   * 
+   * update DetailsDevis
+   * @param {any} devis devis
+   * @memberof DevisComponent
+   */
+  updateDetailsDevis(devis) {
+    // Set DetailsDevis data from devisForm
+    this.detailsDevis1.montantHt = this.devisForm.get('montantHt1').value;
+    this.detailsDevis1.tauxTva = this.devisForm.get('tauxTva1').value;
+    this.detailsDevis1.montantTtc = this.devisForm.get('montantTtc1').value;
+
+    this.detailsDevis2.montantHt = this.devisForm.get('montantHt2').value;
+    this.detailsDevis2.tauxTva = this.devisForm.get('tauxTva2').value;
+    this.detailsDevis2.montantTtc = this.devisForm.get('montantTtc2').value;
+
+    this.detailsDevis3.montantHt = this.devisForm.get('montantHt3').value;
+    this.detailsDevis3.tauxTva = this.devisForm.get('tauxTva3').value;
+    this.detailsDevis3.montantTtc = this.devisForm.get('montantTtc3').value;
+    /* this.detailsDevis1 = {
+      tauxTva: this.devisForm.get('tauxTva1').value,
+      montantHt: this.devisForm.get('montantHt1').value,
+      montantTtc: this.devisForm.get('montantTtc1').value
+    }; */
+    /* this.detailsDevis2 = {
+      tauxTva: this.devisForm.get('tauxTva2').value,
+      montantHt: this.devisForm.get('montantHt2').value,
+      montantTtc: this.devisForm.get('montantTtc2').value
+    };
+    this.detailsDevis3 = {
+      tauxTva: this.devisForm.get('tauxTva3').value,
+      montantHt: this.devisForm.get('montantHt3').value,
+      montantTtc: this.devisForm.get('montantTtc3').value
+    }; */
+    // Update DetailsDevis
+    this.detailsDevisService.updateDetailsDevis(this.detailsDevis1)
+      .subscribe(
+      data => {
+        console.log('Details Devis update ' + this.detailsDevis1);
+        this.detailsDevis1 = { tauxTva: 5.5 };
+
+        this.detailsDevisService.updateDetailsDevis(this.detailsDevis2)
+          .subscribe(
+          data => {
+            console.log('Details Devis update ' + this.detailsDevis2);
+            this.detailsDevis2 = {};
+            this.detailsDevis2 = { tauxTva: 10 };
+
+            this.detailsDevisService.updateDetailsDevis(this.detailsDevis3)
+              .subscribe(
+              data => {
+                console.log('Details Devis update ' + this.detailsDevis3);
+                this.detailsDevis3 = {};
+                this.detailsDevis3 = { tauxTva: 20 };
+                this.onSuccess();
+              }, (err) => {
+                console.log(err);
+                this.enableForm();
+              }
+              );
+          }, (err) => {
+            console.log(err);
+            this.enableForm();
+          }
+          );
+      }, (err) => {
+        console.log(err);
+        this.enableForm();
+      }
+      );
+  }
+
+  /**
+   * Delete devis
    *
-   * @param {number} id client._id
+   * @param {number} id devis._id
    * @memberof DevisComponent
    */
   onDelete(id: number) {
+    // Fetch DetailsDevis by Devis._id
+    this.detailsDevisService.getDetailsDevisByDevis(id)
+      .subscribe(
+      data => {
+        // Delete detailsDevis
+        this.detailsDevisService.deleteDetailsDevis(data[ 0 ]._id)
+          .subscribe(
+          data => {
+            console.log('detailsDevis1 deleted' + data);
+          }, (err) => {
+            console.log('Erreur deleted' + err);
+          }
+          );
+        this.detailsDevisService.deleteDetailsDevis(data[ 1 ]._id)
+          .subscribe(
+          data => {
+            console.log('detailsDevis1 deleted' + data);
+          }, (err) => {
+            console.log('Erreur deleted' + err);
+          }
+          );
+        this.detailsDevisService.deleteDetailsDevis(data[ 2 ]._id)
+          .subscribe(
+          data => {
+            console.log('detailsDevis1 deleted' + data);
+          }, (err) => {
+            console.log('Erreur deleted' + err);
+          }
+          );
+      }
+      );
+    // Delete Devis
     this.devisService.deleteDevis(id)
       .subscribe(
       msg => {
@@ -228,9 +421,12 @@ export class DevisComponent implements OnInit {
    */
   onSuccess() {
     this.mode = false;
-    this.devisForm.reset();
+    this.generateForm();
     this.devis = {};
     this.processing = false;
+    this.devisForm.controls[ 'montantTtc1' ].setValue(0);
+    this.devisForm.controls[ 'montantTtc2' ].setValue(0);
+    this.devisForm.controls[ 'montantTtc3' ].setValue(0);
     this.enableForm();
     // Différente route à utiliser une fois le dashboard implémenté
     if (this.activatedRoute.snapshot.params[ 'id_client' ] !== undefined) {
@@ -264,6 +460,25 @@ export class DevisComponent implements OnInit {
     this.devis.date_creation = latest_date;
     this.devis.client = this.client._id;
     this.mode = true;
+    this.devisForm.get('ref_devis').setValue(this.devis.ref_devis);
+
+    this.detailsDevisService.getDetailsDevisByDevis(d._id)
+      .subscribe(
+      data => {
+        console.log(data);
+        // Fetch data from database
+        this.detailsDevis1 = data[ 0 ];
+        this.detailsDevis2 = data[ 1 ];
+        this.detailsDevis3 = data[ 2 ];
+        console.log(this.detailsDevis1);
+        // Set devisForm value
+        this.devisForm.get('montantHt1').setValue(this.detailsDevis1.montantHt);
+        this.devisForm.get('montantHt2').setValue(this.detailsDevis2.montantHt);
+        this.devisForm.get('montantHt3').setValue(this.detailsDevis3.montantHt);
+      }, (err) => {
+        console.log(err);
+      }
+      );
   }
 
   /**
@@ -273,24 +488,24 @@ export class DevisComponent implements OnInit {
    */
   generateForm() {
     this.devisForm = this.formBuilder.group({
-      ref_devis: [ '', Validators.compose([
+      ref_devis: [ this.devis.ref_devis, Validators.compose([
         Validators.required
       ]) ],
       date_creation: [ Date.now ],
       // DetailsDevis data
-      montantHt1: [ 0, Validators.required ],
+      montantHt1: [ this.detailsDevis1.montantHt, Validators.required ],
       tauxTva1: [ { value: this.detailsDevis1.tauxTva, disabled: true }, Validators.required ],
-      montantTtc1: [ { value: 0, disabled: true }, Validators.required ],
-      montantHt2: [ 0, Validators.required ],
+      montantTtc1: [ { value: this.detailsDevis1.montantTtc, disabled: true }, Validators.required ],
+      montantHt2: [ this.detailsDevis2.montantHt, Validators.required ],
       tauxTva2: [ { value: this.detailsDevis2.tauxTva, disabled: true }, Validators.required ],
-      montantTtc2: [ { value: 0, disabled: true }, Validators.required ],
-      montantHt3: [ 0, Validators.required ],
+      montantTtc2: [ { value: this.detailsDevis2.montantTtc, disabled: true }, Validators.required ],
+      montantHt3: [ this.detailsDevis3.montantHt, Validators.required ],
       tauxTva3: [ { value: this.detailsDevis3.tauxTva, disabled: true }, Validators.required ],
-      montantTtc3: [ { value: 0, disabled: true }, Validators.required ],
+      montantTtc3: [ { value: this.detailsDevis3.montantTtc, disabled: true }, Validators.required ],
       // Devis data
-      montantHt: [ { value: '', disabled: true }],
-      tauxTva: [ { value: '', disabled: true }],
-      montantTtc: [ { value: '', disabled: true }],
+      montantHt: [ { value: this.devis.montantHt, disabled: true }],
+      tauxTva: [ { value: this.devis.tauxTva, disabled: true }],
+      montantTtc: [ { value: this.devis.montantTtc, disabled: true }],
       client: [ { value: this.id_client, disabled: true }, Validators.compose([
         Validators.required
       ]) ],
@@ -303,7 +518,11 @@ export class DevisComponent implements OnInit {
    * @memberof DevisComponent
    */
   enableForm() {
-    this.devisForm.enable();
+    this.devisForm.controls[ 'ref_devis' ].enable();
+    this.devisForm.controls[ 'date_creation' ].enable();
+    this.devisForm.controls[ 'montantHt1' ].enable();
+    this.devisForm.controls[ 'montantHt2' ].enable();
+    this.devisForm.controls[ 'montantHt3' ].enable();
   }
 
   /**
@@ -324,8 +543,8 @@ export class DevisComponent implements OnInit {
    */
   calculMontant1() {
     if (!(this.devisForm.controls[ 'montantHt1' ].value === '') && !(this.devisForm.controls[ 'tauxTva1' ].value === '')) {
-      let montantTTC = this.devisForm.controls[ 'montantHt1' ].value * (1 + this.devisForm.controls[ 'tauxTva1' ].value / 100);
-      this.devisForm.controls[ 'montantTtc1' ].setValue(Number(montantTTC).toFixed(2));
+      let montantTTC = Number(this.devisForm.get('montantHt1').value) * (1 + Number(this.devisForm.get('tauxTva1').value) / 100);
+      this.devisForm.get('montantTtc1').setValue((montantTTC).toFixed(2));
     }
   }
 
@@ -336,8 +555,8 @@ export class DevisComponent implements OnInit {
    */
   calculMontant2() {
     if (!(this.devisForm.controls[ 'montantHt2' ].value === '') && !(this.devisForm.controls[ 'tauxTva2' ].value === '')) {
-      let montantTTC = this.devisForm.controls[ 'montantHt2' ].value * (1 + this.devisForm.controls[ 'tauxTva2' ].value / 100);
-      this.devisForm.controls[ 'montantTtc2' ].setValue(Number(montantTTC).toFixed(2));
+      let montantTTC = Number(this.devisForm.get('montantHt2').value) * (1 + Number(this.devisForm.get('tauxTva2').value) / 100);
+      this.devisForm.get('montantTtc2').setValue((montantTTC).toFixed(2));
     }
   }
 
@@ -348,8 +567,8 @@ export class DevisComponent implements OnInit {
    */
   calculMontant3() {
     if (!(this.devisForm.controls[ 'montantHt3' ].value === '') && !(this.devisForm.controls[ 'tauxTva3' ].value === '')) {
-      let montantTTC = this.devisForm.controls[ 'montantHt3' ].value * (1 + this.devisForm.controls[ 'tauxTva3' ].value / 100);
-      this.devisForm.controls[ 'montantTtc3' ].setValue(Number(montantTTC).toFixed(2));
+      let montantTTC = Number(this.devisForm.get('montantHt3').value) * (1 + Number(this.devisForm.get('tauxTva3').value) / 100);
+      this.devisForm.get('montantTtc3').setValue((montantTTC).toFixed(2));
     }
   }
 
@@ -359,10 +578,10 @@ export class DevisComponent implements OnInit {
    * @memberof DevisComponent
    */
   calculTauxTva() {
-    let tauxTva = this.devisForm.controls[ 'montantHt1' ].value * this.devisForm.controls[ 'tauxTva1' ].value / 100
-      + this.devisForm.controls[ 'montantHt2' ].value * this.devisForm.controls[ 'tauxTva2' ].value / 100
-      + this.devisForm.controls[ 'montantHt3' ].value * this.devisForm.controls[ 'tauxTva3' ].value / 100;
-    this.devisForm.controls[ 'tauxTva' ].setValue(Number(tauxTva).toFixed(2));
+    let tauxTva = this.devisForm.get('montantHt1').value * this.devisForm.get('tauxTva1').value / 100
+      + this.devisForm.get('montantHt2').value * this.devisForm.get('tauxTva2').value / 100
+      + this.devisForm.get('montantHt3').value * this.devisForm.get('tauxTva3').value / 100;
+    this.devisForm.get('tauxTva').setValue(Number(tauxTva).toFixed(2));
   }
 
   /**
@@ -371,9 +590,11 @@ export class DevisComponent implements OnInit {
    * @memberof DevisComponent
    */
   calculMontantHt() {
-    if (!(this.devisForm.controls[ 'montantHt1' ].value === '') && !(this.devisForm.controls[ 'montantHt2' ].value === '') && !(this.devisForm.controls[ 'montantHt3' ].value === '')) {
-      let montantHT = Number(this.devisForm.controls[ 'montantHt1' ].value) + Number(this.devisForm.controls[ 'montantHt2' ].value) + Number(this.devisForm.controls[ 'montantHt3' ].value);
-      this.devisForm.controls[ 'montantHt' ].setValue(Number(montantHT).toFixed(2));
+    if (!(this.devisForm.get('montantHt1').value === '') && !(this.devisForm.get('montantHt2').value === '')
+      && !(this.devisForm.get('montantHt3').value === '')) {
+      let montantHT = Number(this.devisForm.get('montantHt1').value) + Number(this.devisForm.get('montantHt2').value)
+        + Number(this.devisForm.get('montantHt3').value);
+      this.devisForm.get('montantHt').setValue(Number(montantHT).toFixed(2));
     }
   }
 
@@ -383,10 +604,10 @@ export class DevisComponent implements OnInit {
    * @memberof DevisComponent
    */
   calculMontantTtc() {
-    let montantTtc = Number(this.devisForm.controls[ 'montantTtc1' ].value)
-      + Number(this.devisForm.controls[ 'montantTtc2' ].value)
-      + Number(this.devisForm.controls[ 'montantTtc3' ].value);
-    this.devisForm.controls[ 'montantTtc' ].setValue(Number(montantTtc).toFixed(2));
+    let montantTtc = Number(this.devisForm.get('montantTtc1').value)
+      + Number(this.devisForm.get('montantTtc2').value)
+      + Number(this.devisForm.get('montantTtc3').value);
+    this.devisForm.get('montantTtc').setValue(Number(montantTtc).toFixed(2));
   }
 
   /**
