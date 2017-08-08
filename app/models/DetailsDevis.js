@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
 const Devis = require('./Devis');
 
 const DetailsDevisSchema = mongoose.Schema({
@@ -16,10 +17,6 @@ const DetailsDevisSchema = mongoose.Schema({
         ref: 'Devis',
         required: true
     },
-});
-
-DetailsDevisSchema.pre('save', function (next) {
-    next();
 });
 
 module.exports = mongoose.model('DetailsDevis', DetailsDevisSchema);

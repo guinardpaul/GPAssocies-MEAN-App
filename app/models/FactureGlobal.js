@@ -22,7 +22,15 @@ const FactureGlobalSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    montantTtc: {
+    montantTtcTotal: {
+        type: Number,
+        required: true
+    },
+    montantTtcFacture: {
+        type: Number,
+        required: true
+    },
+    montantTtcRegle: {
         type: Number,
         required: true
     },

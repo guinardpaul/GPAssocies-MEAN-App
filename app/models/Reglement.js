@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const FactureMois = require('./FactureMois');
+mongoose.Promise = global.Promise;
+const FactureAccompte = require('./FactureAccompte');
 
 const ReglementSchema = mongoose.Schema({
     date_reglement: {
@@ -11,9 +12,9 @@ const ReglementSchema = mongoose.Schema({
         type: Number,
         required: true
     },
-    factureMois: { 
+    factureAccompte: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'FactureMois',
+        ref: 'FactureAccompte',
         required: true
     },
 });

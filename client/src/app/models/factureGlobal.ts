@@ -10,7 +10,9 @@ export class FactureGlobal {
     date_creation: Date;
     montantHt: number;
     tauxTva: number;
-    montantTtc: number;
+    montantTtcTotal: number;
+    montantTtcFacture: number;
+    montantTtcRegle: number;
     client: number;
 
     /**
@@ -18,7 +20,7 @@ export class FactureGlobal {
      * @param {Object} [value={}]
      * @memberof FactureGlobal
      */
-    constructor(value: Object = {}){
+    constructor(value: Object = {}) {
         Object.assign(this, value);
     }
 }

@@ -5,11 +5,11 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 // Models
 import { FactureGlobal } from '../../models/factureGlobal';
-import { FactureMois } from '../../models/factureMois';
+import { FactureAccompte } from '../../models/factureAccompte';
 
 // Services
 import { FactureGlobalService } from '../../service/facture-global.service';
-import { FactureMoisService } from '../../service/facture-mois.service';
+import { FactureAccompteService } from '../../service/facture-accompte.service';
 import { FlashMessagesService } from 'ngx-flash-messages';
 
 /**
@@ -22,12 +22,12 @@ import { FlashMessagesService } from 'ngx-flash-messages';
 @Component({
   selector: 'app-facture-accompte',
   templateUrl: './facture-accompte.component.html',
-  styleUrls: ['./facture-accompte.component.css']
+  styleUrls: [ './facture-accompte.component.css' ]
 })
 export class FactureAccompteComponent implements OnInit {
   id_fact: number;
   factureGlobal: any = {};
-  listFactureAccompte: FactureMois[];
+  listFactureAccompte: FactureAccompte[];
   mode: boolean = false;
   factureForm: FormGroup;
 
@@ -35,7 +35,7 @@ export class FactureAccompteComponent implements OnInit {
    * Creates an instance of FactureAccompteComponent.
    * @param {ActivatedRoute} activatedRoute request routes param
    * @param {FactureGlobalService} factureGlobalService facture global service
-   * @param {FactureMoisService} factureMoisService facture mois service
+   * @param {FactureAccompteService} factureAccompteService facture mois service
    * @param {DatePipe} datePipe format date
    * @param {FormBuilder} formBuilder reactive form builder
    * @param {FlashMessagesService} flashMessages Angular flash messages
@@ -44,12 +44,20 @@ export class FactureAccompteComponent implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private factureGlobalService: FactureGlobalService,
-    private factureMoisService: FactureMoisService,
+    private factureAccompteService: FactureAccompteService,
     private datePipe: DatePipe,
     private formBuilder: FormBuilder,
     private flashMessages: FlashMessagesService
   ) {
     this.generateForm()
+  }
+
+  getOneFactureGlobal(id: number) {
+    this.factureGlobalService.getOneFactureGlobalById(id)
+      .subscribe(
+      data => this.factureGlobal = data,
+      error => console.log('Error :' + error)
+      );
   }
 
   /**
@@ -58,9 +66,9 @@ export class FactureAccompteComponent implements OnInit {
    * @memberof FactureAccompteComponent
    */
   getAllFactureAccompte() {
-    this.factureMoisService.getAllFactureMois()
+    this.factureAccompteService.getAllFactureAccompte()
       .subscribe(
-      factureMois => this.listFactureAccompte = factureMois,
+      factureAccompte => this.listFactureAccompte = factureAccompte,
       error => console.log('Error :' + error)
       );
   }
@@ -72,9 +80,9 @@ export class FactureAccompteComponent implements OnInit {
    * @memberof FactureAccompteComponent
    */
   getAllFactureAccompteByFactureGlobal(id: number) {
-    this.factureMoisService.getAllFactureMoisByFactureGlobal(id)
+    this.factureAccompteService.getAllFactureAccompteByFactureGlobal(id)
       .subscribe(
-      factureMois => this.listFactureAccompte = factureMois,
+      factureAccompte => this.listFactureAccompte = factureAccompte,
       error => console.log('Error :' + error)
       );
   }
@@ -88,6 +96,10 @@ export class FactureAccompteComponent implements OnInit {
     this.getAllFactureAccompteByFactureGlobal(this.id_fact);
   }
 
+  onAdd() {
+    this.mode = true;
+  }
+
   /**
    * Generate form
    *
@@ -95,12 +107,12 @@ export class FactureAccompteComponent implements OnInit {
    */
   generateForm() {
     this.factureForm = this.formBuilder.group({
-      ref_factureGlobal: ['', Validators.required],
-      date_creation: ['', Validators.required],
-      montantHt: ['', Validators.required],
-      tauxTva: ['', Validators.required],
-      montantTtc: [''],
-      client: ['', Validators.required]
+      ref_factureAccompte: [ '', Validators.required ],
+      date_creation: [ '', Validators.required ],
+      montantHt: [ { value: this.factureGlobal._id, disabled: true }, Validators.required ],
+      tauxTva: [ { value: this.factureGlobal._id, disabled: true }, Validators.required ],
+      montantTtc: [ { value: this.factureGlobal._id, disabled: true }],
+      factureGlobal: [ { value: this.factureGlobal._id, disabled: true }, Validators.required ]
     });
   }
 
@@ -113,9 +125,10 @@ export class FactureAccompteComponent implements OnInit {
    * @memberof FactureAccompteComponent
    */
   ngOnInit() {
-    if (this.activatedRoute.snapshot.params['id_fact'] !== undefined) {
-      this.id_fact = this.activatedRoute.snapshot.params['id_fact'];
+    if (this.activatedRoute.snapshot.params[ 'id_fact' ] !== undefined) {
+      this.id_fact = this.activatedRoute.snapshot.params[ 'id_fact' ];
       this.getAllFactureAccompteByFactureGlobal(this.id_fact);;
+      this.getOneFactureGlobal(this.id_fact);
     }
   }
 

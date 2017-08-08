@@ -1,19 +1,6 @@
 const mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
 const Client = require('./Client');
-
-let validMontantHtChecker = (montantHt) => {
-	if (!montantHt) {
-		return false;
-	} else if (isNaN(montantHt)) {
-		return false;
-	}
-	return true;
-};
-
-const montantHtValidators = [{
-	validator: validMontantHtChecker,
-	message: 'Invalid montantHT'
-}];
 
 const DevisSchema = new mongoose.Schema({
 	ref_devis: {
@@ -28,8 +15,7 @@ const DevisSchema = new mongoose.Schema({
 	},
 	montantHt: {
 		type: Number,
-		required: true,
-		validate: montantHtValidators
+		required: true
 	},
 	tauxTva: {
 		type: Number,
@@ -43,15 +29,6 @@ const DevisSchema = new mongoose.Schema({
 		ref: 'Client',
 		required: true
 	},
-});
-
-DevisSchema.pre('save', function (next) {
-	// Calcul MontantTTC
-	let montantTTC = this.montantHt + this.tauxTva;
-	montantTTC = montantTTC.toFixed(2);
-	this.montantTtc = montantTTC;
-
-	next();
 });
 
 module.exports = mongoose.model('Devis', DevisSchema);

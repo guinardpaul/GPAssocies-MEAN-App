@@ -13,7 +13,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ClientComponent } from './components/client/client.component';
 import { DevisComponent } from './components/devis/devis.component';
-import { FactureComponent } from './components/facture/facture.component';
+import { FactureGlobalComponent } from './components/facture-global/facture-global.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { ValiderDevisComponent } from './components/valider-devis/valider-devis.component';
@@ -24,15 +24,16 @@ import { PageNotFoundComponent } from './components/page-not-found/page-not-foun
 import { ClientService } from './service/client.service';
 import { DevisService } from './service/devis.service';
 import { FactureGlobalService } from './service/facture-global.service';
-import { FactureMoisService } from './service/facture-mois.service';
+import { FactureAccompteService } from './service/facture-accompte.service';
 import { DetailsDevisService } from './service/details-devis.service';
+import { ReglementService } from './service/reglement.service';
 
 @NgModule({
   declarations: [
     AppComponent,
     ClientComponent,
     DevisComponent,
-    FactureComponent,
+    FactureGlobalComponent,
     DashboardComponent,
     NavbarComponent,
     ValiderDevisComponent,
@@ -50,9 +51,10 @@ import { DetailsDevisService } from './service/details-devis.service';
     ClientService,
     DevisService,
     DatePipe,
-    FactureMoisService,
+    FactureAccompteService,
     FactureGlobalService,
-    DetailsDevisService
+    DetailsDevisService,
+    ReglementService
   ],
   bootstrap: [ AppComponent ],
   exports: [ ClientComponent ]

@@ -5,12 +5,12 @@ const favicon = require('serve-favicon');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
 const cors = require('cors');
 const port = process.env.PORT || 3001;
 
 const database = 'mongodb://localhost:27017/GPSuivieFact';
 
-mongoose.Promise = global.Promise;
 // mongoDB connection
 const promise = mongoose.connect(database, {
     useMongoClient: true,
@@ -27,7 +27,7 @@ const app = express();
 const client = require('./app/routes/client')(router);
 const devis = require('./app/routes/devis')(router);
 const factureGlobal = require('./app/routes/factureGlobal')(router);
-const factureMois = require('./app/routes/factureMois')(router);
+const factureAccompte = require('./app/routes/factureAccompte')(router);
 const detailsDevis = require('./app/routes/detailsDevis')(router);
 const reglement = require('./app/routes/reglement')(router);
 
@@ -46,7 +46,7 @@ app.use(express.static(path.join(__dirname, 'dist')));
 app.use('/api', client);
 app.use('/api', devis);
 app.use('/api', factureGlobal);
-app.use('/api', factureMois);
+app.use('/api', factureAccompte);
 app.use('/api', detailsDevis);
 app.use('/api', reglement);
 

@@ -17,15 +17,15 @@ import { FlashMessagesService } from 'ngx-flash-messages';
  *
  * @author Paul GUINARD
  * @export
- * @class FactureComponent
+ * @class FactureGlobalComponent
  * @implements {OnInit}
  */
 @Component({
   selector: 'app-facture',
-  templateUrl: './facture.component.html',
-  styleUrls: ['./facture.component.css']
+  templateUrl: './facture-global.component.html',
+  styleUrls: [ './facture-global.component.css' ]
 })
-export class FactureComponent implements OnInit {
+export class FactureGlobalComponent implements OnInit {
   factureGlobal: any = {};
   ListFactureGlobal: FactureGlobal[];
   client = new Client();
@@ -35,14 +35,14 @@ export class FactureComponent implements OnInit {
   factureForm: FormGroup;
 
   /**
-   * Creates an instance of FactureComponent.
+   * Creates an instance of FactureGlobalComponent.
    * @param {ActivatedRoute} activatedRoute request routes params
    * @param {FactureGlobalService} factureGlobalService facture global service
    * @param {ClientService} clientService client service
    * @param {DatePipe} datePipe format date
    * @param {FormBuilder} formBuilder Reactive form builder
    * @param {FlashMessagesService} flashMessages Angular flash message
-   * @memberof FactureComponent
+   * @memberof FactureGlobalComponent
    */
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -59,7 +59,7 @@ export class FactureComponent implements OnInit {
    * Get all Facture Global.
    * Method used when no params set into url.
    *
-   * @memberof FactureComponent
+   * @memberof FactureGlobalComponent
    */
   getAllFactureGlobal() {
     this.factureGlobalService.getAllFactureGlobal()
@@ -74,7 +74,7 @@ export class FactureComponent implements OnInit {
    * Method used when params client._id set into url.
    *
    * @param {number} id client._id
-   * @memberof FactureComponent
+   * @memberof FactureGlobalComponent
    */
   getAllFactureGlobalByClient(id: number) {
     this.factureGlobalService.getAllFactureGlobalByClient(id)
@@ -89,7 +89,7 @@ export class FactureComponent implements OnInit {
    * Method used to display client.nom, client.prenom in table and form.
    *
    * @param {number} id client._id
-   * @memberof FactureComponent
+   * @memberof FactureGlobalComponent
    */
   getClient(id: number) {
     this.clientService.getOneClient(id)
@@ -104,7 +104,7 @@ export class FactureComponent implements OnInit {
    * Set factureForm.value = facture global data to update.
    *
    * @param {FactureGlobal} facture facture global body
-   * @memberof FactureComponent
+   * @memberof FactureGlobalComponent
    */
   onUpdate(facture: FactureGlobal) {
     this.mode = true;
@@ -112,17 +112,17 @@ export class FactureComponent implements OnInit {
     let latest_date = this.datePipe.transform(this.factureGlobal.date_creation, 'yyyy-MM-dd');
     this.factureGlobal.date_creation = latest_date;
     // Set form controls to touched
-    this.factureForm.controls['client'].markAsTouched();
-    this.factureForm.controls['montantTtc'].markAsTouched();
-    this.factureForm.controls['date_creation'].markAsTouched();
-    this.factureForm.controls['montantHt'].markAsTouched();
-    this.factureForm.controls['tauxTva'].markAsTouched();
+    this.factureForm.controls[ 'client' ].markAsTouched();
+    this.factureForm.controls[ 'montantTtc' ].markAsTouched();
+    this.factureForm.controls[ 'date_creation' ].markAsTouched();
+    this.factureForm.controls[ 'montantHt' ].markAsTouched();
+    this.factureForm.controls[ 'tauxTva' ].markAsTouched();
   }
 
   /**
    * Update Facture global
    *
-   * @memberof FactureComponent
+   * @memberof FactureGlobalComponent
    */
   updateFacture() {
     this.disableForm();
@@ -138,14 +138,14 @@ export class FactureComponent implements OnInit {
         this.onSuccess();
         console.log('Facture Modifiée');
         this.flashMessages.show('Facture modifiée', {
-          classes: ['alert', 'alert-success'],
+          classes: [ 'alert', 'alert-success' ],
           timeout: 3000
         });
       },
       error => {
         console.log('Erreur ' + error);
         this.flashMessages.show('Erreur : Facture non modifiée', {
-          classes: ['alert', 'alert-danger'],
+          classes: [ 'alert', 'alert-danger' ],
           timeout: 3000
         });
         this.processing = false;
@@ -158,7 +158,7 @@ export class FactureComponent implements OnInit {
    * Delete Facture Global by Id.
    *
    * @param {number} id factureGlobal._id
-   * @memberof FactureComponent
+   * @memberof FactureGlobalComponent
    */
   onDelete(id: number) {
     this.factureGlobalService.deleteFactureGlobal(id)
@@ -166,7 +166,7 @@ export class FactureComponent implements OnInit {
       msg => {
         console.log('Facture Global deleted');
         this.flashMessages.show('Facture supprimée', {
-          classes: ['alert', 'alert-warning'],
+          classes: [ 'alert', 'alert-warning' ],
           timeout: 3000
         });
         this.onSuccess();
@@ -174,7 +174,7 @@ export class FactureComponent implements OnInit {
       error => {
         console.log(error);
         this.flashMessages.show('Erreur: Facture non supprimée', {
-          classes: ['alert', 'alert-danger'],
+          classes: [ 'alert', 'alert-danger' ],
           timeout: 3000
         });
       }
@@ -184,7 +184,7 @@ export class FactureComponent implements OnInit {
   /**
    * Method to fetch modified data from database and display into table.
    *
-   * @memberof FactureComponent
+   * @memberof FactureGlobalComponent
    */
   onSuccess() {
     this.getAllFactureGlobal();
@@ -198,23 +198,23 @@ export class FactureComponent implements OnInit {
   /**
    * Generate Reactive Form
    *
-   * @memberof FactureComponent
+   * @memberof FactureGlobalComponent
    */
   generateForm() {
     this.factureForm = this.formBuilder.group({
-      ref_factureGlobal: [this.factureGlobal.ref_factureGlobal, Validators.required],
-      date_creation: [this.factureGlobal.date_creation],
-      montantHt: [this.factureGlobal.montantHt, Validators.required],
-      tauxTva: [this.factureGlobal.tauxTva, Validators.required],
-      montantTtc: [{ value: this.factureGlobal.montantTtc, disabled: true }],
-      client: [{ value: this.factureGlobal.client, disabled: true }, Validators.required]
+      ref_factureGlobal: [ this.factureGlobal.ref_factureGlobal, Validators.required ],
+      date_creation: [ this.factureGlobal.date_creation ],
+      montantHt: [ { value: this.factureGlobal.montantHt, disabled: true }, Validators.required ],
+      tauxTva: [ { value: this.factureGlobal.tauxTva, disabled: true }, Validators.required ],
+      montantTtc: [ { value: this.factureGlobal.montantTtc, disabled: true }],
+      client: [ { value: this.factureGlobal.client, disabled: true }, Validators.required ]
     });
   }
 
   /**
    * Enable form controls
    *
-   * @memberof FactureComponent
+   * @memberof FactureGlobalComponent
    */
   enableForm() {
     this.factureForm.enable();
@@ -223,22 +223,23 @@ export class FactureComponent implements OnInit {
   /**
    * Disable form controls
    *
-   * @memberof FactureComponent
+   * @memberof FactureGlobalComponent
    */
   disableForm() {
     this.factureForm.disable();
   }
 
   /**
+   * NOT USED ////
    * (blur) listenner.
    * Calcul montantTTC using tauxTva and montantHt values of factureForm and send new montantTtc.
    *
-   * @memberof FactureComponent
+   * @memberof FactureGlobalComponent
    */
   calculMontant() {
-    if (!(this.factureForm.controls['montantHt'].value === '') && !(this.factureForm.controls['tauxTva'].value === '')) {
-      let montantTTC = this.factureForm.controls['montantHt'].value * (1 + this.factureForm.controls['tauxTva'].value / 100);
-      this.factureForm.controls['montantTtc'].setValue(Number(montantTTC).toFixed(2));
+    if (!(this.factureForm.controls[ 'montantHt' ].value === '') && !(this.factureForm.controls[ 'tauxTva' ].value === '')) {
+      let montantTTC = this.factureForm.controls[ 'montantHt' ].value + this.factureForm.controls[ 'tauxTva' ].value;
+      this.factureForm.controls[ 'montantTtc' ].setValue(Number(montantTTC).toFixed(2));
       this.factureGlobal.montantTtc = Number(montantTTC).toFixed(2);
     }
   }
@@ -249,12 +250,12 @@ export class FactureComponent implements OnInit {
    * - set this.id_client = params['id_client'].
    * - get Devis using this.id_client.
    *
-   * @memberof FactureComponent
+   * @memberof FactureGlobalComponent
    */
   ngOnInit() {
     // différentes routes à implémenter pour le dashboard
-    if (this.activatedRoute.snapshot.params['id_client'] !== undefined) {
-      this.id_client = this.activatedRoute.snapshot.params['id_client'];
+    if (this.activatedRoute.snapshot.params[ 'id_client' ] !== undefined) {
+      this.id_client = this.activatedRoute.snapshot.params[ 'id_client' ];
       this.getAllFactureGlobalByClient(this.id_client);
       this.getClient(this.id_client);
     } else {
