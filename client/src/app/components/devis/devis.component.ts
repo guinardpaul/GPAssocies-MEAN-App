@@ -355,7 +355,7 @@ export class DevisComponent implements OnInit {
   }
 
   /**
-   * Delete devis
+   * Delete devis and DetailsDevis associé fetch by getDetailsDevisByDevis()
    *
    * @param {number} id devis._id
    * @memberof DevisComponent
