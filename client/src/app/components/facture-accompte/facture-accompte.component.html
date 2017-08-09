@@ -26,7 +26,7 @@
         <td>{{factureGlobal.ref_factureGlobal}}</td>
         <td>
           <div class="btn-group-vertical">
-            <button class="btn btn-success" (click)="addReglement(f)">Ajouter règlement</button>
+            <button class="btn btn-success" (click)="onAddReglement(f)">Ajouter règlement</button>
             <button class="btn btn-danger" (click)="deleteFactureAccompte(f._id)">Supprimer</button>
           </div>
         </td>
@@ -36,7 +36,7 @@
   <button class="btn btn-primary" (click)="onAdd()">Ajouter facture d'accompte</button>
   <br/><br/>
 
-  <!-- onAdd Form -->
+  <!-- addFactureAccompte Form -->
   <div class="container" *ngIf="mode">
     <div class="panel panel-info">
       <div class="panel-heading">Facture d'accompte</div>
@@ -76,16 +76,16 @@
     </div>
   </div>
 
-  <!-- onUpdate form -->
-  <div class="container" *ngIf="modeUpdate">
+  <!-- addReglement form -->
+  <div class="container" *ngIf="modeAddReglement">
     <div class="panel panel-info">
       <div class="panel-heading">Ajouter règlement</div>
       <div class="panel-body">
-        <form class="form-horizontal" [formGroup]="factureForm" (submit)="addReglement()">
+        <form class="form-horizontal" [formGroup]="reglementForm" (submit)="addReglement()">
           <div class="form-group">
             <label class="control-label" for="ref_factureAccompte">Ref :</label>
             <input type="text" class="form-control" name="ref_factureAccompte" id="ref_factureAccompte" formControlName="ref_factureAccompte"
-              autofocus required />
+              value="{{factureAccompte.ref_factureAccompte}}" autofocus required />
           </div>
           <div class="form-group">
             <label class="control-label" for="date_creation">Date création :</label>
@@ -94,18 +94,38 @@
           </div>
           <div class="form-group">
             <label class="control-label" for="montantFacture">Montant facturé :</label>
-            <input type="text" class="form-control" name="montantFacture" id="montantFacture" formControlName="montantFacture" value="0"
+            <input type="text" class="form-control" name="montantFacture" id="montantFacture" formControlName="montantFacture" value="{{factureAccompte.montantFacture}}"
+            />
+          </div>
+          <!-- 
+          <div class="form-group">
+            <label class="control-label" for="reglementClient">Règlement client Total :</label>
+            <input type="text" class="form-control" name="reglementClient" id="reglementClient" formControlName="reglementClient" value="{{factureAccompte.reglementClient}}"
+            />
+          </div> -->
+          <div class="form-group">
+            <label class="control-label" for="reglementTtc">Règlement client :</label>
+            <input type="text" class="form-control" name="reglementTtc" id="reglementTtc" formControlName="reglementTtc" value="{{reglement.reglementTtc}}"
               required />
           </div>
           <div class="form-group">
-            <label class="control-label" for="reglementClient">Règlement client :</label>
-            <input type="text" class="form-control" name="reglementClient" id="reglementClient" formControlName="reglementClient" value="0"
+            <label class="control-label" for="factureAccompte">Facture d'accompte :</label>
+            <input type="text" class="form-control" name="factureAccompte" id="factureAccompte" formControlName="factureAccompte" value="{{reglement.factureAccompte}}"
               required />
           </div>
-          <div class="form-group">
-            <label class="control-label" for="factureGlobal">factureGlobal :</label>
-            <input type="text" class="form-control" name="factureGlobal" id="factureGlobal" formControlName="factureGlobal" value="{{factureGlobal.ref_factureGlobal}}"
-              required />
+          <div *ngIf="!listReglement === null">
+            <table class="table table-striped">
+              <thead>
+                <th>Date création</th>
+                <th>Réglement client</th>
+              </thead>
+              <tbody>
+                <tr *ngFor="let r of listReglement">
+                  <td>{{r.date_creation}}</td>
+                  <td>{{r.reglementTtc}}</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
           <div class="form-group">
             <button [disabled]="!factureForm.valid" type="submit" class="btn btn-success">Ajouter règlement</button>

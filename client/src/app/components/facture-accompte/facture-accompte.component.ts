@@ -33,9 +33,11 @@ export class FactureAccompteComponent implements OnInit {
   factureAccompte: any = {};
   listFactureAccompte: FactureAccompte[];
   listReglement: Reglement[];
+  reglement: any = {};
   mode: boolean = false;
-  modeUpdate: boolean = false;
+  modeAddReglement: boolean = false;
   factureForm: FormGroup;
+  reglementForm: FormGroup;
 
   /**
    * Creates an instance of FactureAccompteComponent.
@@ -59,9 +61,16 @@ export class FactureAccompteComponent implements OnInit {
     private clientService: ClientService,
     private reglementService: ReglementService
   ) {
-    this.generateForm()
+    this.generateForm();
+    this.generateReglementForm();
   }
 
+  /**
+   * Get One Facture Global
+   * 
+   * @param {number} id factureGlobal._id
+   * @memberof FactureAccompteComponent
+   */
   getOneFactureGlobal(id: number) {
     this.factureGlobalService.getOneFactureGlobalById(id)
       .subscribe(
@@ -97,6 +106,12 @@ export class FactureAccompteComponent implements OnInit {
       );
   }
 
+  /**
+   * Get All Reglement by factureAccompte
+   * 
+   * @param {number} id factureAccompte._id
+   * @memberof FactureAccompteComponent
+   */
   getAllReglementByFactureAccompte(id: number) {
     this.reglementService.getReglementByFactureAccompte(id)
       .subscribe(
@@ -181,38 +196,36 @@ export class FactureAccompteComponent implements OnInit {
 
   /**
    * onUpdate:
-   * - generate updateForm
+   * - generate ReglementForm
    * - get All reglement by FactureAccompte._id
    * 
    * @param {FactureAccompte} factureAccompte FactureAccompte
    * @memberof FactureAccompteComponent
    */
-  onUpdate(factureAccompte: FactureAccompte) {
+  onAddReglement(factureAccompte: FactureAccompte) {
+    this.generateReglementForm();
     this.factureAccompte = factureAccompte;
+    let latest_date = this.datePipe.transform(this.factureAccompte.date_creation, 'yyyy-MM-dd');
+    this.factureAccompte.date_creation = latest_date;
     this.getAllReglementByFactureAccompte(factureAccompte._id);
-    this.modeUpdate = true;
-  }
-
-  onCancel() {
-    this.generateForm();
-    this.generateUpdateForm();
-    this.mode = false;
-    this.modeUpdate = false;
-    this.factureAccompte = {};
-  }
-
-  generateUpdateForm() {
-    this.factureForm = this.formBuilder.group({
-      ref_factureAccompte: [ { value: this.factureAccompte.ref_factureAccompte, disabled: true }, Validators.required ],
-      date_creation: [ { value: this.factureAccompte.date_creation }],
-      montantFacture: [ { value: this.factureAccompte.montantFacture, disabled: true }, Validators.required ],
-      reglementClient: [ this.factureAccompte.reglementClient, Validators.required ],
-      factureGlobal: [ { value: this.factureAccompte.factureGlobal, disabled: true }, Validators.required ]
-    });
+    this.modeAddReglement = true;
   }
 
   /**
-   * Generate form Add
+   * Cancel button
+   * 
+   * @memberof FactureAccompteComponent
+   */
+  onCancel() {
+    this.generateForm();
+    this.generateReglementForm();
+    this.mode = false;
+    this.modeAddReglement = false;
+    this.factureAccompte = {};
+  }
+
+  /**
+   * Generate form add facture accompte
    *
    * @memberof FactureAccompteComponent
    */
@@ -223,6 +236,22 @@ export class FactureAccompteComponent implements OnInit {
       montantFacture: [ '0', Validators.required ],
       reglementClient: [ '0', Validators.required ],
       factureGlobal: [ { value: this.factureAccompte.factureGlobal, disabled: true }, Validators.required ]
+    });
+  }
+
+  /**
+   * generator form add reglement
+   * 
+   * @memberof FactureAccompteComponent
+   */
+  generateReglementForm() {
+    this.reglementForm = this.formBuilder.group({
+      ref_factureAccompte: [ { value: this.factureAccompte.ref_factureAccompte, disabled: true }, Validators.required ],
+      date_creation: [ { value: this.factureAccompte.date_creation }],
+      montantFacture: [ { value: this.factureAccompte.montantFacture, disabled: true }],
+      /* reglementClient: [ { value: this.factureAccompte.reglementClient, disabled: true }], */
+      reglementTtc: [ this.reglement.reglementTtc, Validators.required ],
+      factureAccompte: [ { value: this.reglement.factureAccompte, disabled: true }, Validators.required ]
     });
   }
 

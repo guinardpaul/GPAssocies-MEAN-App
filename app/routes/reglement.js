@@ -28,7 +28,7 @@ module.exports = (router) => {
         message: 'id not provided'
       });
     } else {
-      Reglement.find({ factureAccompte: req.params.factureAccompte }, (err, data) => {
+      Reglement.find({ 'factureAccompte': req.params.factureAccompte }, (err, data) => {
         if (err) {
           res.json({
             success: false,
