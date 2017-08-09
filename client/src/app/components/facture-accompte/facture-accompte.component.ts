@@ -6,10 +6,13 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 // Models
 import { FactureGlobal } from '../../models/factureGlobal';
 import { FactureAccompte } from '../../models/factureAccompte';
+import { Reglement } from '../../models/reglement';
 
 // Services
 import { FactureGlobalService } from '../../service/facture-global.service';
 import { FactureAccompteService } from '../../service/facture-accompte.service';
+import { ClientService } from '../../service/client.service';
+import { ReglementService } from '../../service/reglement.service';
 import { FlashMessagesService } from 'ngx-flash-messages';
 
 /**
@@ -27,8 +30,11 @@ import { FlashMessagesService } from 'ngx-flash-messages';
 export class FactureAccompteComponent implements OnInit {
   id_fact: number;
   factureGlobal: any = {};
+  factureAccompte: any = {};
   listFactureAccompte: FactureAccompte[];
+  listReglement: Reglement[];
   mode: boolean = false;
+  modeUpdate: boolean = false;
   factureForm: FormGroup;
 
   /**
@@ -39,6 +45,8 @@ export class FactureAccompteComponent implements OnInit {
    * @param {DatePipe} datePipe format date
    * @param {FormBuilder} formBuilder reactive form builder
    * @param {FlashMessagesService} flashMessages Angular flash messages
+   * @param {ClientService} ClientService client service
+   * @param {ReglementService} ReglementService reglement service
    * @memberof FactureAccompteComponent
    */
   constructor(
@@ -47,7 +55,9 @@ export class FactureAccompteComponent implements OnInit {
     private factureAccompteService: FactureAccompteService,
     private datePipe: DatePipe,
     private formBuilder: FormBuilder,
-    private flashMessages: FlashMessagesService
+    private flashMessages: FlashMessagesService,
+    private clientService: ClientService,
+    private reglementService: ReglementService
   ) {
     this.generateForm()
   }
@@ -87,6 +97,49 @@ export class FactureAccompteComponent implements OnInit {
       );
   }
 
+  getAllReglementByFactureAccompte(id: number) {
+    this.reglementService.getReglementByFactureAccompte(id)
+      .subscribe(
+      reglements => this.listReglement = reglements,
+      err => console.log(err)
+      );
+  }
+
+  /**
+   * Create Facture Accompte
+   * 
+   * @memberof FactureAccompteComponent
+   */
+  addFactureAccompte() {
+    let newFacture = {
+      ref_factureAccompte: this.factureForm.get('ref_factureAccompte').value,
+      date_creation: this.factureForm.get('date_creation').value,
+      montantFacture: this.factureForm.get('montantFacture').value,
+      reglementClient: this.factureForm.get('reglementClient').value,
+      factureGlobal: this.factureGlobal._id,
+    };
+    console.log(newFacture);
+    this.factureAccompteService.addFactureAccompte(newFacture)
+      .subscribe(
+      data => {
+        if (data.success) {
+          console.log(data.message);
+          this.flashMessages.show(data.message, {
+            classes: [ 'alert', 'alert-success' ],
+            timeout: 3000
+          });
+          this.onSuccess();
+        } else {
+          console.log('Erreur creation facture accompte ' + data.message);
+          this.flashMessages.show('Erreur creation facture accompte', {
+            classes: [ 'alert', 'alert-danger' ],
+            timeout: 3000
+          });
+        }
+      }
+      )
+  }
+
   /**
    * Method to fetch modified data from database and display into table.
    *
@@ -94,25 +147,61 @@ export class FactureAccompteComponent implements OnInit {
    */
   onSuccess() {
     this.getAllFactureAccompteByFactureGlobal(this.id_fact);
+    this.mode = false;
+    this.generateForm();
   }
 
+  /**
+   * onAdd
+   * 
+   * @memberof FactureAccompteComponent
+   */
   onAdd() {
     this.mode = true;
   }
 
   /**
-   * Generate form
+   * onUpdate. Set disable 
+   * 
+   * @param {FactureAccompte} factureAccompte FactureAccompte
+   * @memberof FactureAccompteComponent
+   */
+  onUpdate(factureAccompte: FactureAccompte) {
+    this.factureAccompte = factureAccompte;
+    this.getAllReglementByFactureAccompte(factureAccompte._id);
+    this.modeUpdate = true;
+  }
+
+  onCancel() {
+    this.generateForm();
+    this.generateUpdateForm();
+    this.mode = false;
+    this.modeUpdate = false;
+    this.factureAccompte = {};
+  }
+
+  generateUpdateForm() {
+    this.factureForm = this.formBuilder.group({
+      ref_factureAccompte: [ { value: this.factureAccompte.ref_factureAccompte, disabled: true }, Validators.required ],
+      date_creation: [ { value: this.factureAccompte.date_creation }],
+      montantFacture: [ { value: this.factureAccompte.montantFacture, disabled: true }, Validators.required ],
+      reglementClient: [ this.factureAccompte.reglementClient, Validators.required ],
+      factureGlobal: [ { value: this.factureAccompte.factureGlobal, disabled: true }, Validators.required ]
+    });
+  }
+
+  /**
+   * Generate form Add
    *
    * @memberof FactureAccompteComponent
    */
   generateForm() {
     this.factureForm = this.formBuilder.group({
       ref_factureAccompte: [ '', Validators.required ],
-      date_creation: [ '', Validators.required ],
-      montantHt: [ { value: this.factureGlobal._id, disabled: true }, Validators.required ],
-      tauxTva: [ { value: this.factureGlobal._id, disabled: true }, Validators.required ],
-      montantTtc: [ { value: this.factureGlobal._id, disabled: true }],
-      factureGlobal: [ { value: this.factureGlobal._id, disabled: true }, Validators.required ]
+      date_creation: [ Date.now ],
+      montantFacture: [ '0', Validators.required ],
+      reglementClient: [ '0', Validators.required ],
+      factureGlobal: [ { value: this.factureAccompte.factureGlobal, disabled: true }, Validators.required ]
     });
   }
 
@@ -127,7 +216,7 @@ export class FactureAccompteComponent implements OnInit {
   ngOnInit() {
     if (this.activatedRoute.snapshot.params[ 'id_fact' ] !== undefined) {
       this.id_fact = this.activatedRoute.snapshot.params[ 'id_fact' ];
-      this.getAllFactureAccompteByFactureGlobal(this.id_fact);;
+      this.getAllFactureAccompteByFactureGlobal(this.id_fact);
       this.getOneFactureGlobal(this.id_fact);
     }
   }

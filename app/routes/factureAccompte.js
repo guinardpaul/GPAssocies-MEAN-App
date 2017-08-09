@@ -74,13 +74,13 @@ module.exports = (router) => {
                 if (err) {
                     return res.json({
                         success: false,
-                        error: err
+                        message: err
                     });
                 } else {
                     res.json({
                         success: true,
                         obj: data,
-                        message: 'Facture Accompte created'
+                        message: 'Facture d\'accompte créée'
                     });
                 }
             });

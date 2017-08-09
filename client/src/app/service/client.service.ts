@@ -23,6 +23,13 @@ const devUrl = 'http://localhost:3001/api/clients/';
 export class ClientService {
 
   /**
+   * Creates an instance of ClientService.
+   * @param {Http} http http module
+   * @memberof ClientService client service
+   */
+  constructor(private http: Http) { }
+
+  /**
    * Get all clients.
    *
    * @returns
@@ -55,20 +62,19 @@ export class ClientService {
   addClient(client: any) {
     return this.http.post(devUrl, client)
       .map(res => res.json());
-  };
+  }
 
   /**
    * Update client.
    *
-   * @param {number} id client._id
    * @param {Client} client client body
    * @returns
    * @memberof ClientService
    */
-  updateClient(id: number, client: Client) {
-    return this.http.put(devUrl + id, client)
+  updateClient(client: Client) {
+    return this.http.put(devUrl + client._id, client)
       .map(res => res.json());
-  };
+  }
 
   /**
    * Delete client.
@@ -80,9 +86,24 @@ export class ClientService {
   deleteClient(id: number) {
     return this.http.delete(devUrl + id)
       .map(res => res.json());
-  };
+  }
 
   /**
+   * Update Status Client
+   * 
+   * @param {Client} client client body
+   * @returns 
+   * @memberof ClientService
+   */
+  updateStatus(client: Client) {
+    // Inverse status_client
+    client.status_client = !client.status_client;
+    return this.http.put(devUrl + client._id, client)
+      .map(res => res.json());
+  }
+
+  /**
+   * NOT USED
    * function generic to extract Data
    *
    * @private
@@ -96,6 +117,7 @@ export class ClientService {
   }
 
   /**
+   * NOT USED
    * function generic to handle error
    *
    * @private
@@ -108,12 +130,5 @@ export class ClientService {
     console.error('ApiService::handleError', error);
     return Observable.throw(error);
   }
-
-  /**
-   * Creates an instance of ClientService.
-   * @param {Http} http http module
-   * @memberof ClientService client service
-   */
-  constructor(private http: Http) { }
 
 }

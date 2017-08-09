@@ -50,11 +50,11 @@ import { ReglementService } from './service/reglement.service';
   providers: [
     ClientService,
     DevisService,
-    DatePipe,
     FactureAccompteService,
     FactureGlobalService,
     DetailsDevisService,
-    ReglementService
+    ReglementService,
+    DatePipe
   ],
   bootstrap: [ AppComponent ],
   exports: [ ClientComponent ]

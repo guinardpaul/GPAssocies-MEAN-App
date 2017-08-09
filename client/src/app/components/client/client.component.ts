@@ -110,7 +110,7 @@ export class ClientComponent implements OnInit {
         }
         );
     } else {
-      this.clientService.updateClient(this.client._id, this.client)
+      this.clientService.updateClient(this.client)
         .subscribe(
         data => {
           if (data.success) {

@@ -6,7 +6,7 @@
  */
 export class Client {
     _id: number;
-    statutClient: boolean;
+    status_client: boolean;
     civilite: string;
     nom: string;
     prenom: string;
@@ -26,7 +26,7 @@ export class Client {
      * @param {Object} [value={}]
      * @memberof Client
      */
-    constructor(value: Object = {}){
+    constructor(value: Object = {}) {
         Object.assign(this, value);
     }
 }

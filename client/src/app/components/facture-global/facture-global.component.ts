@@ -21,13 +21,13 @@ import { FlashMessagesService } from 'ngx-flash-messages';
  * @implements {OnInit}
  */
 @Component({
-  selector: 'app-facture',
+  selector: 'app-facture-global',
   templateUrl: './facture-global.component.html',
   styleUrls: [ './facture-global.component.css' ]
 })
 export class FactureGlobalComponent implements OnInit {
   factureGlobal: any = {};
-  ListFactureGlobal: FactureGlobal[];
+  listFactureGlobals: FactureGlobal[];
   client = new Client();
   mode: boolean = false;
   id_client: number;
@@ -64,7 +64,7 @@ export class FactureGlobalComponent implements OnInit {
   getAllFactureGlobal() {
     this.factureGlobalService.getAllFactureGlobal()
       .subscribe(
-      factureGlobal => this.ListFactureGlobal = factureGlobal,
+      factureGlobal => this.listFactureGlobals = factureGlobal,
       error => console.log('Error ' + error)
       );
   }
@@ -79,7 +79,7 @@ export class FactureGlobalComponent implements OnInit {
   getAllFactureGlobalByClient(id: number) {
     this.factureGlobalService.getAllFactureGlobalByClient(id)
       .subscribe(
-      factureGlobal => this.ListFactureGlobal = factureGlobal,
+      factureGlobal => this.listFactureGlobals = factureGlobal,
       error => console.log('Error ' + error)
       );
   }
@@ -111,12 +111,8 @@ export class FactureGlobalComponent implements OnInit {
     this.factureGlobal = facture;
     let latest_date = this.datePipe.transform(this.factureGlobal.date_creation, 'yyyy-MM-dd');
     this.factureGlobal.date_creation = latest_date;
-    // Set form controls to touched
-    this.factureForm.controls[ 'client' ].markAsTouched();
-    this.factureForm.controls[ 'montantTtc' ].markAsTouched();
-    this.factureForm.controls[ 'date_creation' ].markAsTouched();
-    this.factureForm.controls[ 'montantHt' ].markAsTouched();
-    this.factureForm.controls[ 'tauxTva' ].markAsTouched();
+    this.factureForm.get('ref_factureGlobal').setValue(this.factureGlobal.ref_factureGlobal);
+    this.factureForm.get('date_creation').setValue(latest_date);
   }
 
   /**
@@ -129,10 +125,11 @@ export class FactureGlobalComponent implements OnInit {
     this.processing = true;
     const newFacture = this.factureForm.value;
     newFacture._id = this.factureGlobal._id;
-    newFacture.montantTtc = this.factureGlobal.montantTtc;
+    newFacture.montantTtcTotal = this.factureGlobal.montantTtc;
     newFacture.client = this.factureGlobal.client;
-    console.log(newFacture)
-    this.factureGlobalService.updateFactureGlobal(newFacture, this.factureGlobal._id)
+    newFacture.ref_factureGlobal = this.factureForm.get('ref_factureGlobal').value;
+    newFacture.date_creation = this.factureForm.get('date_creation').value;
+    this.factureGlobalService.updateFactureGlobal(newFacture)
       .subscribe(
       data => {
         this.onSuccess();
@@ -163,7 +160,7 @@ export class FactureGlobalComponent implements OnInit {
   onDelete(id: number) {
     this.factureGlobalService.deleteFactureGlobal(id)
       .subscribe(
-      msg => {
+      data => {
         console.log('Facture Global deleted');
         this.flashMessages.show('Facture supprimée', {
           classes: [ 'alert', 'alert-warning' ],
@@ -182,17 +179,56 @@ export class FactureGlobalComponent implements OnInit {
   }
 
   /**
+   * Update Status Client si :
+   * - update/delete FactureGlobal => Success.
+   * - AllFactureGlobalByClient.status === true
+   * 
+   * @param {Client} client 
+   * @memberof ValiderDevisComponent
+   */
+  updateStatusClient(client: Client) {
+    // Fetch Facture Globals from Database
+    this.factureGlobalService.getAllFactureGlobalByClient(client._id)
+      .subscribe(
+      FactureGlobals => this.listFactureGlobals = FactureGlobals,
+      err => console.log(err)
+      );
+
+    // Check each factureGlobal.status dans listFactureGlobals
+    let status_facture: boolean = true;
+    if (this.listFactureGlobals !== null) {
+      for (var factureGlobal in this.listFactureGlobals) {
+        if (this.listFactureGlobals.hasOwnProperty(factureGlobal)) {
+          if (this.listFactureGlobals[ factureGlobal ].status_factureGlobal === false) {
+            status_facture = false;
+          }
+
+        }
+      }
+    }
+
+    // si status_facture === true && status_client !== true
+    if (status_facture && this.client.status_client !== true) {
+      this.clientService.updateStatus(client)
+        .subscribe(
+        client => console.log('Status client mis à jour :' + client.status_client),
+        err => console.log('Erreur mis à jour status client :' + err)
+        );
+    }
+  }
+
+  /**
    * Method to fetch modified data from database and display into table.
    *
    * @memberof FactureGlobalComponent
    */
   onSuccess() {
-    this.getAllFactureGlobal();
-    this.factureForm.reset();
+    this.updateStatusClient(this.client);
+    this.generateForm();
     this.mode = false;
     this.factureGlobal = {};
     this.processing = false;
-    this.enableForm();
+    //this.enableForm();
   }
 
   /**
@@ -204,9 +240,7 @@ export class FactureGlobalComponent implements OnInit {
     this.factureForm = this.formBuilder.group({
       ref_factureGlobal: [ this.factureGlobal.ref_factureGlobal, Validators.required ],
       date_creation: [ this.factureGlobal.date_creation ],
-      montantHt: [ { value: this.factureGlobal.montantHt, disabled: true }, Validators.required ],
-      tauxTva: [ { value: this.factureGlobal.tauxTva, disabled: true }, Validators.required ],
-      montantTtc: [ { value: this.factureGlobal.montantTtc, disabled: true }],
+      montantTtcTotal: [ { value: this.factureGlobal.montantTtc, disabled: true }],
       client: [ { value: this.factureGlobal.client, disabled: true }, Validators.required ]
     });
   }
@@ -217,7 +251,8 @@ export class FactureGlobalComponent implements OnInit {
    * @memberof FactureGlobalComponent
    */
   enableForm() {
-    this.factureForm.enable();
+    this.factureForm.controls[ 'ref_factureGlobal' ].enable();
+    this.factureForm.controls[ 'date_creation' ].enable();
   }
 
   /**
@@ -230,7 +265,7 @@ export class FactureGlobalComponent implements OnInit {
   }
 
   /**
-   * NOT USED ////
+   * NOT USED
    * (blur) listenner.
    * Calcul montantTTC using tauxTva and montantHt values of factureForm and send new montantTtc.
    *

@@ -30,13 +30,13 @@ export class ReglementService {
   constructor(private http: Http) { }
 
   /**
-   * Get All Reglement by FactureMois._id
+   * Get All Reglement by FactureAccompte._id
    * 
-   * @param {number} id FactureMois._id
+   * @param {number} id FactureAccompte._id
    * @returns 
    * @memberof ReglementService
    */
-  getReglementByFactureMois(id: number) {
+  getReglementByFactureAccompte(id: number) {
     return this.http.get(devUrl + id)
       .map(res => res.json());
   }
@@ -48,7 +48,7 @@ export class ReglementService {
    * @returns 
    * @memberof ReglementService
    */
-  saveReglement(reglement: any) {
+  addReglement(reglement: any) {
     return this.http.post(devUrl, reglement)
       .map(res => res.json());
   }

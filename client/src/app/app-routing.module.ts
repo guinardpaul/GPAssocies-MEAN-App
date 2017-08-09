@@ -5,7 +5,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ClientComponent } from './components/client/client.component';
 import { DevisComponent } from './components/devis/devis.component';
-import { FactureComponent } from './components/facture/facture.component';
+import { FactureGlobalComponent } from './components/facture-global/facture-global.component';
 import { ValiderDevisComponent } from './components/valider-devis/valider-devis.component';
 import { FactureAccompteComponent } from './components/facture-accompte/facture-accompte.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';

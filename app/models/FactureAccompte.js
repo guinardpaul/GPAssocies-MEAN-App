@@ -3,6 +3,10 @@ mongoose.Promise = global.Promise;
 const FactureGlobal = require('./FactureGlobal');
 
 const FactureAccompteSchema = new mongoose.Schema({
+    status_factureAccompte: {
+        type: Boolean,
+        default: false
+    },
     ref_factureAccompte: {
         type: String,
         required: true

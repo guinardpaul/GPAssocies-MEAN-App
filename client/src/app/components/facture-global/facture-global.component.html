@@ -1,10 +1,11 @@
 <h4 style="text-align: center;">Factures</h4>
-<table class="container-fluid table table-striped">
+<table class="table table-striped">
     <thead>
         <tr>
+            <th>Statut</th>
             <th>Ref</th>
             <th>Date</th>
-            <th>Montant total facture TTC</th>
+            <th>Montant total TTC</th>
             <th>Montant facturé TTC</th>
             <th>Montant réglé</th>
             <th>Client</th>
@@ -12,12 +13,13 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let f of ListFactureGlobal">
+        <tr *ngFor="let f of listFactureGlobals">
+            <td>{{f.status_factureGlobal}}</td>
             <td>{{f.ref_factureGlobal}}</td>
             <td>{{f.date_creation | date: 'dd/MM/yyyy'}}</td>
-            <td>{{f.montantTtc}}</td>
-            <td></td>
-            <td></td>
+            <td>{{f.montantTtcTotal}}</td>
+            <td>{{f.montantTtcFacture}}</td>
+            <td>{{f.montantTtcRegle}}</td>
             <td>{{client.nom}} {{client.prenom}}</td>
             <td>
                 <div class="btn-group-vertical">
@@ -29,10 +31,12 @@
         </tr>
     </tbody>
 </table>
-
+<br/><br/>
 <div class="container-fluid" *ngIf="mode">
     <div class="panel panel-info">
-        <div class="panel-heading">factureGlobal</div>
+        <div class="panel-heading">
+            <h4>Facture Global</h4>
+        </div>
         <div class="panel-body">
             <form class="form-horizontal" [formGroup]="factureForm" (submit)="updateFacture()">
                 <div class="form-group">
@@ -46,18 +50,8 @@
                     />
                 </div>
                 <div class="form-group">
-                    <label class="control-label" for="montantHt">Montant HT :</label>
-                    <input type="text" class="form-control" name="montantHt" id="montantHt" formControlName="montantHt" value="{{factureGlobal.montantHt}}"
-                        required />
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="tauxTva">Taux TVA :</label>
-                    <input type="text" class="form-control" name="tauxTva" id="tauxTva" formControlName="tauxTva" value="{{factureGlobal.tauxTva}}"
-                        required />
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="montantTtc">Montant TTC :</label>
-                    <input type="text" class="form-control" name="montantTtc" id="montantTtc" formControlName="montantTtc" value="{{factureGlobal.montantTtc}}"
+                    <label class="control-label" for="montantTtcTotal">Montant TTC :</label>
+                    <input type="text" class="form-control" name="montantTtcTotal" id="montantTtcTotal" formControlName="montantTtcTotal" value="{{factureGlobal.montantTtcTotal}}"
                     />
                 </div>
                 <div class="form-group">

@@ -192,7 +192,7 @@ export class DevisComponent implements OnInit {
         montantTtc: this.devisForm.get('montantTtc').value,
         client: this.id_client,
       };
-      this.devisService.updateDevis(udpateDevis, udpateDevis._id)
+      this.devisService.updateDevis(udpateDevis)
         .subscribe(
         data => {
           console.log('Devis updated' + data);
@@ -245,20 +245,20 @@ export class DevisComponent implements OnInit {
     };
 
     // Save DetailsDevis
-    this.detailsDevisService.saveDetailsDevis(this.detailsDevis1)
+    this.detailsDevisService.addDetailsDevis(this.detailsDevis1)
       .subscribe(
       data => {
         console.log('Details Devis saved ' + this.detailsDevis1);
         this.detailsDevis1 = { tauxTva: 5.5 };
 
-        this.detailsDevisService.saveDetailsDevis(this.detailsDevis2)
+        this.detailsDevisService.addDetailsDevis(this.detailsDevis2)
           .subscribe(
           data => {
             console.log('Details Devis saved ' + this.detailsDevis2);
             this.detailsDevis2 = {};
             this.detailsDevis2 = { tauxTva: 10 };
 
-            this.detailsDevisService.saveDetailsDevis(this.detailsDevis3)
+            this.detailsDevisService.addDetailsDevis(this.detailsDevis3)
               .subscribe(
               data => {
                 console.log('Details Devis saved ' + this.detailsDevis3);
@@ -301,21 +301,7 @@ export class DevisComponent implements OnInit {
     this.detailsDevis3.montantHt = this.devisForm.get('montantHt3').value;
     this.detailsDevis3.tauxTva = this.devisForm.get('tauxTva3').value;
     this.detailsDevis3.montantTtc = this.devisForm.get('montantTtc3').value;
-    /* this.detailsDevis1 = {
-      tauxTva: this.devisForm.get('tauxTva1').value,
-      montantHt: this.devisForm.get('montantHt1').value,
-      montantTtc: this.devisForm.get('montantTtc1').value
-    }; */
-    /* this.detailsDevis2 = {
-      tauxTva: this.devisForm.get('tauxTva2').value,
-      montantHt: this.devisForm.get('montantHt2').value,
-      montantTtc: this.devisForm.get('montantTtc2').value
-    };
-    this.detailsDevis3 = {
-      tauxTva: this.devisForm.get('tauxTva3').value,
-      montantHt: this.devisForm.get('montantHt3').value,
-      montantTtc: this.devisForm.get('montantTtc3').value
-    }; */
+
     // Update DetailsDevis
     this.detailsDevisService.updateDetailsDevis(this.detailsDevis1)
       .subscribe(

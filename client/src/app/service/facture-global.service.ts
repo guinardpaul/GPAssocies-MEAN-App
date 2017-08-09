@@ -23,6 +23,13 @@ const devUrl = 'http://localhost:3001/api/facture-global/';
 export class FactureGlobalService {
 
 	/**
+   * Creates an instance of FactureGlobalService.
+   * @param {Http} http http module
+   * @memberof FactureGlobalService facture global service
+   */
+  constructor(private http: Http) { }
+
+	/**
    * GET ALL FACTURE GLOBAL.
    *
    * @returns
@@ -86,12 +93,24 @@ export class FactureGlobalService {
    * Update Facture Global.
    *
    * @param {FactureGlobal} factureGlobal factureGlobal body
-   * @param {any} id factureGlobal._id
    * @returns
    * @memberof FactureGlobalService
    */
-  updateFactureGlobal(factureGlobal: FactureGlobal, id) {
-    return this.http.put(devUrl + id, factureGlobal)
+  updateFactureGlobal(factureGlobal: FactureGlobal) {
+    return this.http.put(devUrl + factureGlobal._id, factureGlobal)
+      .map(res => res.json());
+  }
+
+  /**
+   * Update Facture Global status
+   * 
+   * @param {FactureGlobal} factureGlobal facture Global body
+   * @returns 
+   * @memberof FactureGlobalService
+   */
+  updateStatusFactureGlobal(factureGlobal: FactureGlobal) {
+    factureGlobal.status_factureGlobal = !factureGlobal.status_factureGlobal;
+    return this.http.put(devUrl + factureGlobal._id, factureGlobal)
       .map(res => res.json());
   }
 
@@ -108,6 +127,8 @@ export class FactureGlobalService {
   }
 
 	/**
+   * NOT USED
+   * 
    * Generic Extract Data Method.
    *
    * @private
@@ -121,6 +142,8 @@ export class FactureGlobalService {
   }
 
 	/**
+   * NOT USED
+   * 
    * Generic Error handler Method.
    *
    * @private
@@ -132,12 +155,5 @@ export class FactureGlobalService {
     console.error('ApiService::handleError', error);
     return Observable.throw(error);
   }
-
-	/**
-   * Creates an instance of FactureGlobalService.
-   * @param {Http} http http module
-   * @memberof FactureGlobalService facture global service
-   */
-  constructor(private http: Http) { }
 
 }

@@ -23,18 +23,25 @@ const devUrl = 'http://localhost:3001/api/facture-accompte/';
 export class FactureAccompteService {
 
 	/**
+   * Creates an instance of FactureAccompteService.
+   * @param {Http} http http module
+   * @memberof FactureAccompteService factureAccompte service
+   */
+  constructor(private http: Http) { }
+
+	/**
    * Get All Facture Accompte.
    *
    * @returns
    * @memberof FactureAccompteService
    */
-  public getAllFactureAccompte() {
+  getAllFactureAccompte() {
     return this.http.get(devUrl)
       .map(res => res.json());
   }
 
 	/**
-   * Get All Facture Accompte by factureGlobal._id.
+   * Get All Facture Accompte by factureGlobal.
    *
    * @param {number} id_fact factureGlobal._id
    * @returns
@@ -52,7 +59,7 @@ export class FactureAccompteService {
    * @returns
    * @memberof FactureAccompteService
    */
-  public getOneFactureAccompte(id: number) {
+  getOneFactureAccompte(id: number) {
     return this.http.get(devUrl + id)
       .map(res => res.json());
   }
@@ -60,11 +67,11 @@ export class FactureAccompteService {
 	/**
    * Add Facture Accompte.
    *
-   * @param {FactureAccompte} factureAccompte factureAccompte body
+   * @param {*} factureAccompte factureAccompte body
    * @returns
    * @memberof FactureAccompteService
    */
-  public addFactureAccompte(factureAccompte: FactureAccompte) {
+  addFactureAccompte(factureAccompte: any) {
     return this.http.post(devUrl, factureAccompte)
       .map(res => res.json());
   }
@@ -73,12 +80,24 @@ export class FactureAccompteService {
    * Update Facture Accompte.
    *
    * @param {FactureAccompte} factureAccompte factureAccompte body
-   * @param {number} id factureAccompte._id
    * @returns
    * @memberof FactureAccompteService
    */
-  public updateFactureAccompte(factureAccompte: FactureAccompte, id: number) {
-    return this.http.put(devUrl + id, factureAccompte)
+  updateFactureAccompte(factureAccompte: FactureAccompte) {
+    return this.http.put(devUrl + factureAccompte._id, factureAccompte)
+      .map(res => res.json());
+  }
+
+  /**
+   * Update Facture Accompte status
+   * 
+   * @param {FactureAccompte} factureAccompte facture Accompte body
+   * @returns 
+   * @memberof FactureAccompteService
+   */
+  updateStatusFactureAccompte(factureAccompte: FactureAccompte) {
+    factureAccompte.status_factureAccompte = !factureAccompte.status_factureAccompte;
+    return this.http.put(devUrl + factureAccompte._id, factureAccompte)
       .map(res => res.json());
   }
 
@@ -89,12 +108,13 @@ export class FactureAccompteService {
    * @returns
    * @memberof FactureAccompteService
    */
-  public deleteFactureAccompte(id: number) {
+  deleteFactureAccompte(id: number) {
     return this.http.delete(devUrl + id)
       .map(res => res.json());
   }
 
 	/**
+   * NOT USED
    * Generic Extract Data Method.
    *
    * @private
@@ -108,6 +128,7 @@ export class FactureAccompteService {
   }
 
 	/**
+   * NOT USED
    * Generic Handle Error Method.
    *
    * @private
@@ -119,12 +140,5 @@ export class FactureAccompteService {
     console.error('ApiService::handleError', error);
     return Observable.throw(error);
   }
-
-	/**
-   * Creates an instance of FactureAccompteService.
-   * @param {Http} http http module
-   * @memberof FactureAccompteService factureAccompte service
-   */
-  constructor(private http: Http) { }
 
 }

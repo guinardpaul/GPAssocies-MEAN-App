@@ -25,10 +25,11 @@ import { FlashMessagesService } from 'ngx-flash-messages';
 @Component({
   selector: 'app-valider-devis',
   templateUrl: './valider-devis.component.html',
-  styleUrls: ['./valider-devis.component.css']
+  styleUrls: [ './valider-devis.component.css' ]
 })
 export class ValiderDevisComponent implements OnInit {
   listClient: Client[];
+  listFactureGlobals: FactureGlobal[];
   devis: any = {};
   //id_client: number;
   id_devis: number;
@@ -105,6 +106,7 @@ export class ValiderDevisComponent implements OnInit {
       .subscribe(
       devis => {
         this.devis = devis;
+        // Change devis.date_creation
         let latest_date = this.datePipe.transform(this.devis.date_creation, 'yyyy-MM-dd');
         this.devis.date_creation = latest_date;
         this.getOneClient(this.devis.client);
@@ -121,16 +123,19 @@ export class ValiderDevisComponent implements OnInit {
    */
   validerDevis() {
     // Set newFacture body
-    const newFacture = this.validerDevisForm.value;
-    newFacture.montantTtc = this.devis.montantTtc;
+    var newFacture = this.validerDevisForm.value;
+    newFacture.montantTtcTotal = this.devis.montantTtc;
     newFacture.client = this.devis.client;
+    newFacture.montantHt = this.devis.montantHt;
+    newFacture.tauxTva = this.devis.tauxTva;
+
     // Send body to addFactureGlobal method in factureGlobalService
     this.factureGlobalService.addFactureGlobal(newFacture)
       .subscribe(
       data => {
-        console.log('Devis validé' + data);
+        console.log('Devis Validé' + data);
         this.flashMessages.show('Facture créée', {
-          classes: ['alert', 'alert-success'],
+          classes: [ 'alert', 'alert-success' ],
           timeout: 3000
         });
         this.onSuccess();
@@ -138,13 +143,54 @@ export class ValiderDevisComponent implements OnInit {
       error => {
         console.log('Error ' + error);
         this.flashMessages.show('Erreur création facture', {
-          classes: ['alert', 'alert-danger'],
+          classes: [ 'alert', 'alert-danger' ],
           timeout: 3000
         });
       });
   }
 
   /**
+   * Update Status Client si :
+   * - valider Devis => Success.
+   * - AllFactureGlobalByClient.status === true
+   * 
+   * @param {Client} client 
+   * @memberof ValiderDevisComponent
+   */
+  updateStatusClient(client: Client) {
+    // Fetch Facture Globals from Database
+    this.factureGlobalService.getAllFactureGlobalByClient(client._id)
+      .subscribe(
+      FactureGlobals => this.listFactureGlobals = FactureGlobals,
+      err => console.log(err)
+      );
+
+    // Check each factureGlobal.status dans listFactureGlobals
+    let status_facture: boolean = true;
+    if (this.listFactureGlobals !== null) {
+      for (var factureGlobal in this.listFactureGlobals) {
+        if (this.listFactureGlobals.hasOwnProperty(factureGlobal)) {
+          if (this.listFactureGlobals[ factureGlobal ].status_factureGlobal === false) {
+            status_facture = false;
+          }
+
+        }
+      }
+    }
+
+    // si status_facture === true && status_client !== true
+    if (status_facture && this.client.status_client !== true) {
+      this.clientService.updateStatus(client)
+        .subscribe(
+        client => console.log('Status client mis à jour :' + client.status_client),
+        err => console.log('Erreur mis à jour status client :' + err)
+        );
+    }
+  }
+
+  /**
+   * NOT USED
+   * 
    * (blur) listener : Verification de la ref_factureGlobal.
    * - si data.success === true => ref_factureGlobal utilisée => validationRef = true,
    * - si data.success === false => ref_factureGlobal non utilisée => validationRef = false
@@ -175,35 +221,25 @@ export class ValiderDevisComponent implements OnInit {
    * @memberof ValiderDevisComponent
    */
   onSuccess() {
-    this.validerDevisForm.reset();
-    this.router.navigate(['/devis/client/:id_client', { id_client: this.devis.client }]);
+    this.updateStatusClient(this.client);
+    this.generateForm();
+    this.router.navigate([ '/devis/client/:id_client', { id_client: this.devis.client }]);
   }
 
   /**
+   * NOT USED
+   * 
    * Calcul montantTTC using tauxTva and montantHt values of validerDevisForm and send new montantTtc
    *
    * @memberof ValiderDevisComponent
    */
   calculMontant() {
-    if (!(this.validerDevisForm.controls['montantHt'].value === '') && !(this.validerDevisForm.controls['tauxTva'].value === '')) {
-      let montantTTC = this.validerDevisForm.controls['montantHt'].value * (1 + this.validerDevisForm.controls['tauxTva'].value / 100);
-      this.validerDevisForm.controls['montantTtc'].setValue(Number(montantTTC).toFixed(2));
+    if (!(this.validerDevisForm.controls[ 'montantHt' ].value === '') && !(this.validerDevisForm.controls[ 'tauxTva' ].value === '')) {
+      let montantTTC = this.validerDevisForm.controls[ 'montantHt' ].value * (1 + this.validerDevisForm.controls[ 'tauxTva' ].value / 100);
+      this.validerDevisForm.controls[ 'montantTtc' ].setValue(Number(montantTTC).toFixed(2));
       this.devis.montantTtc = Number(montantTTC).toFixed(2);
     }
   };
-
-  /**
-   * Not used
-   *
-   * @memberof ValiderDevisComponent
-   */
-  onValiderDevis() {
-    this.activatedRoute.paramMap
-      .switchMap((params: ParamMap) =>
-        this.devisService.getOneDevis(Number(params.get('id_devis'))))
-      .subscribe((devis) => this.devis = devis);
-    console.log(this.devis);
-  }
 
   /**
    * Generate Reactive form
@@ -212,12 +248,12 @@ export class ValiderDevisComponent implements OnInit {
    */
   generateForm() {
     this.validerDevisForm = this.formBuilder.group({
-      ref_factureGlobal: ['', Validators.required],
-      date_creation: [this.devis.date_creation],
-      montantHt: [this.devis.montantHt],
-      tauxTva: [this.devis.tauxTva],
-      montantTtc: [{ value: this.devis.montantTtc, disabled: true }],
-      client: [{ value: this.devis.client, disabled: true }]
+      ref_factureGlobal: [ '', Validators.required ],
+      date_creation: [ this.devis.date_creation ],
+      montantHt: [ { value: this.devis.montantHt, disabled: true }],
+      tauxTva: [ { value: this.devis.tauxTva, disabled: true }],
+      montantTtcTotal: [ { value: this.devis.montantTtc, disabled: true }],
+      client: [ { value: this.devis.client, disabled: true }]
     });
   }
 
@@ -238,8 +274,8 @@ export class ValiderDevisComponent implements OnInit {
     } */
     // Recupère devis by id if set into url
     // Set id_client and client data
-    if (this.activatedRoute.snapshot.params['id_devis'] !== undefined) {
-      this.id_devis = this.activatedRoute.snapshot.params['id_devis'];
+    if (this.activatedRoute.snapshot.params[ 'id_devis' ] !== undefined) {
+      this.id_devis = this.activatedRoute.snapshot.params[ 'id_devis' ];
       this.getOneDevis(this.id_devis);
     }
   }

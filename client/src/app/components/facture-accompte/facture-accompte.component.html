@@ -1,76 +1,115 @@
-<h4 style="text-align: center;">Factures d'accomptes</h4>
-<table class="container-fluid table table-striped">
-  <thead>
-    <tr>
-      <th>Ref</th>
-      <th>Date</th>
-      <th>Montant HT</th>
-      <th>Taux TVA</th>
-      <th>Montant TTC</th>
-      <th>Facture</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let f of listFactureAccompte">
-      <td>{{f.ref_factureMois}}</td>
-      <td>{{f.date_creation | date: 'dd/MM/yyyy'}}</td>
-      <td>{{f.montantHt}}</td>
-      <td>{{f.tauxTva}}</td>
-      <td>{{f.montantTtc}}</td>
-      <td>{{factureGlobal.ref_factureGlobal}}</td>
-      <td>
-        <div class="btn-group-vertical">
-          <a class="btn btn-success" [routerLink]="['/facture/facture-accompte', f._id]">Consulter</a>
-          <button class="btn btn-warning" (click)="onUpdate(f)">Modifier</button>
-          <button class="btn btn-danger" (click)="onDelete(f._id)">Supprimer</button>
-        </div>
-      </td>
-    </tr>
-  </tbody>
-</table>
-<button class="btn btn-primary" (click)="onAdd()">Ajouter facture d'accompte</button>
-<br/><br/>
+<div class="container-fluid">
+  <h4 style="text-align: center;">Factures d'accompte</h4>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Statut</th>
+        <th>Ref</th>
+        <th>Date</th>
+        <th>Montant facturé TTC</th>
+        <th>Règlement client TTC</th>
+        <th>Facture</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let f of listFactureAccompte">
+        <td>{{f.status_factureAccompte}}</td>
+        <td>{{f.ref_factureAccompte}}</td>
+        <td>{{f.date_creation | date: 'dd/MM/yyyy'}}</td>
+        <td>{{f.montantFacture}}</td>
+        <td>{{f.reglementClient}}</td>
+        <td>{{factureGlobal.ref_factureGlobal}}</td>
+        <td>
+          <div class="btn-group-vertical">
+            <button class="btn btn-success" (click)="addReglement(f)">Ajouter règlement</button>
+            <button class="btn btn-warning" (click)="onUpdate(f)">Modifier</button>
+            <button class="btn btn-danger" (click)="onDelete(f._id)">Supprimer</button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <button class="btn btn-primary" (click)="onAdd()">Ajouter facture d'accompte</button>
+  <br/><br/>
 
-<div class="container-fluid" *ngIf="mode">
-  <div class="panel panel-info">
-    <div class="panel-heading">facture d'accompte</div>
-    <div class="panel-body">
-      <form class="form-horizontal" [formGroup]="factureForm" (submit)="updateFacture()">
-        <div class="form-group">
-          <label class="control-label" for="ref_factureMois">Ref :</label>
-          <input type="text" class="form-control" name="ref_factureMois" id="ref_factureMois" formControlName="ref_factureMois" value="{{factureGlobal.ref_factureMois}}"
-            autofocus required />
-        </div>
-        <div class="form-group">
-          <label class="control-label" for="date_creation">Date création :</label>
-          <input type="date" class="form-control" name="date_creation" id="date_creation" formControlName="date_creation" value="{{factureGlobal.date_creation}}"
-          />
-        </div>
-        <div class="form-group">
-          <label class="control-label" for="montantHt">Montant HT :</label>
-          <input type="text" class="form-control" name="montantHt" id="montantHt" formControlName="montantHt" (blur)="calculMontant()"
-            value="{{factureGlobal.montantHt}}" required />
-        </div>
-        <div class="form-group">
-          <label class="control-label" for="tauxTva">Taux TVA :</label>
-          <input type="text" class="form-control" name="tauxTva" id="tauxTva" formControlName="tauxTva" value="{{factureGlobal.tauxTva}}"
-            required />
-        </div>
-        <div class="form-group">
-          <label class="control-label" for="montantTtc">Montant TTC :</label>
-          <input type="text" class="form-control" name="montantTtc" id="montantTtc" formControlName="montantTtc" value="{{factureGlobal.montantTtc}}"
-          />
-        </div>
-        <div class="form-group">
-          <label class="control-label" for="factureGlobal">factureGlobal :</label>
-          <input type="text" class="form-control" name="factureGlobal" id="factureGlobal" formControlName="factureGlobal" value="{{factureGlobal.ref_factureGlobal}}"
-            required />
-        </div>
-        <div class="form-group">
-          <button [disabled]="!factureForm.valid" type="submit" class="btn btn-success">Modifier</button>
-        </div>
-      </form>
+  <!-- onAdd Form -->
+  <div class="container" *ngIf="mode">
+    <div class="panel panel-info">
+      <div class="panel-heading">Facture d'accompte</div>
+      <div class="panel-body">
+        <form class="form-horizontal" [formGroup]="factureForm" (submit)="addFactureAccompte()">
+          <div class="form-group">
+            <label class="control-label" for="ref_factureAccompte">Ref :</label>
+            <input type="text" class="form-control" name="ref_factureAccompte" id="ref_factureAccompte" formControlName="ref_factureAccompte"
+              autofocus required />
+          </div>
+          <div class="form-group">
+            <label class="control-label" for="date_creation">Date création :</label>
+            <input type="date" class="form-control" name="date_creation" id="date_creation" formControlName="date_creation" value="{{factureGlobal.date_creation}}"
+            />
+          </div>
+          <div class="form-group">
+            <label class="control-label" for="montantFacture">Montant facturé :</label>
+            <input type="text" class="form-control" name="montantFacture" id="montantFacture" formControlName="montantFacture" value="0"
+              required />
+          </div>
+          <div class="form-group">
+            <label class="control-label" for="reglementClient">Règlement client :</label>
+            <input type="text" class="form-control" name="reglementClient" id="reglementClient" formControlName="reglementClient" value="0"
+              required />
+          </div>
+          <div class="form-group">
+            <label class="control-label" for="factureGlobal">factureGlobal :</label>
+            <input type="text" class="form-control" name="factureGlobal" id="factureGlobal" formControlName="factureGlobal" value="{{factureGlobal.ref_factureGlobal}}"
+              required />
+          </div>
+          <div class="form-group">
+            <button [disabled]="!factureForm.valid" type="submit" class="btn btn-success">Créer facture d'accompte</button>
+            <button (click)="onCancel()" class="btn btn-default">Annuler</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- onUpdate form -->
+  <div class="container" *ngIf="modeUpdate">
+    <div class="panel panel-info">
+      <div class="panel-heading">Ajouter règlement</div>
+      <div class="panel-body">
+        <form class="form-horizontal" [formGroup]="factureForm" (submit)="addFactureAccompte()">
+          <div class="form-group">
+            <label class="control-label" for="ref_factureAccompte">Ref :</label>
+            <input type="text" class="form-control" name="ref_factureAccompte" id="ref_factureAccompte" formControlName="ref_factureAccompte"
+              autofocus required />
+          </div>
+          <div class="form-group">
+            <label class="control-label" for="date_creation">Date création :</label>
+            <input type="date" class="form-control" name="date_creation" id="date_creation" formControlName="date_creation" value="{{factureGlobal.date_creation}}"
+            />
+          </div>
+          <div class="form-group">
+            <label class="control-label" for="montantFacture">Montant facturé :</label>
+            <input type="text" class="form-control" name="montantFacture" id="montantFacture" formControlName="montantFacture" value="0"
+              required />
+          </div>
+          <div class="form-group">
+            <label class="control-label" for="reglementClient">Règlement client :</label>
+            <input type="text" class="form-control" name="reglementClient" id="reglementClient" formControlName="reglementClient" value="0"
+              required />
+          </div>
+          <div class="form-group">
+            <label class="control-label" for="factureGlobal">factureGlobal :</label>
+            <input type="text" class="form-control" name="factureGlobal" id="factureGlobal" formControlName="factureGlobal" value="{{factureGlobal.ref_factureGlobal}}"
+              required />
+          </div>
+          <div class="form-group">
+            <button [disabled]="!factureForm.valid" type="submit" class="btn btn-success">Ajouter règlement</button>
+            <button (click)="onCancel()" class="btn btn-default">Annuler</button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 </div>

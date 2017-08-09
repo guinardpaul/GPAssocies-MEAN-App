@@ -5,8 +5,20 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
 
+// Models
+import { DetailsDevis } from '../models/detailsDevis';
+
+/**
+ * Set dev url accessing app/routes/ url
+ */
 const devUrl = 'http://localhost:3001/api/details-devis/';
 
+/**
+ * 
+ * @author Paul GUINARD
+ * @export
+ * @class DetailsDevisService
+ */
 @Injectable()
 export class DetailsDevisService {
 
@@ -38,7 +50,7 @@ export class DetailsDevisService {
    * @returns 
    * @memberof DetailsDevisService
    */
-  saveDetailsDevis(detailsDevis: any) {
+  addDetailsDevis(detailsDevis: any) {
     return this.http.post(devUrl, detailsDevis)
       .map(res => res.json());
   }
@@ -46,11 +58,11 @@ export class DetailsDevisService {
   /**
    * Update DetailsDevis
    * 
-   * @param {*} detailsDevis  DetailsDevis body
+   * @param {DetailsDevis} detailsDevis  DetailsDevis body
    * @returns 
    * @memberof DetailsDevisService
    */
-  updateDetailsDevis(detailsDevis: any) {
+  updateDetailsDevis(detailsDevis: DetailsDevis) {
     return this.http.put(devUrl + detailsDevis._id, detailsDevis)
       .map(res => res.json());
   }

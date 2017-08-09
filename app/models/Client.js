@@ -48,7 +48,10 @@ const emailValidator = [{
 
 const ClientSchema = new mongoose.Schema({
     civilite: String,
-    statutClient: Boolean,
+    status_client: {
+        type: Boolean,
+        default: false
+    },
     nom: {
         type: String,
         required: true

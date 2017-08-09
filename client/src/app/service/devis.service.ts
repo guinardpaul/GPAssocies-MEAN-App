@@ -23,6 +23,13 @@ const devUrl = 'http://localhost:3001/api/devis/'
 export class DevisService {
 
 	/**
+   * Creates an instance of DevisService.
+   * @param {Http} http http module
+   * @memberof DevisService devis service
+   */
+  constructor(private http: Http) { }
+
+	/**
    * Get All Devis.
    *
    * @returns devis
@@ -45,7 +52,6 @@ export class DevisService {
       .map(res => res.json());
   };
 
-
 	/**
    * Get one devis.
    *
@@ -57,7 +63,6 @@ export class DevisService {
     return this.http.get(devUrl + id)
       .map(res => res.json());
   }
-
 
 	/**
    * Add Devis.
@@ -71,20 +76,18 @@ export class DevisService {
       .map(res => res.json());
   }
 
-
 	/**
    * Update Devis.
    *
-   * @param {any} devis devis body
+   * @param {Devis} devis devis body
    * @param {number} id_dev devis._id
    * @returns
    * @memberof DevisService
    */
-  updateDevis(devis: any, id_dev: number) {
-    return this.http.put(devUrl + id_dev, devis)
+  updateDevis(devis: Devis) {
+    return this.http.put(devUrl + devis._id, devis)
       .map(res => res.json());
   }
-
 
 	/**
    * Delete devis.
@@ -98,8 +101,8 @@ export class DevisService {
       .map(res => res.json());
   }
 
-
 	/**
+   * NOT USED
    * generic to extract Data Method.
    *
    * @private
@@ -112,8 +115,8 @@ export class DevisService {
     return body || {};
   }
 
-
 	/**
+   * NOT USED
    * generic to handle error Method.
    *
    * @private
@@ -125,13 +128,5 @@ export class DevisService {
     console.error('ApiService::handleError', error);
     return Observable.throw(error);
   }
-
-
-	/**
-   * Creates an instance of DevisService.
-   * @param {Http} http http module
-   * @memberof DevisService devis service
-   */
-  constructor(private http: Http) { }
 
 }

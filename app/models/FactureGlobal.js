@@ -1,9 +1,12 @@
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 const Client = require('./Client');
-const DetailsDevis = require('./DetailsDevis');
 
 const FactureGlobalSchema = new mongoose.Schema({
+    status_factureGlobal: {
+        type: Boolean,
+        default: true
+    },
     ref_factureGlobal: {
         type: String,
         required: true,
@@ -28,11 +31,11 @@ const FactureGlobalSchema = new mongoose.Schema({
     },
     montantTtcFacture: {
         type: Number,
-        required: true
+        default: 0
     },
     montantTtcRegle: {
         type: Number,
-        required: true
+        default: 0
     },
     client: {
         type: mongoose.Schema.Types.ObjectId,
