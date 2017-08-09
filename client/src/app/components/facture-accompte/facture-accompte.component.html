@@ -1,4 +1,8 @@
 <div class="container-fluid">
+  <h4>{{factureGlobal.ref_factureGlobal}} {{factureGlobal.montantTtc}}</h4>
+  <a class="btn btn-default" [routerLink]="['/devis/client/', factureGlobal.client]">Retour page Devis/Factures</a>
+</div>
+<div class="container-fluid">
   <h4 style="text-align: center;">Factures d'accompte</h4>
   <table class="table table-striped">
     <thead>
@@ -23,8 +27,7 @@
         <td>
           <div class="btn-group-vertical">
             <button class="btn btn-success" (click)="addReglement(f)">Ajouter règlement</button>
-            <button class="btn btn-warning" (click)="onUpdate(f)">Modifier</button>
-            <button class="btn btn-danger" (click)="onDelete(f._id)">Supprimer</button>
+            <button class="btn btn-danger" (click)="deleteFactureAccompte(f._id)">Supprimer</button>
           </div>
         </td>
       </tr>
@@ -78,7 +81,7 @@
     <div class="panel panel-info">
       <div class="panel-heading">Ajouter règlement</div>
       <div class="panel-body">
-        <form class="form-horizontal" [formGroup]="factureForm" (submit)="addFactureAccompte()">
+        <form class="form-horizontal" [formGroup]="factureForm" (submit)="addReglement()">
           <div class="form-group">
             <label class="control-label" for="ref_factureAccompte">Ref :</label>
             <input type="text" class="form-control" name="ref_factureAccompte" id="ref_factureAccompte" formControlName="ref_factureAccompte"

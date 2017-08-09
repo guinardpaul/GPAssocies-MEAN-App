@@ -141,6 +141,25 @@ export class FactureAccompteComponent implements OnInit {
   }
 
   /**
+   * Add reglement. update FactureAccompte on success
+   * 
+   * @memberof FactureAccompteComponent
+   */
+  addReglement() {
+
+  }
+
+  /**
+   * Delete Facture Accompte
+   * 
+   * @param {number} id factureAccompte._id
+   * @memberof FactureAccompteComponent
+   */
+  deleteFactureAccompte(id: number) {
+
+  }
+
+  /**
    * Method to fetch modified data from database and display into table.
    *
    * @memberof FactureAccompteComponent
@@ -161,7 +180,9 @@ export class FactureAccompteComponent implements OnInit {
   }
 
   /**
-   * onUpdate. Set disable 
+   * onUpdate:
+   * - generate updateForm
+   * - get All reglement by FactureAccompte._id
    * 
    * @param {FactureAccompte} factureAccompte FactureAccompte
    * @memberof FactureAccompteComponent
