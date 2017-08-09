@@ -18,7 +18,8 @@ module.exports = (router) => {
         } else {
           res.json({
             success: false,
-            message: 'Details Devis not found'
+            message: 'Details Devis not found',
+            err: err
           });
         }
       });
@@ -39,6 +40,7 @@ module.exports = (router) => {
         if (err) {
           res.json({
             success: false,
+            message: 'Details Devis not found',
             err: err
           });
         } else {
@@ -62,12 +64,13 @@ module.exports = (router) => {
         if (err) {
           res.json({
             success: false,
+            message: 'Erreur création details devis',
             err: err
           });
         } else {
           res.json({
             success: true,
-            message: 'DetailsDevis saved',
+            message: 'DetailsDevis créé',
             obj: data
           });
         }
@@ -89,12 +92,13 @@ module.exports = (router) => {
         if (err) {
           res.json({
             success: false,
-            message: 'Erreur modification Details devis' + err
+            message: 'Erreur modification Details devis',
+            err: err
           });
         } else {
           res.json({
             success: true,
-            message: 'Détails devis mis à jour',
+            message: 'Détails devis modifié',
             obj: data
           });
         }
@@ -116,12 +120,13 @@ module.exports = (router) => {
         if (err) {
           res.json({
             success: false,
+            message: 'Details devis not found',
             err: err
           });
         } else {
           res.json({
             success: true,
-            message: 'Details Devis deleted'
+            message: 'Details Devis supprimé'
           });
         }
       });

@@ -30,7 +30,8 @@ module.exports = (router) => {
                 } else {
                     res.json({
                         success: false,
-                        message: 'Facture Global not found'
+                        message: 'Facture Global not found',
+                        err: err
                     });
                 }
             });
@@ -53,7 +54,8 @@ module.exports = (router) => {
                 if (err) {
                     res.json({
                         success: false,
-                        message: err
+                        message: 'Facture global not found',
+                        err: err
                     });
                 }
                 if (facture) {
@@ -85,16 +87,11 @@ module.exports = (router) => {
                 if (err) {
                     return res.json({
                         success: false,
-                        error: err
+                        message: 'Facture global not found',
+                        err: err
                     });
-                }
-                if (data) {
-                    res.json(data);
                 } else {
-                    res.json({
-                        success: false,
-                        message: 'Facture Global not found'
-                    });
+                    res.json(data);
                 }
             });
         }
@@ -114,13 +111,14 @@ module.exports = (router) => {
                 if (err) {
                     return res.json({
                         success: false,
-                        error: err
+                        message: 'Facture global not found',
+                        err: err
                     });
                 } else {
                     res.json({
                         success: true,
                         obj: data,
-                        msg: 'Facture Global created'
+                        message: 'Facture Global created'
                     });
                 }
             });
@@ -141,14 +139,15 @@ module.exports = (router) => {
                 if (err) {
                     return res.json({
                         success: false,
-                        error: err
+                        message: 'Facture global not found',
+                        err: err
                     });
                 } else {
                     FactureGlobal.findById(req.params.id, (err, data) => {
                         res.json({
                             success: true,
                             obj: data,
-                            msg: 'Facture Global updated'
+                            message: 'Facture Global updated'
                         });
                     });
                 }
@@ -170,13 +169,14 @@ module.exports = (router) => {
                 if (err) {
                     return res.json({
                         success: false,
-                        error: err
+                        message: 'Facture global not found',
+                        err: err
                     });
-                }
-                if (data != null) {
-                    res.json({ success: true, msg: 'Facture Global deleted' });
                 } else {
-                    res.json({ success: false, msg: 'Error. Facture Global doesn\'t exist' });
+                    res.json({
+                        success: true,
+                        message: 'Facture Global deleted'
+                    });
                 }
             });
         }

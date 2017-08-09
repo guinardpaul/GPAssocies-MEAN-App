@@ -28,7 +28,8 @@ module.exports = (router) => {
                 if (err) {
                     return res.json({
                         success: false,
-                        error: err
+                        message: 'Facture d\'accompte not found',
+                        err: err
                     });
                 } else {
                     res.json(data);
@@ -51,7 +52,8 @@ module.exports = (router) => {
                 if (err) {
                     return res.json({
                         success: false,
-                        error: err
+                        message: 'Facture d\'accompte not found',
+                        err: err
                     });
                 } else {
                     res.json(data);
@@ -74,7 +76,8 @@ module.exports = (router) => {
                 if (err) {
                     return res.json({
                         success: false,
-                        message: err
+                        err: err,
+                        message: 'Erreur création facture d\'accompte'
                     });
                 } else {
                     res.json({
@@ -101,14 +104,15 @@ module.exports = (router) => {
                 if (err) {
                     return res.json({
                         success: false,
-                        error: err
+                        message: 'Erreur modification facture d\'accompte',
+                        err: err
                     });
                 } else {
                     FactureAccompte.findById(req.params.id, (err, data) => {
                         res.json({
                             success: true,
                             obj: data,
-                            message: 'Facture Accompte updated'
+                            message: 'Facture  d\'accompte modifiée'
                         });
                     });
                 }
@@ -127,23 +131,17 @@ module.exports = (router) => {
             });
         } else {
             FactureAccompte.findByIdAndRemove(req.params.id, req.body, (err, data) => {
-                if (err) {
-                    return res.json({
-                        success: false,
-                        error: err
+                if (data) {
+                    res.json({
+                        success: true,
+                        message: 'Facture d\'accompte supprimée'
                     });
                 } else {
-                    if (data != null) {
-                        res.json({
-                            success: true,
-                            message: 'Facture Accompte deleted'
-                        });
-                    } else {
-                        res.json({
-                            success: true,
-                            message: 'Error. Facture Accompte doesn\'t exist'
-                        });
-                    }
+                    res.json({
+                        success: false,
+                        message: 'Erreur suppresion facture d\'accompte',
+                        err: err
+                    });
                 }
             });
         }

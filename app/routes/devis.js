@@ -30,7 +30,8 @@ module.exports = (router) => {
                 } else {
                     res.json({
                         success: false,
-                        message: 'Devis not found'
+                        message: 'Devis not found',
+                        err: err
                     });
                 }
             });
@@ -53,7 +54,8 @@ module.exports = (router) => {
                 } else {
                     res.json({
                         success: false,
-                        message: 'Devis not found'
+                        message: 'Devis not found',
+                        err: err
                     });
                 }
             });
@@ -81,13 +83,14 @@ module.exports = (router) => {
                 if (err) {
                     res.json({
                         success: false,
-                        message: 'erreur' + err
+                        message: 'Erreur création devis',
+                        err: err
                     });
                 } else {
                     res.json({
                         success: true,
                         obj: data,
-                        message: 'Devis created'
+                        message: 'Devis créé'
                     });
                 }
             });
@@ -108,7 +111,8 @@ module.exports = (router) => {
                 if (err) {
                     res.json({
                         success: false,
-                        error: err
+                        message: 'Erreur modification devis',
+                        err: err
                     });
                 } else {
                     // Récupère Devis Updated
@@ -116,7 +120,7 @@ module.exports = (router) => {
                         res.json({
                             success: true,
                             obj: data,
-                            msg: 'Devis updated'
+                            message: 'Devis modifié'
                         });
                     });
                 }
@@ -138,12 +142,13 @@ module.exports = (router) => {
                 if (data) {
                     res.json({
                         success: true,
-                        msg: 'Devis deleted'
+                        message: 'Devis supprimé'
                     });
                 } else {
                     res.json({
                         success: false,
-                        msg: 'Error. Devis doesn\'t exist'
+                        message: 'Erreur suppression devis',
+                        err: err
                     });
                 }
             });

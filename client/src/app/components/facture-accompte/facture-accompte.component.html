@@ -39,7 +39,9 @@
   <!-- addFactureAccompte Form -->
   <div class="container" *ngIf="mode">
     <div class="panel panel-info">
-      <div class="panel-heading">Facture d'accompte</div>
+      <div class="panel-heading">
+        <h4>Facture d'accompte</h4>
+      </div>
       <div class="panel-body">
         <form class="form-horizontal" [formGroup]="factureForm" (submit)="addFactureAccompte()">
           <div class="form-group">
@@ -79,7 +81,9 @@
   <!-- addReglement form -->
   <div class="container" *ngIf="modeAddReglement">
     <div class="panel panel-info">
-      <div class="panel-heading">Ajouter règlement</div>
+      <div class="panel-heading">
+        <h4>Ajouter règlement</h4>
+      </div>
       <div class="panel-body">
         <form class="form-horizontal" [formGroup]="reglementForm" (submit)="addReglement()">
           <div class="form-group">

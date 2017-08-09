@@ -2,7 +2,9 @@ const Client = require('../models/Client');
 
 module.exports = (router) => {
 
-    // GET ALL CLIENT
+    /**
+     * GET ALL CLIENT
+     */
     router.get('/clients', (req, res, next) => {
         Client.find((err, data) => {
             if (err) return next(err);
@@ -10,7 +12,9 @@ module.exports = (router) => {
         });
     });
 
-    // GET ONE CLIENT
+    /**
+     * GET ONE CLIENT
+     */
     router.get('/clients/:id', (req, res, next) => {
         if (!req.params.id) {
             res.json({
@@ -32,7 +36,9 @@ module.exports = (router) => {
         }
     });
 
-    // SAVE CLIENT
+    /**
+     * SAVE CLIENT
+     */
     router.post('/clients', (req, res, next) => {
         if (!req.body) {
             res.json({
@@ -56,7 +62,7 @@ module.exports = (router) => {
                         console.log(err);
                         res.json({
                             success: false,
-                            message: 'Error trying to save Client',
+                            message: 'Erreur création client',
                             err: err
                         });
                     }
@@ -64,13 +70,15 @@ module.exports = (router) => {
                 res.json({
                     success: true,
                     obj: data,
-                    msg: 'Client created'
+                    message: 'Client créé'
                 });
             });
         }
     });
 
-    // UPDATE CLIENT
+    /**
+     * UPDATE CLIENT
+     */
     router.put('/clients/:id', (req, res, next) => {
         if (!req.params.id) {
             res.json({
@@ -88,7 +96,7 @@ module.exports = (router) => {
                     } else {
                         res.json({
                             success: false,
-                            message: 'Error trying to update Client',
+                            message: 'Erreur modification client',
                             err: err
                         });
                     }
@@ -97,7 +105,7 @@ module.exports = (router) => {
                         res.json({
                             success: true,
                             obj: data,
-                            msg: 'Client updated'
+                            message: 'Client modifié'
                         });
                     });
                 }
@@ -105,7 +113,9 @@ module.exports = (router) => {
         }
     });
 
-    // REMOVE CLIENT
+    /**
+     * REMOVE CLIENT
+     */
     router.delete('/clients/:id', (req, res, next) => {
         if (!req.params.id) {
             res.json({
@@ -117,12 +127,12 @@ module.exports = (router) => {
                 if (data) {
                     res.json({
                         success: true,
-                        msg: 'Client deleted'
+                        message: 'Client supprimé'
                     });
                 } else {
                     res.json({
                         success: false,
-                        msg: 'Error. Client doesn\'t exist',
+                        message: 'Erreur suppression client',
                         err: err
                     });
                 }

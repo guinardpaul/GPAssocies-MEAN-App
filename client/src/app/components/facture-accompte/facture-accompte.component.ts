@@ -171,7 +171,26 @@ export class FactureAccompteComponent implements OnInit {
    * @memberof FactureAccompteComponent
    */
   deleteFactureAccompte(id: number) {
-
+    this.factureAccompteService.deleteFactureAccompte(id)
+      .subscribe(
+      data => {
+        if (data.success) {
+          console.log(data.message);
+          this.flashMessages.show(data.message, {
+            classes: [ 'alert', 'alert-success' ],
+            timeout: 3000
+          });
+          this.onSuccess();
+        } else {
+          console.log(data.message);
+          console.log(data.err);
+          this.flashMessages.show(data.message, {
+            classes: [ 'alert', 'alert-danger' ],
+            timeout: 3000
+          });
+        }
+      }
+      );
   }
 
   /**
@@ -182,7 +201,9 @@ export class FactureAccompteComponent implements OnInit {
   onSuccess() {
     this.getAllFactureAccompteByFactureGlobal(this.id_fact);
     this.mode = false;
+    this.modeAddReglement = false;
     this.generateForm();
+    this.generateReglementForm();
   }
 
   /**
@@ -191,7 +212,11 @@ export class FactureAccompteComponent implements OnInit {
    * @memberof FactureAccompteComponent
    */
   onAdd() {
+    let latest_date = this.datePipe.transform(Date.now(), 'yyyy-MM-dd');
+    this.factureForm.get('date_creation').setValue(latest_date);
+    this.factureGlobal.date_creation = latest_date;
     this.mode = true;
+    this.modeAddReglement = false;
   }
 
   /**
@@ -209,6 +234,7 @@ export class FactureAccompteComponent implements OnInit {
     this.factureAccompte.date_creation = latest_date;
     this.getAllReglementByFactureAccompte(factureAccompte._id);
     this.modeAddReglement = true;
+    this.mode = false;
   }
 
   /**

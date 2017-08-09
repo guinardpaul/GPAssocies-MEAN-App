@@ -7,14 +7,8 @@ module.exports = (router) => {
    */
   router.get('/reglements', (req, res, next) => {
     Reglement.find((err, data) => {
-      if (err) {
-        res.json({
-          success: false,
-          err: err
-        });
-      } else {
-        res.json(data);
-      }
+      if (err) return next(err);
+      res.json(data);
     });
   });
 
@@ -32,6 +26,7 @@ module.exports = (router) => {
         if (err) {
           res.json({
             success: false,
+            message: 'facture d\'accompte not found',
             err: err
           });
         } else {
@@ -55,13 +50,13 @@ module.exports = (router) => {
         if (err) {
           res.json({
             success: false,
-            message: 'Erreur save Reglement',
+            message: 'Erreur création réglement',
             err: err
           });
         } else {
           res.json({
             success: true,
-            message: 'Reglement saved'
+            message: 'Reglement créé'
           });
         }
       });
@@ -82,7 +77,8 @@ module.exports = (router) => {
         if (err) {
           res.json({
             success: false,
-            error: err
+            message: 'facture d\'accompte not found',
+            err: err
           });
         } else {
           // Récupère Reglement Updated
@@ -90,7 +86,7 @@ module.exports = (router) => {
             res.json({
               success: true,
               obj: data,
-              msg: 'Reglement updated'
+              message: 'Reglement modifié'
             });
           });
         }
@@ -112,12 +108,13 @@ module.exports = (router) => {
         if (data) {
           res.json({
             success: true,
-            msg: 'Reglement deleted'
+            message: 'Reglement supprimé'
           });
         } else {
           res.json({
             success: false,
-            msg: 'Error. Reglement doesn\'t exist'
+            message: 'Erreur suppression réglement',
+            err: err
           });
         }
       });
