@@ -92,12 +92,16 @@ export class ClientService {
    * Update Status Client
    * 
    * @param {Client} client client body
+   * @param {boolean} status status_client
    * @returns 
    * @memberof ClientService
    */
-  updateStatus(client: Client) {
-    // Inverse status_client
-    client.status_client = !client.status_client;
+  updateStatus(client: Client, status: boolean) {
+    // Set status_client
+    client.status_client = status;
+    console.log(status);
+    console.log(client.status_client);
+    // PUT request
     return this.http.put(devUrl + client._id, client)
       .map(res => res.json());
   }

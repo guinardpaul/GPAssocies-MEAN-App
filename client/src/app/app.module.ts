@@ -27,6 +27,7 @@ import { FactureGlobalService } from './service/facture-global.service';
 import { FactureAccompteService } from './service/facture-accompte.service';
 import { DetailsDevisService } from './service/details-devis.service';
 import { ReglementService } from './service/reglement.service';
+import { ReglementComponent } from './components/reglement/reglement.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { ReglementService } from './service/reglement.service';
     NavbarComponent,
     ValiderDevisComponent,
     PageNotFoundComponent,
-    FactureAccompteComponent
+    FactureAccompteComponent,
+    ReglementComponent
   ],
   imports: [
     BrowserModule,

@@ -187,31 +187,46 @@ export class FactureGlobalComponent implements OnInit {
    * @memberof ValiderDevisComponent
    */
   updateStatusClient(client: Client) {
+    // Initialise listFactureGlobals
+    this.listFactureGlobals = [];
+
     // Fetch Facture Globals from Database
     this.factureGlobalService.getAllFactureGlobalByClient(client._id)
       .subscribe(
-      FactureGlobals => this.listFactureGlobals = FactureGlobals,
+      FactureGlobals =>
+        this.listFactureGlobals = FactureGlobals,
       err => console.log(err)
       );
 
     // Check each factureGlobal.status dans listFactureGlobals
-    let status_facture: boolean = true;
-    if (this.listFactureGlobals !== null) {
+    let status_client: boolean = true;
+    if (this.listFactureGlobals.length > 0) {
       for (var factureGlobal in this.listFactureGlobals) {
         if (this.listFactureGlobals.hasOwnProperty(factureGlobal)) {
           if (this.listFactureGlobals[ factureGlobal ].status_factureGlobal === false) {
-            status_facture = false;
+            status_client = false;
           }
-
         }
       }
+    } else {
+      status_client = false;
     }
 
-    // si status_facture === true && status_client !== true
-    if (status_facture && this.client.status_client !== true) {
-      this.clientService.updateStatus(client)
+    // OPTIONNEL : faire 2 cas. si status_client == true et status_client == false
+    // pour éviter requete database si status déja set comme il faut.
+    // Si status_facture === true && status_client !== true
+    if (status_client && this.client.status_client === false) {
+      this.clientService.updateStatus(client, status_client)
         .subscribe(
-        client => console.log('Status client mis à jour :' + client.status_client),
+        data => console.log('Status client mis à jour :' + data.obj.status_client),
+        err => console.log('Erreur mis à jour status client :' + err)
+        );
+    }
+
+    if (!(status_client) && this.client.status_client === true) {
+      this.clientService.updateStatus(client, status_client)
+        .subscribe(
+        data => console.log('Status client mis à jour :' + data.obj.status_client),
         err => console.log('Erreur mis à jour status client :' + err)
         );
     }
@@ -228,7 +243,6 @@ export class FactureGlobalComponent implements OnInit {
     this.mode = false;
     this.factureGlobal = {};
     this.processing = false;
-    //this.enableForm();
   }
 
   /**

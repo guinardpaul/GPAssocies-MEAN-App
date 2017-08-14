@@ -95,8 +95,8 @@ export class FactureAccompteService {
    * @returns 
    * @memberof FactureAccompteService
    */
-  updateStatusFactureAccompte(factureAccompte: FactureAccompte) {
-    factureAccompte.status_factureAccompte = !factureAccompte.status_factureAccompte;
+  updateStatusFactureAccompte(factureAccompte: FactureAccompte, status_factureAccompte) {
+    factureAccompte.status_factureAccompte = status_factureAccompte;
     return this.http.put(devUrl + factureAccompte._id, factureAccompte)
       .map(res => res.json());
   }

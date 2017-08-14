@@ -7,6 +7,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { FactureGlobal } from '../../models/factureGlobal';
 import { FactureAccompte } from '../../models/factureAccompte';
 import { Reglement } from '../../models/reglement';
+import { Client } from '../../models/client';
 
 // Services
 import { FactureGlobalService } from '../../service/facture-global.service';
@@ -31,9 +32,11 @@ export class FactureAccompteComponent implements OnInit {
   id_fact: number;
   factureGlobal: any = {};
   factureAccompte: any = {};
+  reglement: any = {};
+  client: Client;
   listFactureAccompte: FactureAccompte[];
   listReglement: Reglement[];
-  reglement: any = {};
+  listFactureGlobal: FactureGlobal[] = [];
   mode: boolean = false;
   modeAddReglement: boolean = false;
   factureForm: FormGroup;
@@ -41,9 +44,10 @@ export class FactureAccompteComponent implements OnInit {
 
   /**
    * Creates an instance of FactureAccompteComponent.
+   * 
    * @param {ActivatedRoute} activatedRoute request routes param
    * @param {FactureGlobalService} factureGlobalService facture global service
-   * @param {FactureAccompteService} factureAccompteService facture mois service
+   * @param {FactureAccompteService} factureAccompteService facture Accompte service
    * @param {DatePipe} datePipe format date
    * @param {FormBuilder} formBuilder reactive form builder
    * @param {FlashMessagesService} flashMessages Angular flash messages
@@ -66,16 +70,38 @@ export class FactureAccompteComponent implements OnInit {
   }
 
   /**
+   * Get Client to be updated
+   *
+   * @param {number} id client _id
+   * @memberof FactureAccompteComponent
+   */
+  getOneClient(id: number) {
+    // Fetch Client from database
+    this.clientService.getOneClient(this.factureGlobal.client)
+      .subscribe(
+      data => this.client = data,
+      err => console.log('Erreur :' + err)
+      );
+  }
+
+  getAllFactureGlobal(id: number) {
+
+  }
+
+  /**
    * Get One Facture Global
-   * 
+   *
    * @param {number} id factureGlobal._id
    * @memberof FactureAccompteComponent
    */
   getOneFactureGlobal(id: number) {
     this.factureGlobalService.getOneFactureGlobalById(id)
       .subscribe(
-      data => this.factureGlobal = data,
-      error => console.log('Error :' + error)
+      data => {
+        this.factureGlobal = data;
+        this.getOneClient(data.client);
+      },
+      err => console.log(err)
       );
   }
 
@@ -88,7 +114,7 @@ export class FactureAccompteComponent implements OnInit {
     this.factureAccompteService.getAllFactureAccompte()
       .subscribe(
       factureAccompte => this.listFactureAccompte = factureAccompte,
-      error => console.log('Error :' + error)
+      err => console.log(err)
       );
   }
 
@@ -102,13 +128,13 @@ export class FactureAccompteComponent implements OnInit {
     this.factureAccompteService.getAllFactureAccompteByFactureGlobal(id)
       .subscribe(
       factureAccompte => this.listFactureAccompte = factureAccompte,
-      error => console.log('Error :' + error)
+      err => console.log(err)
       );
   }
 
   /**
    * Get All Reglement by factureAccompte
-   * 
+   *
    * @param {number} id factureAccompte._id
    * @memberof FactureAccompteComponent
    */
@@ -122,7 +148,7 @@ export class FactureAccompteComponent implements OnInit {
 
   /**
    * Create Facture Accompte
-   * 
+   *
    * @memberof FactureAccompteComponent
    */
   addFactureAccompte() {
@@ -130,7 +156,7 @@ export class FactureAccompteComponent implements OnInit {
       ref_factureAccompte: this.factureForm.get('ref_factureAccompte').value,
       date_creation: this.factureForm.get('date_creation').value,
       montantFacture: this.factureForm.get('montantFacture').value,
-      reglementClient: this.factureForm.get('reglementClient').value,
+      reglementClient: 0,
       factureGlobal: this.factureGlobal._id,
     };
     console.log(newFacture);
@@ -143,34 +169,86 @@ export class FactureAccompteComponent implements OnInit {
             classes: [ 'alert', 'alert-success' ],
             timeout: 3000
           });
+          // Update facture global montantTtcFacture
+          this.updateMontantFactureGlobal(this.factureGlobal, newFacture.montantFacture);
+          // Update facture global status
+          // And update client status on success
+          this.updateStatusFactureGlobal(this.factureGlobal);
+          // Update client status
+          //this.updateStatusClient();
+
           this.onSuccess();
         } else {
-          console.log('Erreur creation facture accompte ' + data.message);
-          this.flashMessages.show('Erreur creation facture accompte', {
+          console.log('Erreur creation facture accompte :' + data.err);
+          this.flashMessages.show('data.message', {
             classes: [ 'alert', 'alert-danger' ],
             timeout: 3000
           });
         }
       }
-      )
+      );
   }
 
   /**
    * Add reglement. update FactureAccompte on success
-   * 
+   *
    * @memberof FactureAccompteComponent
    */
   addReglement() {
+    // Récupère Reglement data du form
+    let newReglement = {
+      date_reglement: this.reglementForm.get('date_creation').value,
+      reglementTtc: this.reglementForm.get('reglementTtc').value,
+      factureAccompte: this.factureAccompte._id
+    };
 
+    // Set factureAccompte.reglementClient
+    this.factureAccompte.reglementClient += Number(this.reglementForm.get('reglementTtc').value);
+
+    // add Reglement
+    this.reglementService.addReglement(newReglement)
+      .subscribe(
+      data => {
+        if (data.success) {
+          console.log(data.message);
+          this.flashMessages.show(data.message, {
+            classes: [ 'alert', 'alert-success' ],
+            timeout: 3000
+          });
+          // update Facture accompte with new reglementClient
+          this.updateReglementClientFactureAccompte(this.factureAccompte);
+          // update facture Accompte Status
+          this.updateStatusFactureAccompte(this.factureAccompte);
+          // update facture global reglement
+          this.updateReglementClientFactureGlobal(this.factureGlobal, newReglement.reglementTtc);
+          // update facture Global Status
+          // And update client status on success
+          this.updateStatusFactureGlobal(this.factureGlobal);
+          // Update client status
+          // this.updateStatusClient();
+
+          this.onSuccess();
+
+        } else {
+          console.log('Erreur creation facture accompte :' + data.err);
+          this.flashMessages.show('data.message', {
+            classes: [ 'alert', 'alert-danger' ],
+            timeout: 3000
+          });
+        }
+      }
+      );
   }
 
   /**
    * Delete Facture Accompte
-   * 
-   * @param {number} id factureAccompte._id
+   *
+   * @param {number} id factureAccompte Id
+   * @param {number} montantFacture factureAccomte montantTtcFacture
+   * @param {number} reglementClient factureAccomte montantTtcRegle
    * @memberof FactureAccompteComponent
    */
-  deleteFactureAccompte(id: number) {
+  deleteFactureAccompte(id: number, montantFacture: number, reglementClient: number) {
     this.factureAccompteService.deleteFactureAccompte(id)
       .subscribe(
       data => {
@@ -180,16 +258,190 @@ export class FactureAccompteComponent implements OnInit {
             classes: [ 'alert', 'alert-success' ],
             timeout: 3000
           });
+          // Update Facture global montantTtcFacture
+          this.updateMontantFactureGlobal(this.factureGlobal, -montantFacture);
+          // Update facture global reglementTtcTotal
+          this.updateReglementClientFactureGlobal(this.factureGlobal, -reglementClient);
+          // Update facture global status
+          // And update client status on success
+          this.updateStatusFactureGlobal(this.factureGlobal);
+          // Update client status
+          this.updateStatusClient();
+
           this.onSuccess();
         } else {
-          console.log(data.message);
-          console.log(data.err);
+          console.log(data.message + ' :' + data.err);
           this.flashMessages.show(data.message, {
             classes: [ 'alert', 'alert-danger' ],
             timeout: 3000
           });
         }
       }
+      );
+  }
+
+  /**
+   * Update reglement client facture accompte si :
+   * - réglement créé
+   *
+   * @param {FactureAccompte} factureAccompte facture accompte body
+   * @memberof FactureAccompteComponent
+   */
+  updateReglementClientFactureAccompte(factureAccompte: FactureAccompte) {
+    this.factureAccompteService.updateFactureAccompte(factureAccompte)
+      .subscribe(
+      data => {
+        if (data.success) {
+          console.log(data.message);
+        } else {
+          console.log(data.message + ' :' + data.err);
+        }
+      }
+      );
+  }
+
+  /**
+   * Update status factureAccompte si :
+   * - modification reglement == success
+   * - factureAccompte.reglementClient === factureAccompte.montantFacture
+   * - factureAccompte.status_factureAccompte !== true
+   *
+   * @param {FactureAccompte} factureAccompte facture accompte body
+   * @memberof FactureAccompteComponent
+   */
+  updateStatusFactureAccompte(factureAccompte: FactureAccompte) {
+    // Check if montantFacture === reglementClient && status_factureAccompte === false
+    if ((factureAccompte.reglementClient === factureAccompte.montantFacture)
+      && !factureAccompte.status_factureAccompte) {
+      this.factureAccompteService.updateStatusFactureAccompte(factureAccompte, true)
+        .subscribe(
+        data => console.log('Status facture accompte = true'),
+        err => console.log(err)
+        );
+    } else {
+      console.log('Status facture accompte not updated. Status = ' + factureAccompte.status_factureAccompte);
+    }
+  }
+
+  /**
+   * Update status factureGlobal si :
+   * - each montantFacturé factureAccompte === montantTtcTotal factureGlobal
+   * - each status factureAccompte === true
+   *
+   * @param {FactureGlobal} factureGlobal
+   * @memberof FactureAccompteComponent
+   */
+  updateStatusFactureGlobal(factureGlobal: FactureGlobal) {
+    let status_factureGlobal: boolean = false;
+
+    // Check montant facture
+    if ((factureGlobal.montantTtcFacture === factureGlobal.montantTtcTotal) && (factureGlobal.montantTtcFacture === factureGlobal.montantTtcRegle)) {
+      status_factureGlobal = true;
+    }
+
+    this.factureGlobalService.updateStatusFactureGlobal(factureGlobal, status_factureGlobal)
+      .subscribe(
+      data => {
+        console.log('Status facture global updated :' + data.obj.status_factureGlobal);
+      },
+      err => console.log('Erreur :' + err)
+      );
+    // this.updateStatusClient();
+  }
+
+  /**
+   * Update Status Client si :
+   * - update/delete FactureGlobal => Success.
+   * - AllFactureGlobalByClient.status === true
+   *
+   * @memberof FactureAccompteComponent
+   */
+  updateStatusClient() {
+    // init status_client
+    let status_client: boolean = true;
+
+    // Fetch Facture Globals from Database
+    this.factureGlobalService.getAllFactureGlobalByClient(this.client._id)
+      .subscribe(
+      factureGlobals => {
+        console.log(factureGlobals);
+
+        // Si list non vide : check each factureGlobal.status dans listFactureGlobal
+        if (factureGlobals.length > 0) {
+          for (var factureGlobal in factureGlobals) {
+            if (factureGlobals.hasOwnProperty(factureGlobal)) {
+              if (factureGlobals[ factureGlobal ].status_factureGlobal === false) {
+                status_client = false;
+                console.log('in');
+                console.log('status_client : ' + status_client);
+              }
+            }
+          }
+        } else {
+          status_client = false;
+        }
+      },
+      err => console.log('Erreur :' + err)
+      );
+
+    console.log(status_client);
+    // Update Status client
+    this.clientService.updateStatus(this.client, status_client)
+      .subscribe(
+      data => console.log('Status client mis à jour :' + data.obj.status_client),
+      err => console.log('Erreur' + err)
+      );
+
+    /*  // Si status_client === true && client.status_client === false
+     if (status_client && this.client.status_client === false) {
+       this.clientService.updateStatus(this.client, status_client)
+         .subscribe(
+         data => console.log('Status client mis à jour :' + data.obj.status_client),
+         err => console.log('Erreur mis à jour status client :' + err)
+         );
+     }
+ 
+     // Si status_client === false && client.status_client === true
+     if (!(status_client) && this.client.status_client === true) {
+       this.clientService.updateStatus(this.client, status_client)
+         .subscribe(
+         data => console.log('Status client mis à jour :' + data.obj.status_client),
+         err => console.log('Erreur mis à jour status client :' + err)
+         );
+     } */
+  }
+
+  /**
+   * Update FactureGlobal montantTtcFacturé si:
+   * - FactureAccompte success (add/update/delete).
+   *
+   * @param {FactureGlobal} factureGlobal
+   * @param {number} montantFacture
+   * @memberof FactureAccompteComponent
+   */
+  updateMontantFactureGlobal(factureGlobal: FactureGlobal, montantFacture: number) {
+    factureGlobal.montantTtcFacture += Number(montantFacture);
+    this.factureGlobalService.updateFactureGlobal(factureGlobal)
+      .subscribe(
+      data => console.log('updateMontantFactureGlobal réussi : ' + data.obj.montantTtcTotal),
+      err => console.log('Erreur :' + err)
+      );
+  }
+
+  /**
+   * Update FactureGlobal montantTtcReglé si:
+   * - Reglement success (add/update/delete).
+   *
+   * @param {FactureGlobal} factureGlobal
+   * @param {number} Reglement
+   * @memberof FactureAccompteComponent
+   */
+  updateReglementClientFactureGlobal(factureGlobal: FactureGlobal, reglement: number) {
+    factureGlobal.montantTtcRegle += Number(reglement);
+    this.factureGlobalService.updateFactureGlobal(factureGlobal)
+      .subscribe(
+      data => console.log('updateReglementClientFactureGlobal réussi :' + data.obj.montantTtcRegle),
+      err => console.log('Erreur :' + err)
       );
   }
 
@@ -202,19 +454,19 @@ export class FactureAccompteComponent implements OnInit {
     this.getAllFactureAccompteByFactureGlobal(this.id_fact);
     this.mode = false;
     this.modeAddReglement = false;
-    this.generateForm();
-    this.generateReglementForm();
   }
 
   /**
-   * onAdd
-   * 
+   * onAdd Facture accompte
+   *
    * @memberof FactureAccompteComponent
    */
-  onAdd() {
+  onAddFactureAccompte() {
+    this.generateForm();
     let latest_date = this.datePipe.transform(Date.now(), 'yyyy-MM-dd');
     this.factureForm.get('date_creation').setValue(latest_date);
     this.factureGlobal.date_creation = latest_date;
+    this.factureForm.get('montantFacture').setValue(this.factureGlobal.montantTtcTotal);
     this.mode = true;
     this.modeAddReglement = false;
   }
@@ -223,7 +475,7 @@ export class FactureAccompteComponent implements OnInit {
    * onUpdate:
    * - generate ReglementForm
    * - get All reglement by FactureAccompte._id
-   * 
+   *
    * @param {FactureAccompte} factureAccompte FactureAccompte
    * @memberof FactureAccompteComponent
    */
@@ -232,6 +484,7 @@ export class FactureAccompteComponent implements OnInit {
     this.factureAccompte = factureAccompte;
     let latest_date = this.datePipe.transform(this.factureAccompte.date_creation, 'yyyy-MM-dd');
     this.factureAccompte.date_creation = latest_date;
+    this.reglementForm.get('date_creation').setValue(latest_date);
     this.getAllReglementByFactureAccompte(factureAccompte._id);
     this.modeAddReglement = true;
     this.mode = false;
@@ -239,7 +492,7 @@ export class FactureAccompteComponent implements OnInit {
 
   /**
    * Cancel button
-   * 
+   *
    * @memberof FactureAccompteComponent
    */
   onCancel() {
@@ -259,15 +512,14 @@ export class FactureAccompteComponent implements OnInit {
     this.factureForm = this.formBuilder.group({
       ref_factureAccompte: [ '', Validators.required ],
       date_creation: [ Date.now ],
-      montantFacture: [ '0', Validators.required ],
-      reglementClient: [ '0', Validators.required ],
+      montantFacture: [ this.factureGlobal.montantFacture, Validators.required ],
       factureGlobal: [ { value: this.factureAccompte.factureGlobal, disabled: true }, Validators.required ]
     });
   }
 
   /**
-   * generator form add reglement
-   * 
+   * Generate form add reglement
+   *
    * @memberof FactureAccompteComponent
    */
   generateReglementForm() {
@@ -277,7 +529,7 @@ export class FactureAccompteComponent implements OnInit {
       montantFacture: [ { value: this.factureAccompte.montantFacture, disabled: true }],
       /* reglementClient: [ { value: this.factureAccompte.reglementClient, disabled: true }], */
       reglementTtc: [ this.reglement.reglementTtc, Validators.required ],
-      factureAccompte: [ { value: this.reglement.factureAccompte, disabled: true }, Validators.required ]
+      factureAccompte: [ { value: this.factureAccompte._id, disabled: true }, Validators.required ]
     });
   }
 

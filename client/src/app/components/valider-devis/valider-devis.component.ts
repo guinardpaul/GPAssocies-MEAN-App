@@ -173,16 +173,15 @@ export class ValiderDevisComponent implements OnInit {
           if (this.listFactureGlobals[ factureGlobal ].status_factureGlobal === false) {
             status_facture = false;
           }
-
         }
       }
     }
 
     // si status_facture === true && status_client !== true
-    if (status_facture && this.client.status_client !== true) {
-      this.clientService.updateStatus(client)
+    if ((status_facture && this.client.status_client !== true) || (!status_facture && this.client.status_client === true)) {
+      this.clientService.updateStatus(client, status_facture)
         .subscribe(
-        client => console.log('Status client mis à jour :' + client.status_client),
+        data => console.log('Status client mis à jour :' + data.obj.status_client),
         err => console.log('Erreur mis à jour status client :' + err)
         );
     }

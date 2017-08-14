@@ -27,13 +27,13 @@
         <td>
           <div class="btn-group-vertical">
             <button class="btn btn-success" (click)="onAddReglement(f)">Ajouter règlement</button>
-            <button class="btn btn-danger" (click)="deleteFactureAccompte(f._id)">Supprimer</button>
+            <button class="btn btn-danger" (click)="deleteFactureAccompte(f._id, f.montantFacture, f.reglementClient)">Supprimer</button>
           </div>
         </td>
       </tr>
     </tbody>
   </table>
-  <button class="btn btn-primary" (click)="onAdd()">Ajouter facture d'accompte</button>
+  <button class="btn btn-primary" (click)="onAddFactureAccompte()">Ajouter facture d'accompte</button>
   <br/><br/>
 
   <!-- addFactureAccompte Form -->
@@ -43,7 +43,7 @@
         <h4>Facture d'accompte</h4>
       </div>
       <div class="panel-body">
-        <form class="form-horizontal" [formGroup]="factureForm" (submit)="addFactureAccompte()">
+        <form class="form-horizontal" [formGroup]="factureForm">
           <div class="form-group">
             <label class="control-label" for="ref_factureAccompte">Ref :</label>
             <input type="text" class="form-control" name="ref_factureAccompte" id="ref_factureAccompte" formControlName="ref_factureAccompte"
@@ -56,21 +56,21 @@
           </div>
           <div class="form-group">
             <label class="control-label" for="montantFacture">Montant facturé :</label>
-            <input type="text" class="form-control" name="montantFacture" id="montantFacture" formControlName="montantFacture" value="0"
+            <input type="text" class="form-control" name="montantFacture" id="montantFacture" formControlName="montantFacture" value="{{factureGlobal.montantTtcTotal}}"
               required />
           </div>
-          <div class="form-group">
+          <!-- <div class="form-group">
             <label class="control-label" for="reglementClient">Règlement client :</label>
             <input type="text" class="form-control" name="reglementClient" id="reglementClient" formControlName="reglementClient" value="0"
               required />
-          </div>
+          </div> -->
           <div class="form-group">
             <label class="control-label" for="factureGlobal">factureGlobal :</label>
             <input type="text" class="form-control" name="factureGlobal" id="factureGlobal" formControlName="factureGlobal" value="{{factureGlobal.ref_factureGlobal}}"
               required />
           </div>
           <div class="form-group">
-            <button [disabled]="!factureForm.valid" type="submit" class="btn btn-success">Créer facture d'accompte</button>
+            <button [disabled]="!factureForm.valid" (click)="addFactureAccompte()" class="btn btn-success">Créer facture d'accompte</button>
             <button (click)="onCancel()" class="btn btn-default">Annuler</button>
           </div>
         </form>
@@ -85,15 +85,15 @@
         <h4>Ajouter règlement</h4>
       </div>
       <div class="panel-body">
-        <form class="form-horizontal" [formGroup]="reglementForm" (submit)="addReglement()">
+        <form class="form-horizontal" [formGroup]="reglementForm">
           <div class="form-group">
             <label class="control-label" for="ref_factureAccompte">Ref :</label>
             <input type="text" class="form-control" name="ref_factureAccompte" id="ref_factureAccompte" formControlName="ref_factureAccompte"
-              value="{{factureAccompte.ref_factureAccompte}}" autofocus required />
+              value="{{factureAccompte.ref_factureAccompte}}" required />
           </div>
           <div class="form-group">
             <label class="control-label" for="date_creation">Date création :</label>
-            <input type="date" class="form-control" name="date_creation" id="date_creation" formControlName="date_creation" value="{{factureGlobal.date_creation}}"
+            <input type="date" class="form-control" name="date_creation" id="date_creation" formControlName="date_creation" value="{{factureAccompte.date_creation}}"
             />
           </div>
           <div class="form-group">
@@ -110,14 +110,14 @@
           <div class="form-group">
             <label class="control-label" for="reglementTtc">Règlement client :</label>
             <input type="text" class="form-control" name="reglementTtc" id="reglementTtc" formControlName="reglementTtc" value="{{reglement.reglementTtc}}"
-              required />
+              autofocus required />
           </div>
           <div class="form-group">
             <label class="control-label" for="factureAccompte">Facture d'accompte :</label>
-            <input type="text" class="form-control" name="factureAccompte" id="factureAccompte" formControlName="factureAccompte" value="{{reglement.factureAccompte}}"
+            <input type="text" class="form-control" name="factureAccompte" id="factureAccompte" formControlName="factureAccompte" value="{{factureAccompte.ref_factureAccompte}}"
               required />
           </div>
-          <div *ngIf="!listReglement === null">
+          <div>
             <table class="table table-striped">
               <thead>
                 <th>Date création</th>
@@ -125,14 +125,14 @@
               </thead>
               <tbody>
                 <tr *ngFor="let r of listReglement">
-                  <td>{{r.date_creation}}</td>
+                  <td>{{r.date_reglement | date :'dd/MM/yyyy'}}</td>
                   <td>{{r.reglementTtc}}</td>
                 </tr>
               </tbody>
             </table>
           </div>
           <div class="form-group">
-            <button [disabled]="!factureForm.valid" type="submit" class="btn btn-success">Ajouter règlement</button>
+            <button [disabled]="!reglementForm.valid" (click)="addReglement()" class="btn btn-success">Ajouter règlement</button>
             <button (click)="onCancel()" class="btn btn-default">Annuler</button>
           </div>
         </form>
