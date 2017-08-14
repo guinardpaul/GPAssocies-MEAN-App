@@ -127,7 +127,10 @@ export class FactureAccompteComponent implements OnInit {
   getAllFactureAccompteByFactureGlobal(id: number) {
     this.factureAccompteService.getAllFactureAccompteByFactureGlobal(id)
       .subscribe(
-      factureAccompte => this.listFactureAccompte = factureAccompte,
+      factureAccompte => {
+        console.log(factureAccompte);
+        this.listFactureAccompte = factureAccompte;
+      },
       err => console.log(err)
       );
   }
@@ -172,12 +175,12 @@ export class FactureAccompteComponent implements OnInit {
           // Update facture global montantTtcFacture
           this.updateMontantFactureGlobal(this.factureGlobal, newFacture.montantFacture);
           // Update facture global status
-          // And update client status on success
           this.updateStatusFactureGlobal(this.factureGlobal);
           // Update client status
-          //this.updateStatusClient();
+          this.updateStatusClient();
 
           this.onSuccess();
+
         } else {
           console.log('Erreur creation facture accompte :' + data.err);
           this.flashMessages.show('data.message', {
@@ -222,10 +225,9 @@ export class FactureAccompteComponent implements OnInit {
           // update facture global reglement
           this.updateReglementClientFactureGlobal(this.factureGlobal, newReglement.reglementTtc);
           // update facture Global Status
-          // And update client status on success
           this.updateStatusFactureGlobal(this.factureGlobal);
           // Update client status
-          // this.updateStatusClient();
+          //this.updateStatusClient();
 
           this.onSuccess();
 
@@ -263,7 +265,6 @@ export class FactureAccompteComponent implements OnInit {
           // Update facture global reglementTtcTotal
           this.updateReglementClientFactureGlobal(this.factureGlobal, -reglementClient);
           // Update facture global status
-          // And update client status on success
           this.updateStatusFactureGlobal(this.factureGlobal);
           // Update client status
           this.updateStatusClient();
@@ -315,12 +316,16 @@ export class FactureAccompteComponent implements OnInit {
       && !factureAccompte.status_factureAccompte) {
       this.factureAccompteService.updateStatusFactureAccompte(factureAccompte, true)
         .subscribe(
-        data => console.log('Status facture accompte = true'),
+        data => {
+          console.log('Status facture accompte = true');
+          this.onSuccess();
+        },
         err => console.log(err)
         );
     } else {
       console.log('Status facture accompte not updated. Status = ' + factureAccompte.status_factureAccompte);
     }
+
   }
 
   /**
@@ -343,10 +348,11 @@ export class FactureAccompteComponent implements OnInit {
       .subscribe(
       data => {
         console.log('Status facture global updated :' + data.obj.status_factureGlobal);
+
       },
       err => console.log('Erreur :' + err)
       );
-    // this.updateStatusClient();
+    this.updateStatusClient();
   }
 
   /**
@@ -364,13 +370,17 @@ export class FactureAccompteComponent implements OnInit {
     this.factureGlobalService.getAllFactureGlobalByClient(this.client._id)
       .subscribe(
       factureGlobals => {
+        this.listFactureGlobal = factureGlobals
         console.log(factureGlobals);
-
+      },
+      err => {
+        console.log('Erreur :' + err)
+      }, () => {
         // Si list non vide : check each factureGlobal.status dans listFactureGlobal
-        if (factureGlobals.length > 0) {
-          for (var factureGlobal in factureGlobals) {
-            if (factureGlobals.hasOwnProperty(factureGlobal)) {
-              if (factureGlobals[ factureGlobal ].status_factureGlobal === false) {
+        if (this.listFactureGlobal.length > 0) {
+          for (var factureGlobal in this.listFactureGlobal) {
+            if (this.listFactureGlobal.hasOwnProperty(factureGlobal)) {
+              if (this.listFactureGlobal[ factureGlobal ].status_factureGlobal === false) {
                 status_client = false;
                 console.log('in');
                 console.log('status_client : ' + status_client);
@@ -380,17 +390,17 @@ export class FactureAccompteComponent implements OnInit {
         } else {
           status_client = false;
         }
-      },
-      err => console.log('Erreur :' + err)
+
+        // Update Status client
+        this.clientService.updateStatus(this.client, status_client)
+          .subscribe(
+          data => console.log('Status client mis à jour :' + data.obj.status_client),
+          err => console.log('Erreur' + err)
+          );
+      }
       );
 
-    console.log(status_client);
-    // Update Status client
-    this.clientService.updateStatus(this.client, status_client)
-      .subscribe(
-      data => console.log('Status client mis à jour :' + data.obj.status_client),
-      err => console.log('Erreur' + err)
-      );
+
 
     /*  // Si status_client === true && client.status_client === false
      if (status_client && this.client.status_client === false) {

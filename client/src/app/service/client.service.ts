@@ -99,8 +99,6 @@ export class ClientService {
   updateStatus(client: Client, status: boolean) {
     // Set status_client
     client.status_client = status;
-    console.log(status);
-    console.log(client.status_client);
     // PUT request
     return this.http.put(devUrl + client._id, client)
       .map(res => res.json());
