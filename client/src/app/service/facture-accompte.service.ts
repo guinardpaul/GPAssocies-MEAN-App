@@ -96,7 +96,9 @@ export class FactureAccompteService {
    * @memberof FactureAccompteService
    */
   updateStatusFactureAccompte(factureAccompte: FactureAccompte, status_factureAccompte) {
+    // Set status facture accompte
     factureAccompte.status_factureAccompte = status_factureAccompte;
+    // PUT request
     return this.http.put(devUrl + factureAccompte._id, factureAccompte)
       .map(res => res.json());
   }

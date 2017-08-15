@@ -25,7 +25,7 @@ module.exports = (router) => {
             // associe client to params
             // {} display all Devis informations
             Devis.find({ 'client': req.params.client }, {}, (err, data) => {
-                if (data.length > 0) {
+                if (data) {
                     res.json(data);
                 } else {
                     res.json({
