@@ -89,6 +89,20 @@ export class FactureAccompteComponent implements OnInit {
   }
 
   /**
+   * Get All Facture Global by Client
+   * 
+   * @param {number} id 
+   * @memberof FactureAccompteComponent
+   */
+  getAllFactureGlobalByClient(id: number) {
+    this.factureGlobalService.getAllFactureGlobalByClient(id)
+      .subscribe(
+      data => this.listFactureGlobal = data,
+      err => console.log('Erreur :' + err)
+      );
+  }
+
+  /**
    * Get One Facture Global
    *
    * @param {number} id factureGlobal._id
@@ -177,7 +191,7 @@ export class FactureAccompteComponent implements OnInit {
           // Update facture global status
           this.updateStatusFactureGlobal(this.factureGlobal);
           // Update client status
-          this.updateStatusClient();
+          //this.updateStatusClient();
 
           this.onSuccess();
 
@@ -267,7 +281,7 @@ export class FactureAccompteComponent implements OnInit {
           // Update facture global status
           this.updateStatusFactureGlobal(this.factureGlobal);
           // Update client status
-          this.updateStatusClient();
+          //this.updateStatusClient();
 
           this.onSuccess();
         } else {
@@ -325,7 +339,6 @@ export class FactureAccompteComponent implements OnInit {
     } else {
       console.log('Status facture accompte not updated. Status = ' + factureAccompte.status_factureAccompte);
     }
-
   }
 
   /**
@@ -348,11 +361,11 @@ export class FactureAccompteComponent implements OnInit {
       .subscribe(
       data => {
         console.log('Status facture global updated :' + data.obj.status_factureGlobal);
-
+        this.updateStatusClient();
       },
       err => console.log('Erreur :' + err)
-      );
-    this.updateStatusClient();
+      )
+
   }
 
   /**
@@ -367,20 +380,16 @@ export class FactureAccompteComponent implements OnInit {
     let status_client: boolean = true;
 
     // Fetch Facture Globals from Database
+    //this.getAllFactureGlobalByClient(this.client._id);
     this.factureGlobalService.getAllFactureGlobalByClient(this.client._id)
       .subscribe(
-      factureGlobals => {
-        this.listFactureGlobal = factureGlobals
-        console.log(factureGlobals);
-      },
-      err => {
-        console.log('Erreur :' + err)
-      }, () => {
+      data => {
+        console.log(data);
         // Si list non vide : check each factureGlobal.status dans listFactureGlobal
-        if (this.listFactureGlobal.length > 0) {
-          for (var factureGlobal in this.listFactureGlobal) {
-            if (this.listFactureGlobal.hasOwnProperty(factureGlobal)) {
-              if (this.listFactureGlobal[ factureGlobal ].status_factureGlobal === false) {
+        if (data.length > 0) {
+          for (var factureGlobal in data) {
+            if (data.hasOwnProperty(factureGlobal)) {
+              if (data[ factureGlobal ].status_factureGlobal === false) {
                 status_client = false;
                 console.log('in');
                 console.log('status_client : ' + status_client);
@@ -390,15 +399,15 @@ export class FactureAccompteComponent implements OnInit {
         } else {
           status_client = false;
         }
-
         // Update Status client
         this.clientService.updateStatus(this.client, status_client)
           .subscribe(
           data => console.log('Status client mis à jour :' + data.obj.status_client),
           err => console.log('Erreur' + err)
           );
-      }
-      );
+      }, err => console.log('Erreur :' + err)
+      )
+
 
 
 

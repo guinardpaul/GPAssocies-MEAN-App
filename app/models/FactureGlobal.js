@@ -5,7 +5,7 @@ const Client = require('./Client');
 const FactureGlobalSchema = new mongoose.Schema({
     status_factureGlobal: {
         type: Boolean,
-        default: true
+        default: false
     },
     ref_factureGlobal: {
         type: String,

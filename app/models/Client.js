@@ -64,7 +64,6 @@ const ClientSchema = new mongoose.Schema({
         type: String,
         lowercase: true,
         required: true,
-        unique: true,
         validate: emailValidator
     },
     adresseFact: String,
