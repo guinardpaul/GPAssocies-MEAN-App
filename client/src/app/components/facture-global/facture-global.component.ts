@@ -29,9 +29,9 @@ export class FactureGlobalComponent implements OnInit {
   factureGlobal: any = {};
   listFactureGlobals: FactureGlobal[];
   client = new Client();
-  mode: boolean = false;
   id_client: number;
-  processing: boolean = false;
+  mode = false;
+  processing = false;
   factureForm: FormGroup;
 
   /**

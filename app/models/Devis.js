@@ -5,8 +5,7 @@ const Client = require('./Client');
 const DevisSchema = new mongoose.Schema({
 	ref_devis: {
 		type: String,
-		required: true,
-		unique: true
+		required: true
 	},
 	date_creation: {
 		type: Date,

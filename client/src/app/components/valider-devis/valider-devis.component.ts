@@ -31,7 +31,6 @@ export class ValiderDevisComponent implements OnInit {
   listClient: Client[];
   listFactureGlobals: FactureGlobal[];
   devis: any = {};
-  //id_client: number;
   id_devis: number;
   client = new Client();
   validationRef: boolean;

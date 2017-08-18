@@ -35,8 +35,8 @@ export class DevisComponent implements OnInit {
   detailsDevis3: any = { tauxTva: 20 };
   client = new Client();
   id_client: number;
-  mode: boolean = false;
-  processing: boolean = false;
+  mode = false;
+  processing = false;
   devisForm: FormGroup;
 
   /**
@@ -219,7 +219,7 @@ export class DevisComponent implements OnInit {
    * onAddDevis() success :
    * - set detailsDevis.devis = devis._id : get from data.obj
    * - save all DetailsDevis to database
-   * 
+   *
    * @param {any} devis devis data
    * @memberof DevisComponent
    */
@@ -283,7 +283,7 @@ export class DevisComponent implements OnInit {
   }
 
   /**
-   * 
+   *
    * update DetailsDevis
    * @param {any} devis devis
    * @memberof DevisComponent
@@ -468,6 +468,21 @@ export class DevisComponent implements OnInit {
   }
 
   /**
+   * onCancel form
+   * !!!! TODO !!!!!!
+   *
+   * @memberof DevisComponent
+   */
+  onCancel() {
+    this.mode = false;
+    this.generateForm();
+    this.devis = {};
+    this.detailsDevis1 = { tauxTva: 5.5 };
+    this.detailsDevis2 = { tauxTva: 10 };
+    this.detailsDevis3 = { tauxTva: 20 };
+  }
+
+  /**
    * Generate Reactive Form
    *
    * @memberof DevisComponent
@@ -524,7 +539,7 @@ export class DevisComponent implements OnInit {
   /* (blur) CALCUL MONTANT TTC DetailsDevis & Devis data */
   /**
    * Calcul montantTtc1 using tauxTva1 and montantHt1 values of validerDevisForm and send new montantTtc1
-   * 
+   *
    * @memberof DevisComponent
    */
   calculMontant1() {
@@ -536,7 +551,7 @@ export class DevisComponent implements OnInit {
 
   /**
    * Calcul montantTtc2 using tauxTva2 and montantHt2 values of validerDevisForm and send new montantTtc2
-   * 
+   *
    * @memberof DevisComponent
    */
   calculMontant2() {
@@ -548,7 +563,7 @@ export class DevisComponent implements OnInit {
 
   /**
    * Calcul montantTtc3 using tauxTva3 and montantHt3 values of validerDevisForm and send new montantTtc3
-   * 
+   *
    * @memberof DevisComponent
    */
   calculMontant3() {
@@ -560,7 +575,7 @@ export class DevisComponent implements OnInit {
 
   /**
    * Calcul tauxTva using tauxTva1, tauxTva2 and tauxTva3 values of validerDevisForm and send new tauxTva
-   * 
+   *
    * @memberof DevisComponent
    */
   calculTauxTva() {
@@ -572,7 +587,7 @@ export class DevisComponent implements OnInit {
 
   /**
    * Calcul MontantHt using MontantHt1, MontantHt2 and MontantHt3 values of validerDevisForm and send new MontantHt
-   * 
+   *
    * @memberof DevisComponent
    */
   calculMontantHt() {
@@ -586,7 +601,7 @@ export class DevisComponent implements OnInit {
 
   /**
    * Calcul MontantTtc using MontantTtc1, MontantTtc2 and MontantTtc3 values of validerDevisForm and send new MontantTtc
-   * 
+   *
    * @memberof DevisComponent
    */
   calculMontantTtc() {

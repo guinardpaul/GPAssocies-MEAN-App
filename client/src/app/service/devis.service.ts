@@ -101,32 +101,4 @@ export class DevisService {
       .map(res => res.json());
   }
 
-	/**
-   * NOT USED
-   * generic to extract Data Method.
-   *
-   * @private
-   * @param {Response} res response
-   * @returns
-   * @memberof DevisService
-   */
-  private extractData(res: Response) {
-    let body = res.json();
-    return body || {};
-  }
-
-	/**
-   * NOT USED
-   * generic to handle error Method.
-   *
-   * @private
-   * @param {(Response | any)} error error
-   * @returns
-   * @memberof DevisService
-   */
-  private handleError(error: Response | any) {
-    console.error('ApiService::handleError', error);
-    return Observable.throw(error);
-  }
-
 }

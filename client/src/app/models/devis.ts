@@ -18,7 +18,7 @@ export class Devis {
    * @param {Object} [values={}]
    * @memberof Devis
    */
-  constructor(values: Object = {}) {
+	constructor(values: Object = {}) {
 		Object.assign(this, values);
 	}
 }

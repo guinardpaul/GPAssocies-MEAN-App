@@ -128,34 +128,4 @@ export class FactureGlobalService {
       .map(res => res.json());
   }
 
-	/**
-   * NOT USED
-   * 
-   * Generic Extract Data Method.
-   *
-   * @private
-   * @param {Response} res response
-   * @returns
-   * @memberof FactureGlobalService
-   */
-  private extractData(res: Response) {
-    let body = res.json();
-    return body || {};
-  }
-
-	/**
-   * NOT USED
-   * 
-   * Generic Error handler Method.
-   *
-   * @private
-   * @param {(Response | any)} error error
-   * @returns
-   * @memberof FactureGlobalService
-   */
-  private handleError(error: Response | any) {
-    console.error('ApiService::handleError', error);
-    return Observable.throw(error);
-  }
-
 }

@@ -19,6 +19,8 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { ValiderDevisComponent } from './components/valider-devis/valider-devis.component';
 import { FactureAccompteComponent } from './components/facture-accompte/facture-accompte.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
+import { ReglementComponent } from './components/reglement/reglement.component';
+import { BugsComponent } from './components/bugs/bugs.component';
 
 // import Services
 import { ClientService } from './service/client.service';
@@ -27,7 +29,7 @@ import { FactureGlobalService } from './service/facture-global.service';
 import { FactureAccompteService } from './service/facture-accompte.service';
 import { DetailsDevisService } from './service/details-devis.service';
 import { ReglementService } from './service/reglement.service';
-import { ReglementComponent } from './components/reglement/reglement.component';
+import { BugsService } from './service/bugs.service';
 
 @NgModule({
   declarations: [
@@ -40,7 +42,8 @@ import { ReglementComponent } from './components/reglement/reglement.component';
     ValiderDevisComponent,
     PageNotFoundComponent,
     FactureAccompteComponent,
-    ReglementComponent
+    ReglementComponent,
+    BugsComponent
   ],
   imports: [
     BrowserModule,
@@ -56,7 +59,8 @@ import { ReglementComponent } from './components/reglement/reglement.component';
     FactureGlobalService,
     DetailsDevisService,
     ReglementService,
-    DatePipe
+    DatePipe,
+    BugsService
   ],
   bootstrap: [ AppComponent ],
   exports: [ ClientComponent ]

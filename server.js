@@ -30,6 +30,7 @@ const factureGlobal = require('./app/routes/factureGlobal')(router);
 const factureAccompte = require('./app/routes/factureAccompte')(router);
 const detailsDevis = require('./app/routes/detailsDevis')(router);
 const reglement = require('./app/routes/reglement')(router);
+const bug = require('./app/routes/bug')(router);
 
 // MIDDLEWARE
 // log into console (dev)
@@ -49,6 +50,7 @@ app.use('/api', factureGlobal);
 app.use('/api', factureAccompte);
 app.use('/api', detailsDevis);
 app.use('/api', reglement);
+app.use('/api', bug);
 
 // allow to refresh page
 // send back to dist/index.html

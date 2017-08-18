@@ -1,0 +1,62 @@
+<div class="container-fluid">
+  <h4 style="text-align: center;">Bugs</h4>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Statut</th>
+        <th>Date création</th>
+        <th>Description</th>
+        <th>Criticité</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let b of listBugs">
+        <td>{{b.status_correction}}</td>
+        <td>{{b.date_creation | date: 'dd/MM/yyyy'}}</td>
+        <td>{{b.description}}</td>
+        <td>{{b.criticite}}</td>
+        <td>
+          <div class="btn-group-vertical">
+            <button class="btn btn-success" (click)="onUpdateBug(b)">Modifier</button>
+            <button class="btn btn-danger" (click)="deleteBug(b._id)">Supprimer</button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <button class="btn btn-primary" (click)="onAdd()">Ajouter Bug</button>
+  <br/><br/>
+
+  <div class="container-fluid" *ngIf="mode">
+    <span class="col-sm-3"></span>
+    <div class="panel panel-info col-sm-6">
+      <div class="panel-heading">
+        <h4>Bug</h4>
+      </div>
+      <div class="panel-body">
+        <form class="form-horizontal" [formGroup]="bugForm" (submit)="addBug()">
+          <div class="form-group">
+            <label class="control-label" for="date_creation">Date création :</label>
+            <input type="date" class="form-control" name="date_creation" id="date_creation" formControlName="date_creation" value="{{bug.date_creation}}"
+            />
+          </div>
+          <div class="form-group">
+            <label class="control-label" for="description">Description :</label>
+            <input type="text" class="form-control" name="description" id="description" formControlName="description" value="{{bug.description}}"
+            />
+          </div>
+          <div class="form-group">
+            <label class="control-label" for="criticite">Criticité :</label>
+            <select class="form-control" name="criticite" id="criticite" formControlName="criticite" required>
+              <option *ngFor="let key of keys" [value]="key">{{criticite[key]}}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <button [disabled]="!bugForm.valid || processing" type="submit" class="btn btn-success">Ajouter Bug</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <span class="col-sm-3"></span>
+  </div>

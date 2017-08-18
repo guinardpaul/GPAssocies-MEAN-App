@@ -9,8 +9,7 @@ const FactureGlobalSchema = new mongoose.Schema({
     },
     ref_factureGlobal: {
         type: String,
-        required: true,
-        unique: true
+        required: true
     },
     date_creation: {
         type: Date,

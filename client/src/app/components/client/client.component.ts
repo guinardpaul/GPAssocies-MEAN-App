@@ -26,8 +26,8 @@ export class ClientComponent implements OnInit {
   listClient: any[];
   client: any = {};
   client_id: number;
-  mode: boolean = false;
-  processing: boolean = false;
+  mode = false;
+  processing = false;
   clientForm: FormGroup;
 
 	/**
@@ -88,7 +88,7 @@ export class ClientComponent implements OnInit {
     this.disableForm();
     this.client = this.clientForm.value;
     this.client._id = this.client_id;
-    if (this.client._id == null || this.client._id == 0) {
+    if (this.client._id === null || this.client._id === 0) {
       this.clientService.addClient(this.client)
         .subscribe(
         data => {

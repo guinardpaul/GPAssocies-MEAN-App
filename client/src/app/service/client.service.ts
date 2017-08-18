@@ -104,33 +104,4 @@ export class ClientService {
       .map(res => res.json());
   }
 
-  /**
-   * NOT USED
-   * function generic to extract Data
-   *
-   * @private
-   * @param {Response} res
-   * @returns
-   * @memberof ClientService
-   */
-  private extractData(res: Response) {
-    let body = res.json();
-    return body || {};
-  }
-
-  /**
-   * NOT USED
-   * function generic to handle error
-   *
-   * @private
-   * @param {(Response | any)} error
-   * @returns
-   * @throws {error} error
-   * @memberof ClientService
-   */
-  private handleError(error: Response | any) {
-    console.error('ApiService::handleError', error);
-    return Observable.throw(error);
-  }
-
 }

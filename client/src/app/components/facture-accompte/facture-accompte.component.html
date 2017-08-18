@@ -82,7 +82,7 @@
       <div class="panel-body">
         <form class="form-horizontal" [formGroup]="reglementForm">
           <div class="form-group">
-            <label class="control-label" for="ref_factureAccompte">Ref :</label>
+            <label class="control-label" for="ref_factureAccompte">Ref Facture d'accompte :</label>
             <input type="text" class="form-control" name="ref_factureAccompte" id="ref_factureAccompte" formControlName="ref_factureAccompte"
               value="{{factureAccompte.ref_factureAccompte}}" required />
           </div>
@@ -101,11 +101,11 @@
             <input type="text" class="form-control" name="reglementTtc" id="reglementTtc" formControlName="reglementTtc" value="{{reglement.reglementTtc}}"
               autofocus required />
           </div>
-          <div class="form-group">
+          <!-- <div class="form-group">
             <label class="control-label" for="factureAccompte">Facture d'accompte :</label>
             <input type="text" class="form-control" name="factureAccompte" id="factureAccompte" formControlName="factureAccompte" value="{{factureAccompte.ref_factureAccompte}}"
               required />
-          </div>
+          </div> -->
           <div class="form-group">
             <button [disabled]="!reglementForm.valid || processing" (click)="addReglement()" class="btn btn-success">Ajouter règlement</button>
             <button [disabled]="processing" (click)="onCancel()" class="btn btn-default">Annuler</button>
@@ -113,7 +113,7 @@
         </form>
       </div>
     </div>
-    <div class="col-sm-6">
+    <div class="col-sm-6" *ngIf="listReglement.length > 0">
       <h4 style="text-align: center;">Règlements</h4>
       <table class="table table-striped">
         <thead>
