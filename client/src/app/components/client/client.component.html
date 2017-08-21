@@ -43,10 +43,9 @@
                 <div class="panel-body">
                     <div class="form-group">
                         <label for="civilite">Civilité :</label>
-                        <label class="radio-inline"><input type="radio" id="civilite" name="civilite"
-              formControlName="civilite" value="M.">M.</label>
-                        <label class="radio-inline"><input type="radio" id="civilite" name="civilite"
-                formControlName="civilite" value="Mme/Mlle">Mme/Mlle</label>
+                        <select class="form-control" name="civilite" id="civilite" formControlName="civilite">
+                            <option *ngFor="let key of keys" [value]="key">{{civilite[key]}}</option>
+                          </select>
                     </div>
                     <div class="form-group" [ngClass]="{'has-error': (clientForm.controls.nom.errors && clientForm.controls.nom.dirty),
               'has-success': (!clientForm.controls.nom.errors)}">

@@ -7,6 +7,6 @@
 export enum CRITICITE {
   null,
   'Bloquant',
-  'Amélioration',
+  'Amelioration',
   'Mineur'
 }

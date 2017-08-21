@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 
 // Models
 import { Client } from '../../models/client';
+import { CIVILITE } from '../../models/civilite.enum';
 
 // Services
 import { ClientService } from '../../service/client.service';
@@ -26,6 +27,8 @@ export class ClientComponent implements OnInit {
   listClient: any[];
   client: any = {};
   client_id: number;
+  keys: any[];
+  civilite = CIVILITE;
   mode = false;
   processing = false;
   clientForm: FormGroup;
@@ -45,7 +48,8 @@ export class ClientComponent implements OnInit {
     private formBuilder: FormBuilder,
     private flashMessages: FlashMessagesService
   ) {
-    this.generateForm()
+    this.generateForm();
+    this.keys = Object.keys(this.civilite).filter(Number);
   }
 
 	/**

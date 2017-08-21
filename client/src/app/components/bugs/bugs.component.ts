@@ -9,6 +9,7 @@ import { FlashMessagesService } from 'ngx-flash-messages';
 // Model
 import { Bug } from '../../models/bug';
 import { CRITICITE } from '../../models/criticite.enum';
+import { STATUS } from '../../models/status-bug.enum';
 
 /**
  * 
@@ -27,10 +28,15 @@ export class BugsComponent implements OnInit {
   bug: any = {};
   bug_id: number = 0;
   currentDate;
+  status_bug = STATUS;
   criticite = CRITICITE;
+  numbers: any[];
+  key;
   keys: any[];
   bugForm: FormGroup;
+  bugFormUpdate: FormGroup;
   mode = false;
+  modeUpdate = false;
   processing = false;
 
   /**
@@ -48,6 +54,8 @@ export class BugsComponent implements OnInit {
     private datePipe: DatePipe
   ) {
     this.generateForm();
+    this.generateFormUpdate();
+    this.numbers = Object.keys(this.status_bug).filter(Number);
     this.keys = Object.keys(this.criticite).filter(Number);
   }
 
@@ -79,45 +87,53 @@ export class BugsComponent implements OnInit {
     newBug.date_creation = this.bugForm.get('date_creation').value;
     newBug.criticite = this.criticite[ this.bugForm.get('criticite').value ];
     console.log(newBug);
-    // Check if bug._id set
-    if (this.bug_id === 0) {
-      this.bugService.addBug(newBug)
-        .subscribe(
-        data => {
-          console.log('Bug saved');
-          this.flashMessages.show('Bug ajouté', {
-            classes: [ 'alert', 'alert-success' ],
-            timeout: 3000
-          });
-          this.onSuccess();
-        }, err => {
-          console.log('Erreur :' + err);
-          this.flashMessages.show('Erreur suppresion Bug', {
-            classes: [ 'alert', 'alert-danger' ],
-            timeout: 3000
-          });
-          this.enableForm();
-        }
-        );
-    } else {
-      this.bugService.updateBug(newBug)
-        .subscribe(
-        data => {
-          console.log('Bug updated');
-          this.flashMessages.show('Bug modifié', {
-            classes: [ 'alert', 'alert-success' ],
-            timeout: 3000
-          });
-          this.onSuccess();
-        }, err => {
-          console.log('Erreur :' + err);
-          this.flashMessages.show('Erreur modification Bug', {
-            classes: [ 'alert', 'alert-danger' ],
-            timeout: 3000
-          });
-          this.enableForm();
+
+    this.bugService.addBug(newBug)
+      .subscribe(
+      data => {
+        console.log('Bug saved');
+        this.flashMessages.show('Bug ajouté', {
+          classes: [ 'alert', 'alert-success' ],
+          timeout: 3000
         });
-    }
+        this.onSuccess();
+      }, err => {
+        console.log('Erreur :' + err);
+        this.flashMessages.show('Erreur suppresion Bug', {
+          classes: [ 'alert', 'alert-danger' ],
+          timeout: 3000
+        });
+        this.enableForm();
+      }
+      );
+  }
+
+  updateBug() {
+    this.processing = true;
+    this.disableForm();
+    let newBug = this.bugForm.value;
+    newBug.date_creation = this.bugForm.get('date_creation').value;
+    newBug.criticite = this.criticite[ this.bugForm.get('criticite').value ];
+    newBug.status_correction = this.status_bug[ this.bugForm.get('status_correction').value ];
+    console.log(newBug);
+    this.bugService.updateBug(newBug)
+      .subscribe(
+      data => {
+        console.log('Bug updated');
+        this.flashMessages.show('Bug modifié', {
+          classes: [ 'alert', 'alert-success' ],
+          timeout: 3000
+        });
+        this.onSuccess();
+      }, err => {
+        console.log('Erreur :' + err);
+        this.flashMessages.show('Erreur modification Bug', {
+          classes: [ 'alert', 'alert-danger' ],
+          timeout: 3000
+        });
+        this.enableForm();
+      });
+
   }
 
   /**
@@ -146,24 +162,29 @@ export class BugsComponent implements OnInit {
    * @memberof BugsComponent
    */
   onAdd() {
+    this.bug_id = 0;
     this.generateForm();
-
-    let date = this.datePipe.transform(this.currentDate, 'yyyy-MM-dd');
-    this.bugForm.get('date_creation').setValue(date);
+    this.bugForm.get('date_creation').setValue(this.currentDate);
     this.mode = true;
   }
 
   /**
-   * onUpdate => Display bugForm
+   * onUpdate => Display bugFormUpdate
    * 
    * @param {Bug} bug 
    * @memberof BugsComponent
    */
   onUpdateBug(bug: Bug) {
-    this.generateForm();
+    this.generateFormUpdate();
     this.bug_id = bug._id;
     this.bug = bug;
-    this.mode = true;
+    console.log(this.keys)
+    console.log(this.criticite[ this.bug.criticite ]);
+    console.log(this.criticite);
+    this.key = this.criticite[ this.bug.criticite ];
+    this.bugForm.get('criticite').setValue(this.criticite[ this.bug.criticite ]);
+    //this.bugForm.controls[ 'status_correction' ].setValue(this.bug.status_bug);
+    this.modeUpdate = true;
   }
 
   /**
@@ -172,8 +193,12 @@ export class BugsComponent implements OnInit {
    * @memberof BugsComponent
    */
   onSuccess() {
+    this.generateForm();
+    this.generateFormUpdate();
     this.bug_id = 0;
     this.mode = false;
+    this.modeUpdate = false;
+    this.processing = false;
     this.getAllBugs();
   }
 
@@ -190,6 +215,15 @@ export class BugsComponent implements OnInit {
     });
   }
 
+  generateFormUpdate() {
+    this.bugFormUpdate = this.formBuilder.group({
+      status_correction: [ this.bug.status_correction, Validators.required ],
+      date_creation: [ this.bug.date_creation ],
+      description: [ this.bug.description, Validators.required ],
+      criticite: [ this.bug.criticite, Validators.required ]
+    })
+  }
+
   /**
    * Enable controls
    * 
@@ -197,6 +231,7 @@ export class BugsComponent implements OnInit {
    */
   enableForm() {
     this.bugForm.enable();
+    this.bugFormUpdate.enable();
   }
 
   /**
@@ -206,6 +241,7 @@ export class BugsComponent implements OnInit {
    */
   disableForm() {
     this.bugForm.disable();
+    this.bugFormUpdate.disable();
   }
 
   /**
@@ -216,7 +252,7 @@ export class BugsComponent implements OnInit {
    */
   ngOnInit() {
     this.getAllBugs();
-    this.currentDate = Date.now;
+    this.currentDate = Date.now();
   }
 
 }

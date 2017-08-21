@@ -1,3 +1,6 @@
+// Enum
+import { CIVILITE } from './civilite.enum';
+
 /**
  * Client model
  *
@@ -7,7 +10,7 @@
 export class Client {
     _id: number;
     status_client: boolean;
-    civilite: string;
+    civilite: CIVILITE;
     nom: string;
     prenom: string;
     adresseFact: string;
