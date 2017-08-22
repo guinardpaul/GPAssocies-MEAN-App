@@ -26,7 +26,7 @@ import { FlashMessagesService } from 'ngx-flash-messages';
 export class ClientComponent implements OnInit {
   listClient: any[];
   client: any = {};
-  client_id: number;
+  client_id: number = null;
   keys: any[];
   civilite = CIVILITE;
   mode = false;
@@ -91,8 +91,9 @@ export class ClientComponent implements OnInit {
     this.processing = true;
     this.disableForm();
     this.client = this.clientForm.value;
-    this.client._id = this.client_id;
-    if (this.client._id === null || this.client._id === 0) {
+    this.client.civilite = this.civilite[ this.clientForm.get('civilite').value ];
+    console.log(this.client)
+    if (this.client_id === null || this.client_id === 0) {
       this.clientService.addClient(this.client)
         .subscribe(
         data => {
@@ -188,6 +189,7 @@ export class ClientComponent implements OnInit {
    */
   onAdd() {
     this.mode = true;
+    this.client_id = null;
   }
 
 	/**

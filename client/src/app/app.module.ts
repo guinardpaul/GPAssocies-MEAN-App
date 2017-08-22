@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
-// Flash messages
+// Angular Flash messages
 import { FlashMessagesModule } from 'ngx-flash-messages';
 
 // Routing Module

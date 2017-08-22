@@ -23,10 +23,4 @@ const bugSchema = new mongoose.Schema({
   }
 });
 
-const CRITICITE = {
-  Bloquant: { value: 1, name: 'Bloquant' },
-  Amelioration: { value: 2, name: 'Amelioration' },
-  Mineur: { value: 3, name: 'Mineur' }
-}
-
 module.exports = mongoose.model('Bug', bugSchema);

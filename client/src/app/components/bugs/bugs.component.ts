@@ -26,12 +26,11 @@ import { STATUS } from '../../models/status-bug.enum';
 export class BugsComponent implements OnInit {
   listBugs: Bug[] = [];
   bug: any = {};
-  bug_id: number = 0;
+  id_bug: number = 0;
   currentDate;
-  status_bug = STATUS;
+  status_correction = STATUS;
   criticite = CRITICITE;
   numbers: any[];
-  key;
   keys: any[];
   bugForm: FormGroup;
   bugFormUpdate: FormGroup;
@@ -55,7 +54,7 @@ export class BugsComponent implements OnInit {
   ) {
     this.generateForm();
     this.generateFormUpdate();
-    this.numbers = Object.keys(this.status_bug).filter(Number);
+    this.numbers = Object.keys(this.status_correction).filter(Number);
     this.keys = Object.keys(this.criticite).filter(Number);
   }
 
@@ -74,9 +73,9 @@ export class BugsComponent implements OnInit {
 
   /**
    * Add Bug
-   * Check si this.bug_id set :
-   * - si bug_id === 0 : méthode Add
-   * - si bug_id !== 0 : méthode Update
+   * Check si this.id_bug set :
+   * - si.id_bug === 0 : méthode Add
+   * - si.id_bug !== 0 : méthode Update
    * 
    * @memberof BugsComponent
    */
@@ -108,13 +107,18 @@ export class BugsComponent implements OnInit {
       );
   }
 
+  /**
+   * Update Bug
+   * 
+   * @memberof BugsComponent
+   */
   updateBug() {
     this.processing = true;
     this.disableForm();
     let newBug = this.bugForm.value;
     newBug.date_creation = this.bugForm.get('date_creation').value;
     newBug.criticite = this.criticite[ this.bugForm.get('criticite').value ];
-    newBug.status_correction = this.status_bug[ this.bugForm.get('status_correction').value ];
+    newBug.status_correction = this.status_correction[ this.bugForm.get('status_correction').value ];
     console.log(newBug);
     this.bugService.updateBug(newBug)
       .subscribe(
@@ -162,7 +166,10 @@ export class BugsComponent implements OnInit {
    * @memberof BugsComponent
    */
   onAdd() {
-    this.bug_id = 0;
+    // Display ony one form
+    this.modeUpdate = false;
+    this.bug = {};
+    this.id_bug = 0;
     this.generateForm();
     this.bugForm.get('date_creation').setValue(this.currentDate);
     this.mode = true;
@@ -175,15 +182,16 @@ export class BugsComponent implements OnInit {
    * @memberof BugsComponent
    */
   onUpdateBug(bug: Bug) {
+    // Display only one form
+    this.mode = false;
+    // Set bug value
     this.generateFormUpdate();
-    this.bug_id = bug._id;
+    this.id_bug = bug._id;
     this.bug = bug;
-    console.log(this.keys)
-    console.log(this.criticite[ this.bug.criticite ]);
-    console.log(this.criticite);
-    this.key = this.criticite[ this.bug.criticite ];
-    this.bugForm.get('criticite').setValue(this.criticite[ this.bug.criticite ]);
-    //this.bugForm.controls[ 'status_correction' ].setValue(this.bug.status_bug);
+    this.bugForm.get('criticite').setValue(this.bug.criticite);
+    console.log(this.bugForm.get('criticite').value);
+    this.bugForm.get('status_correction').setValue(this.bug.status_correction);
+    console.log(this.bugForm.get('status_correction').value);
     this.modeUpdate = true;
   }
 
@@ -195,11 +203,26 @@ export class BugsComponent implements OnInit {
   onSuccess() {
     this.generateForm();
     this.generateFormUpdate();
-    this.bug_id = 0;
+    this.id_bug = 0;
     this.mode = false;
     this.modeUpdate = false;
     this.processing = false;
     this.getAllBugs();
+  }
+
+  /**
+   * Cancel Bug Forms
+   * 
+   * @memberof BugsComponent
+   */
+  onCancel() {
+    this.generateForm();
+    this.generateFormUpdate();
+    this.id_bug = 0;
+    this.mode = false;
+    this.modeUpdate = false;
+    this.processing = false;
+    this.bug = {};
   }
 
   /**
