@@ -12,7 +12,7 @@ import { CRITICITE } from '../../models/criticite.enum';
 import { STATUS } from '../../models/status-bug.enum';
 
 /**
- * 
+ *
  * @author Paul GUINARD
  * @export
  * @class BugsComponent
@@ -60,7 +60,7 @@ export class BugsComponent implements OnInit {
 
   /**
    * Get All Bugs
-   * 
+   *
    * @memberof BugsComponent
    */
   getAllBugs() {
@@ -76,7 +76,7 @@ export class BugsComponent implements OnInit {
    * Check si this.id_bug set :
    * - si.id_bug === 0 : méthode Add
    * - si.id_bug !== 0 : méthode Update
-   * 
+   *
    * @memberof BugsComponent
    */
   addBug() {
@@ -109,7 +109,7 @@ export class BugsComponent implements OnInit {
 
   /**
    * Update Bug
-   * 
+   *
    * @memberof BugsComponent
    */
   updateBug() {
@@ -142,7 +142,7 @@ export class BugsComponent implements OnInit {
 
   /**
    * Delete Bug
-   * 
+   *
    * @param {number} id bug._id
    * @memberof BugsComponent
    */
@@ -162,7 +162,7 @@ export class BugsComponent implements OnInit {
 
   /**
    * Display bugForm
-   * 
+   *
    * @memberof BugsComponent
    */
   onAdd() {
@@ -177,8 +177,8 @@ export class BugsComponent implements OnInit {
 
   /**
    * onUpdate => Display bugFormUpdate
-   * 
-   * @param {Bug} bug 
+   *
+   * @param {Bug} bug
    * @memberof BugsComponent
    */
   onUpdateBug(bug: Bug) {
@@ -197,7 +197,7 @@ export class BugsComponent implements OnInit {
 
   /**
    * onSuccess method
-   * 
+   *
    * @memberof BugsComponent
    */
   onSuccess() {
@@ -212,7 +212,7 @@ export class BugsComponent implements OnInit {
 
   /**
    * Cancel Bug Forms
-   * 
+   *
    * @memberof BugsComponent
    */
   onCancel() {
@@ -227,7 +227,7 @@ export class BugsComponent implements OnInit {
 
   /**
    * Generate reactive bug form
-   * 
+   *
    * @memberof BugsComponent
    */
   generateForm() {
@@ -249,7 +249,7 @@ export class BugsComponent implements OnInit {
 
   /**
    * Enable controls
-   * 
+   *
    * @memberof BugsComponent
    */
   enableForm() {
@@ -259,7 +259,7 @@ export class BugsComponent implements OnInit {
 
   /**
    * Disable controls
-   * 
+   *
    * @memberof BugsComponent
    */
   disableForm() {
@@ -270,7 +270,7 @@ export class BugsComponent implements OnInit {
   /**
    * onInit:
    * - Get All Bugs
-   * 
+   *
    * @memberof BugsComponent
    */
   ngOnInit() {
