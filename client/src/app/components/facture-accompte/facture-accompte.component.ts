@@ -42,6 +42,9 @@ export class FactureAccompteComponent implements OnInit {
   modeAddReglement = false;
   factureForm: FormGroup;
   reglementForm: FormGroup;
+  // Status images
+  status_true = '../../assets/images/status_true.png';
+  status_false = '../../assets/images/status_false.png';
 
   /**
    * Creates an instance of FactureAccompteComponent.
@@ -272,7 +275,7 @@ export class FactureAccompteComponent implements OnInit {
               if (data.success) {
                 console.log(data.message);
                 this.flashMessages.show(data.message, {
-                  classes: [ 'alert', 'alert-success' ],
+                  classes: [ 'alert', 'alert-warning' ],
                   timeout: 3000
                 });
                 // Update Facture global montantTtcFacture
@@ -293,7 +296,7 @@ export class FactureAccompteComponent implements OnInit {
         } else {
           console.log('Impossible : Facture accompte a supprimé');
           this.flashMessages.show('Suppression impossible. La facture possède des règlements', {
-            classes: [ 'alert', 'alert-warning' ],
+            classes: [ 'alert', 'alert-danger' ],
             timeout: 3000
           });
         }
@@ -355,8 +358,6 @@ export class FactureAccompteComponent implements OnInit {
       data => {
         if (data.success) {
           console.log(data.message);
-          // Get all facture accompte by facture global
-          this.getAllFactureAccompteByFactureGlobal(this.id_fact);
           // Update status facture accompte
           this.updateStatusFactureAccompte(data.obj);
           //this.onSuccess();
@@ -378,9 +379,8 @@ export class FactureAccompteComponent implements OnInit {
    */
   updateStatusFactureAccompte(factureAccompte: FactureAccompte) {
     let status_factureAccompte = false;
-    // Check if montantFacture === reglementClient && status_factureAccompte === false
-    if ((factureAccompte.reglementClient === factureAccompte.montantFacture)
-      && !factureAccompte.status_factureAccompte) {
+    // Check if montantFacture === reglementClient
+    if (factureAccompte.reglementClient === factureAccompte.montantFacture) {
       status_factureAccompte = true;
     }
 
@@ -389,6 +389,8 @@ export class FactureAccompteComponent implements OnInit {
       data => console.log('Status facture accompte = ' + data.obj.status_factureAccompte),
       err => console.log(err)
       );
+    // Get all facture accompte by facture global
+    this.getAllFactureAccompteByFactureGlobal(this.id_fact);
   }
 
   /**

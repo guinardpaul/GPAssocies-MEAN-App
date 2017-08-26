@@ -428,7 +428,7 @@ export class DevisComponent implements OnInit {
         } else {
           console.log('Impossible de supprimer'),
             this.flashMessages.show('Suppression impossible! Le devis possède des factures.', {
-              classes: [ 'alert', 'alert-warning' ],
+              classes: [ 'alert', 'alert-danger' ],
               timeout: 3000
             });
         }

@@ -18,7 +18,8 @@
     </thead>
     <tbody>
       <tr *ngFor="let f of listFactureAccompte">
-        <td>{{f.status_factureAccompte}}</td>
+        <td *ngIf="f.status_factureAccompte"><img src="{{status_true}}" alt="true"></td>
+        <td *ngIf="!f.status_factureAccompte"><img src="{{status_false}}" alt="false"></td>
         <td>{{f.ref_factureAccompte}}</td>
         <td>{{f.date_creation | date: 'dd/MM/yyyy'}}</td>
         <td>{{f.montantFacture}}</td>

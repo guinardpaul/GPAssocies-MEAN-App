@@ -14,7 +14,8 @@
         </thead>
         <tbody>
             <tr *ngFor="let client of listClient">
-                <td>{{client.status_client}}</td>
+                <td *ngIf="client.status_client"><img src="{{status_true}}" alt="true"></td>
+                <td *ngIf="!client.status_client"><img src="{{status_false}}" alt="false"></td>
                 <td>{{client.nom}}</td>
                 <td>{{client.prenom}}</td>
                 <td>{{client.adresseFact}} {{client.complAdresseFact}} <br/> {{client.cpFact}} {{client.villeFact}}</td>

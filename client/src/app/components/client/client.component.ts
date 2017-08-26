@@ -32,6 +32,9 @@ export class ClientComponent implements OnInit {
   mode = false;
   processing = false;
   clientForm: FormGroup;
+  // Status images
+  status_true = '../../assets/images/status_true.png';
+  status_false = '../../assets/images/status_false.png';
 
 	/**
    * Creates an instance of ClientComponent.
@@ -175,7 +178,7 @@ export class ClientComponent implements OnInit {
         } else {
           console.log('Client non supprimé');
           this.flashMessages.show('Impossible de supprimer le client car il possède des devis', {
-            classes: [ 'alert', 'alert-warning' ],
+            classes: [ 'alert', 'alert-danger' ],
             timeout: 3000
           });
         }

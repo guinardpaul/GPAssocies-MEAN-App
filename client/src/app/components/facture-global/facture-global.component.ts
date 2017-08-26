@@ -34,6 +34,9 @@ export class FactureGlobalComponent implements OnInit {
   mode = false;
   processing = false;
   factureForm: FormGroup;
+  // Status images
+  status_true = '../../assets/images/status_true.png';
+  status_false = '../../assets/images/status_false.png';
 
   /**
    * Creates an instance of FactureGlobalComponent.
@@ -186,7 +189,7 @@ export class FactureGlobalComponent implements OnInit {
         } else {
           console.log('Suppression impossible');
           this.flashMessages.show('Suppression impossible! La facture global possède des factures d\'accompte', {
-            classes: [ 'alert', 'alert-warning' ],
+            classes: [ 'alert', 'alert-danger' ],
             timeout: 3000
           });
         }
