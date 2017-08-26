@@ -60,7 +60,9 @@ export class ClientComponent implements OnInit {
   getAllClients() {
     this.clientService.getAllClients()
       .subscribe(
-      data => this.listClient = data,
+      data => {
+        this.listClient = data;
+      },
       error => console.log(error)
       );
   }
@@ -91,7 +93,8 @@ export class ClientComponent implements OnInit {
     this.processing = true;
     this.disableForm();
     this.client = this.clientForm.value;
-    this.client.civilite = this.civilite[ this.clientForm.get('civilite').value ];
+    this.client._id = this.client_id;
+    this.client.civilite = this.clientForm.get('civilite').value;
     console.log(this.client)
     if (this.client_id === null || this.client_id === 0) {
       this.clientService.addClient(this.client)
@@ -140,30 +143,47 @@ export class ClientComponent implements OnInit {
   }
 
 	/**
-   * Delete client
+   * Delete client si Ne possède pas de Devis
    *
    * @param {number} id client._id
    * @memberof ClientComponent
    */
   onDelete(id: number) {
-    this.clientService.deleteClient(id)
+    this.devisService.getAllDevisByClient(id)
       .subscribe(
-      () => {
-        console.log('Client deleted');
-        this.flashMessages.show('Client supprimé', {
-          classes: [ 'alert', 'alert-warning' ],
-          timeout: 3000
-        });
-        this.getAllClients();
+      data => {
+        console.log(data.length);
+        if (data.length === 0) {
+          this.clientService.deleteClient(id)
+            .subscribe(
+            () => {
+              console.log('Client deleted');
+              this.flashMessages.show('Client supprimé', {
+                classes: [ 'alert', 'alert-warning' ],
+                timeout: 3000
+              });
+              this.getAllClients();
+            },
+            error => {
+              console.log(error);
+              this.flashMessages.show('Erreur: Client non supprimé', {
+                classes: [ 'alert', 'alert-danger' ],
+                timeout: 3000
+              });
+            }
+            );
+        } else {
+          console.log('Client non supprimé');
+          this.flashMessages.show('Impossible de supprimer le client car il possède des devis', {
+            classes: [ 'alert', 'alert-warning' ],
+            timeout: 3000
+          });
+        }
       },
-      error => {
-        console.log(error);
-        this.flashMessages.show('Erreur: Client non supprimé', {
-          classes: [ 'alert', 'alert-danger' ],
-          timeout: 3000
-        });
-      }
+      err => console.log('Erreur :' + err)
       );
+
+
   }
 
 	/**
@@ -195,13 +215,15 @@ export class ClientComponent implements OnInit {
 	/**
    * Display clientForm and set values to be updated
    *
-   * @param {*} client client
+   * @param {Client} client client body
    * @memberof ClientComponent
    */
-  onUpdate(client: any) {
+  onUpdate(client: Client) {
     // Set this.client values (fecth _id)
     this.client = client;
     this.client_id = client._id;
+    console.log(this.client);
+    console.log(this.client_id);
 
     // Set clientForm values
     this.clientForm.get('civilite').setValue(client.civilite);
@@ -218,7 +240,7 @@ export class ClientComponent implements OnInit {
     this.clientForm.get('cpChantier').setValue(client.cpChantier);
     this.clientForm.get('villeChantier').setValue(client.villeChantier);
 
-    client = {};
+    client = null;
     this.mode = true;
   }
 

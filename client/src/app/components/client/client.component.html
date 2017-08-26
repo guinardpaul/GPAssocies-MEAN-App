@@ -45,6 +45,7 @@
                     <div class="form-group">
                         <label for="civilite">Civilité :</label>
                         <select class="form-control" name="civilite" id="civilite" formControlName="civilite">
+                            <option>Civilité...</option>
                             <option *ngFor="let key of keys" ([value])="key">{{civilite[key]}}</option>
                           </select>
                     </div>

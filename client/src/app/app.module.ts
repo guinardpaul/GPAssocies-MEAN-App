@@ -19,7 +19,6 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { ValiderDevisComponent } from './components/valider-devis/valider-devis.component';
 import { FactureAccompteComponent } from './components/facture-accompte/facture-accompte.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
-import { ReglementComponent } from './components/reglement/reglement.component';
 import { BugsComponent } from './components/bugs/bugs.component';
 
 // import Services
@@ -42,7 +41,6 @@ import { BugsService } from './service/bugs.service';
     ValiderDevisComponent,
     PageNotFoundComponent,
     FactureAccompteComponent,
-    ReglementComponent,
     BugsComponent
   ],
   imports: [

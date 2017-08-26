@@ -7,10 +7,12 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Devis } from '../../models/devis';
 import { DetailsDevis } from '../../models/detailsDevis';
 import { Client } from '../../models/client';
+import { CONST_TAUX } from '../../models/taux.const';
 
 // Services
 import { DevisService } from '../../service/devis.service';
 import { ClientService } from '../../service/client.service';
+import { FactureGlobalService } from '../../service/facture-global.service';
 import { FlashMessagesService } from 'ngx-flash-messages';
 import { DetailsDevisService } from '../../service/details-devis.service';
 
@@ -30,9 +32,9 @@ export class DevisComponent implements OnInit {
   listDevis: Devis[];
   listClient: Client[];
   devis: any = {};
-  detailsDevis1: any = { tauxTva: 5.5 };
-  detailsDevis2: any = { tauxTva: 10 };
-  detailsDevis3: any = { tauxTva: 20 };
+  detailsDevis1: any = { tauxTva: CONST_TAUX[ 1 ] };
+  detailsDevis2: any = { tauxTva: CONST_TAUX[ 2 ] };
+  detailsDevis3: any = { tauxTva: CONST_TAUX[ 3 ] };
   //listDetailsDevis = [ this.detailsDevis1, this.detailsDevis2, this.detailsDevis3 ];
   client = new Client();
   id_client: number;
@@ -49,6 +51,7 @@ export class DevisComponent implements OnInit {
    * @param {ClientService} clientService client service
    * @param {FlashMessagesService} flashMessages angular flash messages
    * @param {DetailsDevisService} detailsDevisService Details Devis service
+   * @param {FactureGlobalService} factureGlobalService Facture global service
    * @memberof DevisComponent
    */
   constructor(
@@ -58,7 +61,8 @@ export class DevisComponent implements OnInit {
     private formBuilder: FormBuilder,
     private clientService: ClientService,
     private flashMessages: FlashMessagesService,
-    private detailsDevisService: DetailsDevisService
+    private detailsDevisService: DetailsDevisService,
+    private factureGlobalService: FactureGlobalService
   ) {
     this.generateForm()
   }
@@ -268,21 +272,21 @@ export class DevisComponent implements OnInit {
       .subscribe(
       data => {
         console.log('Details Devis saved :' + this.detailsDevis1);
-        this.detailsDevis1 = { tauxTva: 5.5 };
+        this.detailsDevis1 = { tauxTva: CONST_TAUX[ 1 ] };
 
         this.detailsDevisService.addDetailsDevis(this.detailsDevis2)
           .subscribe(
           data => {
             console.log('Details Devis saved :' + this.detailsDevis2);
             this.detailsDevis2 = {};
-            this.detailsDevis2 = { tauxTva: 10 };
+            this.detailsDevis2 = { tauxTva: CONST_TAUX[ 2 ] };
 
             this.detailsDevisService.addDetailsDevis(this.detailsDevis3)
               .subscribe(
               data => {
                 console.log('Details Devis saved :' + this.detailsDevis3);
                 this.detailsDevis3 = {};
-                this.detailsDevis3 = { tauxTva: 20 };
+                this.detailsDevis3 = { tauxTva: CONST_TAUX[ 3 ] };
                 this.onSuccess();
               }, (err) => {
                 console.log(err);
@@ -326,21 +330,21 @@ export class DevisComponent implements OnInit {
       .subscribe(
       data => {
         console.log('Details Devis update :' + this.detailsDevis1);
-        this.detailsDevis1 = { tauxTva: 5.5 };
+        this.detailsDevis1 = { tauxTva: CONST_TAUX[ 1 ] };
 
         this.detailsDevisService.updateDetailsDevis(this.detailsDevis2)
           .subscribe(
           data => {
             console.log('Details Devis update :' + this.detailsDevis2);
             this.detailsDevis2 = {};
-            this.detailsDevis2 = { tauxTva: 10 };
+            this.detailsDevis2 = { tauxTva: CONST_TAUX[ 2 ] };
 
             this.detailsDevisService.updateDetailsDevis(this.detailsDevis3)
               .subscribe(
               data => {
                 console.log('Details Devis update :' + this.detailsDevis3);
                 this.detailsDevis3 = {};
-                this.detailsDevis3 = { tauxTva: 20 };
+                this.detailsDevis3 = { tauxTva: CONST_TAUX[ 3 ] };
                 this.onSuccess();
               }, (err) => {
                 console.log(err);
@@ -360,61 +364,75 @@ export class DevisComponent implements OnInit {
   }
 
   /**
-   * Delete devis and DetailsDevis associé fetch from database by getDetailsDevisByDevis() method
+   * Delete devis and DetailsDevis associé fetch from database by getDetailsDevisByDevis() method SI :
+   * - le client ne possède pas de facture global
    *
-   * @param {number} id devis._id
+   * @param {Devis} devis devis data
    * @memberof DevisComponent
    */
-  onDelete(id: number) {
-    // Fetch DetailsDevis by Devis._id
-    this.detailsDevisService.getDetailsDevisByDevis(id)
+  onDelete(devis: Devis) {
+    this.factureGlobalService.getAllFactureGlobalByClient(devis.client)
       .subscribe(
       data => {
-        // Delete detailsDevis
-        this.detailsDevisService.deleteDetailsDevis(data[ 0 ]._id)
-          .subscribe(
-          data => {
-            console.log('detailsDevis1 deleted' + data);
-          }, (err) => {
-            console.log('Erreur deleted :' + err);
-          }
-          );
-        this.detailsDevisService.deleteDetailsDevis(data[ 1 ]._id)
-          .subscribe(
-          data => {
-            console.log('detailsDevis2 deleted' + data);
-          }, (err) => {
-            console.log('Erreur deleted :' + err);
-          }
-          );
-        this.detailsDevisService.deleteDetailsDevis(data[ 2 ]._id)
-          .subscribe(
-          data => {
-            console.log('detailsDevis3 deleted' + data);
-          }, (err) => {
-            console.log('Erreur deleted :' + err);
-          }
-          );
-      }
-      );
-    // Delete Devis
-    this.devisService.deleteDevis(id)
-      .subscribe(
-      msg => {
-        console.log('Devis deleted'),
-          this.flashMessages.show('Client supprimé', {
-            classes: [ 'alert', 'alert-warning' ],
-            timeout: 3000
-          });
-        this.onSuccess()
-      },
-      error => {
-        console.log(error),
-          this.flashMessages.show('Erreur : Client non supprimé', {
-            classes: [ 'alert', 'alert-danger' ],
-            timeout: 3000
-          });
-      }
+        if (data.length === 0) {
+          // Fetch DetailsDevis by Devis._id
+          this.detailsDevisService.getDetailsDevisByDevis(devis._id)
+            .subscribe(
+            data => {
+              // Delete detailsDevis
+              this.detailsDevisService.deleteDetailsDevis(data[ 0 ]._id)
+                .subscribe(
+                data => {
+                  console.log('detailsDevis1 deleted' + data);
+                }, (err) => {
+                  console.log('Erreur deleted :' + err);
+                }
+                );
+              this.detailsDevisService.deleteDetailsDevis(data[ 1 ]._id)
+                .subscribe(
+                data => {
+                  console.log('detailsDevis2 deleted' + data);
+                }, (err) => {
+                  console.log('Erreur deleted :' + err);
+                }
+                );
+              this.detailsDevisService.deleteDetailsDevis(data[ 2 ]._id)
+                .subscribe(
+                data => {
+                  console.log('detailsDevis3 deleted' + data);
+                }, (err) => {
+                  console.log('Erreur deleted :' + err);
+                }
+                );
+            }
+            );
+          // Delete Devis
+          this.devisService.deleteDevis(devis._id)
+            .subscribe(
+            msg => {
+              console.log('Devis deleted'),
+                this.flashMessages.show('Client supprimé', {
+                  classes: [ 'alert', 'alert-warning' ],
+                  timeout: 3000
+                });
+              this.onSuccess()
+            },
+            error => {
+              console.log(error),
+                this.flashMessages.show('Erreur : Client non supprimé', {
+                  classes: [ 'alert', 'alert-danger' ],
+                  timeout: 3000
+                });
+            }
+            );
+        } else {
+          console.log('Impossible de supprimer'),
+            this.flashMessages.show('Suppression impossible! Le devis possède des factures.', {
+              classes: [ 'alert', 'alert-warning' ],
+              timeout: 3000
+            });
+        }
+      }, err => console.log('Erreur :' + err)
       );
   }
 
@@ -495,9 +513,9 @@ export class DevisComponent implements OnInit {
     this.mode = false;
     this.generateForm();
     this.devis = {};
-    this.detailsDevis1 = { tauxTva: 5.5 };
-    this.detailsDevis2 = { tauxTva: 10 };
-    this.detailsDevis3 = { tauxTva: 20 };
+    this.detailsDevis1 = { tauxTva: CONST_TAUX[ 1 ] };
+    this.detailsDevis2 = { tauxTva: CONST_TAUX[ 2 ] };
+    this.detailsDevis3 = { tauxTva: CONST_TAUX[ 3 ] };
   }
 
   /**
@@ -513,20 +531,17 @@ export class DevisComponent implements OnInit {
       date_creation: [ Date.now ],
       // DetailsDevis data
       montantHt1: [ this.detailsDevis1.montantHt, Validators.compose([
-        Validators.required,
-        this.isNumber
+        Validators.required
       ]) ],
       tauxTva1: [ { value: this.detailsDevis1.tauxTva, disabled: true }, Validators.required ],
       montantTtc1: [ { value: this.detailsDevis1.montantTtc, disabled: true }, Validators.required ],
       montantHt2: [ this.detailsDevis2.montantHt, Validators.compose([
-        Validators.required,
-        this.isNumber
+        Validators.required
       ]) ],
       tauxTva2: [ { value: this.detailsDevis2.tauxTva, disabled: true }, Validators.required ],
       montantTtc2: [ { value: this.detailsDevis2.montantTtc, disabled: true }, Validators.required ],
       montantHt3: [ this.detailsDevis3.montantHt, Validators.compose([
-        Validators.required,
-        this.isNumber
+        Validators.required
       ]) ],
       tauxTva3: [ { value: this.detailsDevis3.tauxTva, disabled: true }, Validators.required ],
       montantTtc3: [ { value: this.detailsDevis3.montantTtc, disabled: true }, Validators.required ],

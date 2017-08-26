@@ -254,7 +254,7 @@ export class FactureAccompteComponent implements OnInit {
   }
 
   /**
-   * Delete Facture Accompte
+   * Delete Facture Accompte si NE possède pas de Reglement
    *
    * @param {number} id factureAccompte._id
    * @param {number} montantFacture factureAccomte montantTtcFacture
@@ -262,29 +262,42 @@ export class FactureAccompteComponent implements OnInit {
    * @memberof FactureAccompteComponent
    */
   deleteFactureAccompte(id: number, montantFacture: number, reglementClient: number) {
-    this.factureAccompteService.deleteFactureAccompte(id)
+    this.reglementService.getReglementByFactureAccompte(id)
       .subscribe(
       data => {
-        if (data.success) {
-          console.log(data.message);
-          this.flashMessages.show(data.message, {
-            classes: [ 'alert', 'alert-success' ],
-            timeout: 3000
-          });
-          // Update Facture global montantTtcFacture
-          this.updateMontantFactureGlobal(this.factureGlobal, -montantFacture);
-          // Update facture global reglementTtcTotal
-          this.updateReglementClientFactureGlobal(this.factureGlobal, -reglementClient);
+        if (data.length === 0) {
+          this.factureAccompteService.deleteFactureAccompte(id)
+            .subscribe(
+            data => {
+              if (data.success) {
+                console.log(data.message);
+                this.flashMessages.show(data.message, {
+                  classes: [ 'alert', 'alert-success' ],
+                  timeout: 3000
+                });
+                // Update Facture global montantTtcFacture
+                this.updateMontantFactureGlobal(this.factureGlobal, -montantFacture);
+                // Update facture global reglementTtcTotal
+                this.updateReglementClientFactureGlobal(this.factureGlobal, -reglementClient);
 
-          this.onSuccess();
+                this.onSuccess();
+              } else {
+                console.log(data.message + ' :' + data.err);
+                this.flashMessages.show(data.message, {
+                  classes: [ 'alert', 'alert-danger' ],
+                  timeout: 3000
+                });
+              }
+            }
+            );
         } else {
-          console.log(data.message + ' :' + data.err);
-          this.flashMessages.show(data.message, {
-            classes: [ 'alert', 'alert-danger' ],
+          console.log('Impossible : Facture accompte a supprimé');
+          this.flashMessages.show('Suppression impossible. La facture possède des règlements', {
+            classes: [ 'alert', 'alert-warning' ],
             timeout: 3000
           });
         }
-      }
+      }, err => console.log('Erreur :' + err)
       );
   }
 

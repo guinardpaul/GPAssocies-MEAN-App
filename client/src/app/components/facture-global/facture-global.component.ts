@@ -10,6 +10,7 @@ import { Client } from '../../models/client';
 
 // Services
 import { FactureGlobalService } from '../../service/facture-global.service';
+import { FactureAccompteService } from '../../service/facture-accompte.service';
 import { ClientService } from '../../service/client.service';
 import { FlashMessagesService } from 'ngx-flash-messages';
 
@@ -38,6 +39,7 @@ export class FactureGlobalComponent implements OnInit {
    * Creates an instance of FactureGlobalComponent.
    * @param {ActivatedRoute} activatedRoute request routes params
    * @param {FactureGlobalService} factureGlobalService facture global service
+   * @param {FactureAccompteService} factureAccompteService facture accompte service
    * @param {ClientService} clientService client service
    * @param {DatePipe} datePipe format date
    * @param {FormBuilder} formBuilder Reactive form builder
@@ -47,6 +49,7 @@ export class FactureGlobalComponent implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private factureGlobalService: FactureGlobalService,
+    private factureAccompteService: FactureAccompteService,
     private clientService: ClientService,
     private datePipe: DatePipe,
     private formBuilder: FormBuilder,
@@ -158,23 +161,36 @@ export class FactureGlobalComponent implements OnInit {
    * @memberof FactureGlobalComponent
    */
   onDelete(id: number) {
-    this.factureGlobalService.deleteFactureGlobal(id)
+    this.factureAccompteService.getAllFactureAccompteByFactureGlobal(id)
       .subscribe(
       data => {
-        console.log('Facture Global deleted');
-        this.flashMessages.show('Facture supprimée', {
-          classes: [ 'alert', 'alert-warning' ],
-          timeout: 3000
-        });
-        this.onSuccess();
-      },
-      error => {
-        console.log(error);
-        this.flashMessages.show('Erreur: Facture non supprimée', {
-          classes: [ 'alert', 'alert-danger' ],
-          timeout: 3000
-        });
-      }
+        if (data.length === 0) {
+          this.factureGlobalService.deleteFactureGlobal(id)
+            .subscribe(
+            data => {
+              console.log('Facture Global deleted');
+              this.flashMessages.show('Facture supprimée', {
+                classes: [ 'alert', 'alert-warning' ],
+                timeout: 3000
+              });
+              this.onSuccess();
+            },
+            error => {
+              console.log(error);
+              this.flashMessages.show('Erreur: Facture non supprimée', {
+                classes: [ 'alert', 'alert-danger' ],
+                timeout: 3000
+              });
+            }
+            );
+        } else {
+          console.log('Suppression impossible');
+          this.flashMessages.show('Suppression impossible! La facture global possède des factures d\'accompte', {
+            classes: [ 'alert', 'alert-warning' ],
+            timeout: 3000
+          });
+        }
+      }, err => console.log('Erreur :' + err)
       );
   }
 

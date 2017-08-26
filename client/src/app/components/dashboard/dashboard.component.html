@@ -1,7 +1,109 @@
 <div class="container-fluid">
-  <app-client></app-client>
-  <app-devis></app-devis>
-</div>
-<div class="container-fluid">
-  <app-facture-accompte></app-facture-accompte>
+  <!-- Client table -->
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Statut</th>
+        <th>Nom</th>
+        <th>Prénom</th>
+        <th>Email</th>
+        <th>Tél</th>
+        <th>Sélection</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let client of listClient">
+        <td>{{client.status_client}}</td>
+        <td>{{client.nom}}</td>
+        <td>{{client.prenom}}</td>
+        <td>{{client.email}}</td>
+        <td>{{client.numTel}}</td>
+        <td>
+          <div class="btn-group-vertical">
+            <a class="btn btn-success" (click)="onSelect(client)">Select</a>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <button class="btn btn-primary" (click)="annulerSelection()">Voir tous les clients</button>
+  <br>
+
+  <!-- Devis table -->
+  <div class="container-fluid col-sm-6 col-md-6">
+    <h4 style="text-align: center;">Devis</h4>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Ref</th>
+          <th>Date</th>
+          <th>Montant HT</th>
+          <th>Taux TVA €</th>
+          <th>Montant TTC</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let d of listDevis">
+          <td>{{d.ref_devis}}</td>
+          <td>{{d.date_creation | date: 'dd/MM/yyyy'}}</td>
+          <td>{{d.montantHt}}</td>
+          <td>{{d.tauxTva}}</td>
+          <td>{{d.montantTtc}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Facture global table -->
+  <div class="container-fluid col-sm-6 col-md-6">
+    <h4 style="text-align: center;">Factures</h4>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Statut</th>
+          <th>Ref</th>
+          <th>Date</th>
+          <th>Montant total TTC</th>
+          <th>Montant facturé TTC</th>
+          <th>Montant réglé</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let fg of listFactureGlobal">
+          <td>{{fg.status_factureGlobal}}</td>
+          <td>{{fg.ref_factureGlobal}}</td>
+          <td>{{fg.date_creation | date: 'dd/MM/yyyy'}}</td>
+          <td>{{fg.montantTtcTotal}}</td>
+          <td>{{fg.montantTtcFacture}}</td>
+          <td>{{fg.montantTtcRegle}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <br>
+
+  <!-- Facture accompte table -->
+  <div class="container-fluid">
+    <h4 style="text-align: center;">Factures d'accompte</h4>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Statut</th>
+          <th>Ref</th>
+          <th>Date</th>
+          <th>Montant facturé TTC</th>
+          <th>Règlement client TTC</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let f of listFactureAccompte">
+          <td>{{f.status_factureAccompte}}</td>
+          <td>{{f.ref_factureAccompte}}</td>
+          <td>{{f.date_creation | date: 'dd/MM/yyyy'}}</td>
+          <td>{{f.montantFacture}}</td>
+          <td>{{f.reglementClient}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

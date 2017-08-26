@@ -88,18 +88,18 @@ module.exports = (router) => {
         } else {
             Client.findByIdAndUpdate(req.params.id, req.body, (err, data) => {
                 if (err) {
-                    if (err.errors.email) {
+                    /* if (err.errors.email) {
                         res.json({
                             success: false,
                             message: err.errors.email.message
                         });
-                    } else {
-                        res.json({
-                            success: false,
-                            message: 'Erreur modification client',
-                            err: err
-                        });
-                    }
+                    } else { */
+                    res.json({
+                        success: false,
+                        message: 'Erreur modification client',
+                        err: err
+                    });
+                    // }
                 } else {
                     Client.findById(req.params.id, (err, data) => {
                         res.json({
