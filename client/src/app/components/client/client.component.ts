@@ -98,7 +98,8 @@ export class ClientComponent implements OnInit {
     this.client = this.clientForm.value;
     this.client._id = this.client_id;
     this.client.civilite = this.clientForm.get('civilite').value;
-    console.log(this.client)
+    console.log(this.client);
+    // Check method to use 
     if (this.client_id === null || this.client_id === 0) {
       this.clientService.addClient(this.client)
         .subscribe(
@@ -234,6 +235,7 @@ export class ClientComponent implements OnInit {
   onAdd() {
     this.mode = true;
     this.client_id = null;
+    this.client = {};
   }
 
 	/**
@@ -246,8 +248,6 @@ export class ClientComponent implements OnInit {
     // Set this.client values (fecth _id)
     this.client = client;
     this.client_id = client._id;
-    console.log(this.client);
-    console.log(this.client_id);
 
     // Set clientForm values
     this.clientForm.get('civilite').setValue(client.civilite);

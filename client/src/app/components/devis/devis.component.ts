@@ -438,6 +438,11 @@ export class DevisComponent implements OnInit {
       );
   }
 
+  /**
+   * on close modal
+   * 
+   * @memberof DevisComponent
+   */
   closeModal() {
     this.devis = {};
   }
@@ -472,6 +477,11 @@ export class DevisComponent implements OnInit {
    */
   onAdd() {
     this.mode = true;
+    this.generateForm();
+    this.devis = {};
+    this.detailsDevis1 = { tauxTva: CONST_TAUX[ 1 ] };
+    this.detailsDevis2 = { tauxTva: CONST_TAUX[ 2 ] };
+    this.detailsDevis3 = { tauxTva: CONST_TAUX[ 3 ] };
     // Set controls['client'] touched for Validators.required
     this.devisForm.controls[ 'client' ].markAsTouched;
   }
