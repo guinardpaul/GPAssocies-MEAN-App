@@ -41,7 +41,8 @@
                     />
                 </div>
                 <div class="form-group">
-                    <button [disabled]="!validerDevisForm.valid" type="submit" class="btn btn-success">Sauver</button>
+                    <button [disabled]="!validerDevisForm.valid || processing" type="submit" class="btn btn-success">Sauver</button>
+                    <button [disabled]="processing" class="btn btn-default" (click)="onCancel()">Annuler</button>
                 </div>
             </form>
         </div>

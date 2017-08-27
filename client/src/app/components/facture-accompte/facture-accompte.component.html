@@ -28,7 +28,7 @@
         <td>
           <div class="btn-group-vertical">
             <button class="btn btn-success" (click)="onAddReglement(f)">Règlements</button>
-            <button class="btn btn-danger" (click)="deleteFactureAccompte(f._id, f.montantFacture, f.reglementClient)">Supprimer</button>
+            <button class="btn btn-danger" data-toggle="modal" data-target="#myModal" (click)="getFactureAccompteToDelete(f)">Supprimer</button>
           </div>
         </td>
       </tr>
@@ -36,6 +36,27 @@
   </table>
   <button class="btn btn-primary" (click)="onAddFactureAccompte()">Ajouter facture d'accompte</button>
   <br/><br/>
+
+  <!-- Confirm delete Modal -->
+  <div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Confirmer suppression</h4>
+        </div>
+        <div class="modal-body">
+          <p>Etes-vous sûr de vouloir supprimer {{factureAccompte.ref_factureAccompte}} ?</p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-danger" (click)="deleteFactureAccompte(factureAccompte._id, factureAccompte.montantFacture, factureAccompte.reglementClient)"
+            data-dismiss="modal">Supprimer</button>
+          <button class="btn btn-default" data-dismiss="modal" (click)="closeModal()">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- addFactureAccompte Form -->
   <div class="container" *ngIf="mode">

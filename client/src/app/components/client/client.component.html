@@ -26,7 +26,7 @@
                     <div class="btn-group-vertical">
                         <a class="btn btn-success" [routerLink]="['/devis/client', client._id]">Consulter</a>
                         <button class="btn btn-warning" (click)="onUpdate(client)">Modifier</button>
-                        <button class="btn btn-danger" (click)="onDelete(client._id)">Supprimer</button>
+                        <button class="btn btn-danger" data-toggle="modal" data-target="#myModal" (click)="getClientToDelete(client)">Supprimer</button>
                     </div>
                 </td>
             </tr>
@@ -35,6 +35,26 @@
     <button class="btn btn-primary" (click)="onAdd()">Ajouter client</button>
 </div>
 <br/>
+
+<!-- Confirm delete Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Confirmer suppression</h4>
+            </div>
+            <div class="modal-body">
+                <p>Etes-vous sûr de vouloir supprimer {{client.nom}} {{client.prenom}} ?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger" (click)="onDelete(client._id)" data-dismiss="modal">Supprimer</button>
+                <button class="btn btn-default" data-dismiss="modal" (click)="closeModal()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Add/Update Client form -->
 <div class="container" *ngIf="mode">
@@ -47,7 +67,7 @@
                         <label for="civilite">Civilité :</label>
                         <select class="form-control" name="civilite" id="civilite" formControlName="civilite">
                             <option>Civilité...</option>
-                            <option *ngFor="let key of keys" ([value])="key">{{civilite[key]}}</option>
+                            <option *ngFor="let key of keys" ([ngValue])="key">{{civilite[key]}}</option>
                           </select>
                     </div>
                     <div class="form-group" [ngClass]="{'has-error': (clientForm.controls.nom.errors && clientForm.controls.nom.dirty),

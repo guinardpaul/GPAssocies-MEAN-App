@@ -39,6 +39,30 @@ module.exports = (router) => {
     });
 
     /**
+     * GET All FactureGlobal by Devis
+     */
+    router.get('/facture-global/devis/:devis', (req, res, next) => {
+        if (!req.params.devis) {
+            res.json({
+                success: false,
+                message: 'devis not provided'
+            });
+        } else {
+            FactureGlobal.find({ 'devis': req.params.devis }, {}, (err, data) => {
+                if (data) {
+                    res.json(data);
+                } else {
+                    res.json({
+                        success: false,
+                        message: 'Facture Global not found',
+                        err: err
+                    });
+                }
+            });
+        }
+    });
+
+    /**
      * GET ONE FactureGlobal BY REF_FACTUREGLOBAL
      */
     router.get('/facture-global/ref/:ref_factureGlobal', (req, res, next) => {

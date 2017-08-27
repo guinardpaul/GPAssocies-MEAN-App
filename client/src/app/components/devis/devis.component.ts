@@ -371,55 +371,56 @@ export class DevisComponent implements OnInit {
    * @memberof DevisComponent
    */
   onDelete(devis: Devis) {
-    this.factureGlobalService.getAllFactureGlobalByClient(devis.client)
+    this.factureGlobalService.getAllFactureGlobalByDevis(devis._id)
       .subscribe(
       data => {
+        console.log(data);
         if (data.length === 0) {
-          // Fetch DetailsDevis by Devis._id
-          this.detailsDevisService.getDetailsDevisByDevis(devis._id)
-            .subscribe(
-            data => {
-              // Delete detailsDevis
-              this.detailsDevisService.deleteDetailsDevis(data[ 0 ]._id)
-                .subscribe(
-                data => {
-                  console.log('detailsDevis1 deleted' + data);
-                }, (err) => {
-                  console.log('Erreur deleted :' + err);
-                }
-                );
-              this.detailsDevisService.deleteDetailsDevis(data[ 1 ]._id)
-                .subscribe(
-                data => {
-                  console.log('detailsDevis2 deleted' + data);
-                }, (err) => {
-                  console.log('Erreur deleted :' + err);
-                }
-                );
-              this.detailsDevisService.deleteDetailsDevis(data[ 2 ]._id)
-                .subscribe(
-                data => {
-                  console.log('detailsDevis3 deleted' + data);
-                }, (err) => {
-                  console.log('Erreur deleted :' + err);
-                }
-                );
-            }
-            );
           // Delete Devis
           this.devisService.deleteDevis(devis._id)
             .subscribe(
             msg => {
-              console.log('Devis deleted'),
-                this.flashMessages.show('Client supprimé', {
-                  classes: [ 'alert', 'alert-warning' ],
-                  timeout: 3000
-                });
-              this.onSuccess()
+              console.log('Devis deleted');
+              this.flashMessages.show('Devis supprimé', {
+                classes: [ 'alert', 'alert-warning' ],
+                timeout: 3000
+              });
+              this.onSuccess();
+              // Fetch DetailsDevis by Devis._id
+              this.detailsDevisService.getDetailsDevisByDevis(devis._id)
+                .subscribe(
+                data => {
+                  // Delete detailsDevis
+                  this.detailsDevisService.deleteDetailsDevis(data[ 0 ]._id)
+                    .subscribe(
+                    data => {
+                      console.log('detailsDevis1 deleted' + data);
+                    }, (err) => {
+                      console.log('Erreur deleted :' + err);
+                    }
+                    );
+                  this.detailsDevisService.deleteDetailsDevis(data[ 1 ]._id)
+                    .subscribe(
+                    data => {
+                      console.log('detailsDevis2 deleted' + data);
+                    }, (err) => {
+                      console.log('Erreur deleted :' + err);
+                    }
+                    );
+                  this.detailsDevisService.deleteDetailsDevis(data[ 2 ]._id)
+                    .subscribe(
+                    data => {
+                      console.log('detailsDevis3 deleted' + data);
+                    }, (err) => {
+                      console.log('Erreur deleted :' + err);
+                    }
+                    );
+                }
+                );
             },
             error => {
               console.log(error),
-                this.flashMessages.show('Erreur : Client non supprimé', {
+                this.flashMessages.show('Erreur : Devis non supprimé', {
                   classes: [ 'alert', 'alert-danger' ],
                   timeout: 3000
                 });
@@ -427,13 +428,18 @@ export class DevisComponent implements OnInit {
             );
         } else {
           console.log('Impossible de supprimer'),
-            this.flashMessages.show('Suppression impossible! Le devis possède des factures.', {
+            this.flashMessages.show('Suppression impossible ! Le devis est associé à des factures.', {
               classes: [ 'alert', 'alert-danger' ],
               timeout: 3000
             });
+          this.onSuccess();
         }
       }, err => console.log('Erreur :' + err)
       );
+  }
+
+  closeModal() {
+    this.devis = {};
   }
 
   /**
@@ -516,6 +522,16 @@ export class DevisComponent implements OnInit {
     this.detailsDevis1 = { tauxTva: CONST_TAUX[ 1 ] };
     this.detailsDevis2 = { tauxTva: CONST_TAUX[ 2 ] };
     this.detailsDevis3 = { tauxTva: CONST_TAUX[ 3 ] };
+  }
+
+  /**
+   * Set devis to delete on confirm
+   * 
+   * @param {Devis} devis devis body
+   * @memberof DevisComponent
+   */
+  getDevisToDelete(devis: Devis) {
+    this.devis = devis;
   }
 
   /**
@@ -656,6 +672,7 @@ export class DevisComponent implements OnInit {
   // VALIDATIONS
   /**
    * Validation for number
+   * NOT USED
    * 
    * @param {*} n number to check
    * @returns 

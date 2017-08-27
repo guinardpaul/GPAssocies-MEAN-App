@@ -28,7 +28,7 @@
           <div class="btn-group-vertical">
             <a class="btn btn-success" [routerLink]="['/devis/client/valider-devis', d._id]">Valider</a>
             <button class="btn btn-warning" (click)="onUpdate(d)">Modifier</button>
-            <button class="btn btn-danger" (click)="onDelete(d)">Supprimer</button>
+            <button class="btn btn-danger" data-toggle="modal" data-target="#myModal" (click)="getDevisToDelete(d)">Supprimer</button>
           </div>
         </td>
       </tr>
@@ -37,6 +37,26 @@
   <button class="btn btn-primary" (click)="onAdd()">Ajouter devis</button>
 
   <br/><br/>
+
+  <!-- Confirm delete Modal -->
+  <div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Confirmer suppression</h4>
+        </div>
+        <div class="modal-body">
+          <p>Etes-vous sûr de vouloir supprimer {{devis.ref_devis}} ?</p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-danger" (click)="onDelete(devis)" data-dismiss="modal">Supprimer</button>
+          <button class="btn btn-default" data-dismiss="modal" (click)="closeModal()">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Add/Update Devis-DetailsDevis form -->
   <div class="container-fluid" *ngIf="mode">

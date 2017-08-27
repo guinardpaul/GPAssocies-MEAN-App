@@ -91,7 +91,7 @@ export class FactureAccompteComponent implements OnInit {
   /**
    * Get All Facture Global by Client
    * 
-   * @param {number} id 
+   * @param {number} id client id
    * @memberof FactureAccompteComponent
    */
   getAllFactureGlobalByClient(id: number) {
@@ -294,14 +294,33 @@ export class FactureAccompteComponent implements OnInit {
             }
             );
         } else {
-          console.log('Impossible : Facture accompte a supprimé');
-          this.flashMessages.show('Suppression impossible. La facture possède des règlements', {
+          console.log('Impossible de supprimer la facture accompte');
+          this.flashMessages.show('Suppression impossible ! La facture d\'accompte est associée à des règlements', {
             classes: [ 'alert', 'alert-danger' ],
             timeout: 3000
           });
         }
       }, err => console.log('Erreur :' + err)
       );
+  }
+
+  /**
+   * Set facture accompte to delete
+   * 
+   * @param {FactureAccompte} factureAccompte facture accompte body
+   * @memberof FactureAccompteComponent
+   */
+  getFactureAccompteToDelete(factureAccompte: FactureAccompte) {
+    this.factureAccompte = factureAccompte;
+  }
+
+  /**
+   * on close modal
+   * 
+   * @memberof FactureAccompteComponent
+   */
+  closeModal() {
+    this.factureAccompte = {};
   }
 
   /**

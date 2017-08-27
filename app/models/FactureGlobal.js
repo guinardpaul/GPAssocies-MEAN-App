@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 const Client = require('./Client');
+const Devis = require('./Devis');
 
 const FactureGlobalSchema = new mongoose.Schema({
     status_factureGlobal: {
@@ -39,6 +40,11 @@ const FactureGlobalSchema = new mongoose.Schema({
     client: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Client',
+        required: true
+    },
+    devis: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Devis',
         required: true
     },
 });

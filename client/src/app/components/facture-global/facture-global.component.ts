@@ -167,6 +167,7 @@ export class FactureGlobalComponent implements OnInit {
     this.factureAccompteService.getAllFactureAccompteByFactureGlobal(id)
       .subscribe(
       data => {
+        console.log(data);
         if (data.length === 0) {
           this.factureGlobalService.deleteFactureGlobal(id)
             .subscribe(
@@ -184,17 +185,40 @@ export class FactureGlobalComponent implements OnInit {
                 classes: [ 'alert', 'alert-danger' ],
                 timeout: 3000
               });
+              this.factureGlobal = {};
             }
             );
         } else {
           console.log('Suppression impossible');
-          this.flashMessages.show('Suppression impossible! La facture global possède des factures d\'accompte', {
+          this.flashMessages.show('Suppression impossible ! La facture est associée à des factures d\'accomptes', {
             classes: [ 'alert', 'alert-danger' ],
             timeout: 3000
           });
+          this.factureGlobal = {};
         }
       }, err => console.log('Erreur :' + err)
       );
+  }
+
+  /**
+   * Store Facture global data to delete. 
+   * Confirm modal implementation
+   * 
+   * @param {FactureGlobal} factureGlobal facture global body
+   * @memberof FactureGlobalComponent
+   */
+  getFactureGlobalToDelete(factureGlobal: FactureGlobal) {
+    this.factureGlobal = factureGlobal;
+    console.log(this.factureGlobal);
+  }
+
+  /**
+   * on close modal
+   * 
+   * @memberof FactureGlobalComponent
+   */
+  closeModal() {
+    this.factureGlobal = {};
   }
 
   /**
@@ -262,6 +286,18 @@ export class FactureGlobalComponent implements OnInit {
     this.mode = false;
     this.factureGlobal = {};
     this.processing = false;
+  }
+
+  /**
+   * on cancel form
+   * 
+   * @memberof FactureGlobalComponent
+   */
+  onCancel() {
+    this.mode = false;
+    this.processing = false;
+    this.generateForm();
+    this.factureGlobal = {};
   }
 
   /**

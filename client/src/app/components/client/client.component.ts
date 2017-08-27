@@ -165,9 +165,11 @@ export class ClientComponent implements OnInit {
                 classes: [ 'alert', 'alert-warning' ],
                 timeout: 3000
               });
+              this.client = {};
               this.getAllClients();
             },
             error => {
+              this.client = {};
               console.log(error);
               this.flashMessages.show('Erreur: Client non supprimé', {
                 classes: [ 'alert', 'alert-danger' ],
@@ -176,8 +178,9 @@ export class ClientComponent implements OnInit {
             }
             );
         } else {
+          this.client = {};
           console.log('Client non supprimé');
-          this.flashMessages.show('Impossible de supprimer le client car il possède des devis', {
+          this.flashMessages.show('Suppression impossible ! le client est associé à des devis', {
             classes: [ 'alert', 'alert-danger' ],
             timeout: 3000
           });
@@ -185,8 +188,26 @@ export class ClientComponent implements OnInit {
       },
       err => console.log('Erreur :' + err)
       );
+  }
 
+  /**
+   * Set client to delete on confirm
+   * 
+   * @param {Client} client client body
+   * @memberof ClientComponent
+   */
+  getClientToDelete(client: Client) {
+    this.client = client;
+  }
 
+  /**
+   * on close modal
+   * 
+   * @memberof ClientComponent
+   */
+  closeModal() {
+    this.client = {};
+    this.client_id = null;
   }
 
 	/**

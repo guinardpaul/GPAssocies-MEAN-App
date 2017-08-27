@@ -36,6 +36,7 @@ export class ValiderDevisComponent implements OnInit {
   validationRef: boolean;
   factureGlobal = new FactureGlobal();
   validerDevisForm: FormGroup;
+  processing = false;
 
   /**
    * Creates an instance of ValiderDevisComponent.
@@ -121,12 +122,15 @@ export class ValiderDevisComponent implements OnInit {
    * @memberof ValiderDevisComponent
    */
   validerDevis() {
+    this.disableForm();
+    this.processing = true;
     // Set newFacture body
     var newFacture = this.validerDevisForm.value;
     newFacture.montantTtcTotal = this.devis.montantTtc;
     newFacture.client = this.devis.client;
     newFacture.montantHt = this.devis.montantHt;
     newFacture.tauxTva = this.devis.tauxTva;
+    newFacture.devis = this.devis._id;
 
     // Send body to addFactureGlobal method in factureGlobalService
     this.factureGlobalService.addFactureGlobal(newFacture)
@@ -140,11 +144,13 @@ export class ValiderDevisComponent implements OnInit {
         this.onSuccess();
       },
       error => {
+        this.processing = false;
         console.log('Error ' + error);
         this.flashMessages.show('Erreur création facture', {
           classes: [ 'alert', 'alert-danger' ],
           timeout: 3000
         });
+        this.enableForm();
       });
   }
 
@@ -220,7 +226,20 @@ export class ValiderDevisComponent implements OnInit {
    */
   onSuccess() {
     this.updateStatusClient(this.client);
-    this.generateForm();
+    setTimeout(() => {
+      this.processing = false;
+      // this.enableForm();
+      this.generateForm();
+      this.router.navigate([ '/devis/client/:id_client', { id_client: this.devis.client }]);
+    }, 1000);
+  }
+
+  /**
+   * on cancel form
+   * 
+   * @memberof ValiderDevisComponent
+   */
+  onCancel() {
     this.router.navigate([ '/devis/client/:id_client', { id_client: this.devis.client }]);
   }
 
@@ -253,6 +272,25 @@ export class ValiderDevisComponent implements OnInit {
       montantTtcTotal: [ { value: this.devis.montantTtc, disabled: true }],
       client: [ { value: this.devis.client, disabled: true }]
     });
+  }
+
+  /**
+   * Enable form
+   * 
+   * @memberof ValiderDevisComponent
+   */
+  enableForm() {
+    this.validerDevisForm.controls[ 'ref_factureGLobal' ].enable();
+    this.validerDevisForm.controls[ 'date_creation' ].enable();
+  }
+
+  /**
+   * Disable form
+   * 
+   * @memberof ValiderDevisComponent
+   */
+  disableForm() {
+    this.validerDevisForm.disable();
   }
 
   /**
