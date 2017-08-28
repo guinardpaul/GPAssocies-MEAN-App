@@ -3,6 +3,7 @@ const router = express.Router();
 const path = require('path');
 const favicon = require('serve-favicon');
 const logger = require('morgan');
+const fs = require('fs');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
@@ -34,7 +35,14 @@ const bug = require('./app/routes/bug')(router);
 
 // MIDDLEWARE
 // log into console (dev)
-app.use(logger('dev'));
+//app.use(logger('dev'));
+// Log into file
+// create a write stream (in append mode) 
+var accessLogStream = fs.createWriteStream(path.join(__dirname, 'server.log'), { flags: 'a' })
+app.use(logger('common', { stream: accessLogStream }))
+
+// Favicon
+app.use(favicon(path.join(__dirname, 'client/src', 'favicon.ico')))
 // Allows cross origin in development only
 app.use(cors({ origin: 'http://localhost:4200' }));
 // body-parser
