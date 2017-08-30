@@ -2,6 +2,23 @@ const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 const FactureGlobal = require('./FactureGlobal');
 
+// BackEnd Validators Definition
+// Validators Function
+isNumberChecker = (montantFacture) => {
+    if (!montantFacture) {
+        return false;
+    } else {
+        const regExp = new RegExp(/^[0-9]{0,20}(\.[0-9]{0,4})?$/);
+        return regExp.test(montantFacture);
+    }
+};
+
+// Validators
+const montantValidator = [{
+    validator: isNumberChecker,
+    message: 'Le montant doit être positif et au maximum 4 chiffres après la virgule'
+}];
+
 const FactureAccompteSchema = new mongoose.Schema({
     status_factureAccompte: {
         type: Boolean,
@@ -18,7 +35,8 @@ const FactureAccompteSchema = new mongoose.Schema({
     },
     montantFacture: {
         type: Number,
-        required: true
+        required: true,
+        validate: montantValidator
     },
     reglementClient: {
         type: Number,

@@ -74,11 +74,18 @@ module.exports = (router) => {
         } else {
             FactureAccompte.create(req.body, (err, data) => {
                 if (err) {
-                    return res.json({
-                        success: false,
-                        err: err,
-                        message: 'Erreur création facture d\'accompte'
-                    });
+                    if (err.errors.montantFacture) {
+                        res.json({
+                            success: false,
+                            message: err.errors.montantFacture.message
+                        });
+                    } else {
+                        return res.json({
+                            success: false,
+                            err: err,
+                            message: 'Erreur création facture d\'accompte'
+                        });
+                    }
                 } else {
                     res.json({
                         success: true,

@@ -48,11 +48,18 @@ module.exports = (router) => {
     } else {
       Reglement.create(req.body, (err, data) => {
         if (err) {
-          res.json({
-            success: false,
-            message: 'Erreur création réglement',
-            err: err
-          });
+          if (err.errors.reglementTtc) {
+            res.json({
+              success: false,
+              message: err.errors.reglementTtc.message
+            });
+          } else {
+            res.json({
+              success: false,
+              message: 'Erreur création réglement',
+              err: err
+            });
+          }
         } else {
           res.json({
             success: true,

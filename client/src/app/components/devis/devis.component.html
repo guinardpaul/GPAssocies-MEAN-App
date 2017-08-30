@@ -102,7 +102,7 @@
                 Ce champ est requis
               </li>
               <li class="list-group-item list-group-item-danger" *ngIf="devisForm.controls.montantHt1.errors?.isNumber && devisForm.controls.montantHt1.dirty && !devisForm.controls.montantHt1.errors?.required">
-                Ce n'est pas un nombre
+                Le montant doit être positif et doit posséder au maximum 4 chiffres après la virgule
               </li>
             </ul>
           </div>

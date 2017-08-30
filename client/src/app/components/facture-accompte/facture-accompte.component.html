@@ -66,20 +66,38 @@
       </div>
       <div class="panel-body">
         <form class="form-horizontal" [formGroup]="factureForm">
-          <div class="form-group">
+          <div class="form-group" [ngClass]="{'has-error': (factureForm.controls.ref_factureAccompte.errors && factureForm.controls.ref_factureAccompte.dirty),
+          'has-success': (!factureForm.controls.ref_factureAccompte.errors)}">
             <label class="control-label" for="ref_factureAccompte">Ref :</label>
             <input type="text" class="form-control" name="ref_factureAccompte" id="ref_factureAccompte" formControlName="ref_factureAccompte"
               autofocus required />
+            <ul class="list-group">
+              <li class="list-group-item list-group-item-danger" *ngIf="factureForm.controls.ref_factureAccompte.errors?.required && factureForm.controls.ref_factureAccompte.dirty">
+                Ce champ est requis
+              </li>
+            </ul>
           </div>
           <div class="form-group">
             <label class="control-label" for="date_creation">Date création :</label>
             <input type="date" class="form-control" name="date_creation" id="date_creation" formControlName="date_creation" value="{{factureGlobal.date_creation}}"
             />
           </div>
-          <div class="form-group">
+          <div class="form-group" [ngClass]="{'has-error': (factureForm.controls.montantFacture.errors && factureForm.controls.montantFacture.dirty),
+          'has-success': (!factureForm.controls.montantFacture.errors)}">
             <label class="control-label" for="montantFacture">Montant facturé :</label>
             <input type="text" class="form-control" name="montantFacture" id="montantFacture" formControlName="montantFacture" value="{{factureGlobal.montantTtcTotal}}"
               required />
+            <ul class="list-group">
+              <li class="list-group-item list-group-item-danger" *ngIf="factureForm.controls.montantFacture.errors?.required && factureForm.controls.montantFacture.dirty">
+                Ce champ est requis
+              </li>
+              <li class="list-group-item list-group-item-danger" *ngIf="factureForm.controls.montantFacture.errors?.isNumber && factureForm.controls.montantFacture.dirty && !factureForm.controls.montantFacture.errors?.required">
+                Le montant doit être positif et doit posséder au maximum 4 chiffres après la virgule
+              </li>
+              <li class="list-group-item list-group-item-danger" *ngIf="factureForm.controls.montantFacture.errors?.montantFactureValidation && factureForm.controls.montantFacture.dirty && !factureForm.controls.montantFacture.errors?.required">
+                Le montant est supérieur au montant facturé TTC de la facture
+              </li>
+            </ul>
           </div>
           <div class="form-group">
             <label class="control-label" for="factureGlobal">factureGlobal :</label>
@@ -122,6 +140,14 @@
             <label class="control-label" for="reglementTtc">Règlement client :</label>
             <input type="text" class="form-control" name="reglementTtc" id="reglementTtc" formControlName="reglementTtc" value="{{reglement.reglementTtc}}"
               autofocus required />
+            <ul class="list-group">
+              <li class="list-group-item list-group-item-danger" *ngIf="reglementForm.controls.reglementTtc.errors?.required && reglementForm.controls.reglementTtc.dirty">
+                Ce champ est requis
+              </li>
+              <li class="list-group-item list-group-item-danger" *ngIf="reglementForm.controls.reglementTtc.errors?.isNumber && reglementForm.controls.reglementTtc.dirty && !reglementForm.controls.reglementTtc.errors?.required">
+                Ce n'est pas un nombre positif
+              </li>
+            </ul>
           </div>
           <div class="form-group">
             <button [disabled]="!reglementForm.valid || processing" (click)="addReglement()" class="btn btn-success">Ajouter règlement</button>

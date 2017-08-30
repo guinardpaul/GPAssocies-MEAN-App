@@ -58,6 +58,16 @@ module.exports = (router) => {
                             success: false,
                             message: err.errors.email.message
                         });
+                    } else if (err.errors.nom) {
+                        res.json({
+                            success: false,
+                            message: err.errors.nom.message
+                        });
+                    } else if (err.errors.prenom) {
+                        res.json({
+                            success: false,
+                            message: err.errors.prenom.message
+                        });
                     } else {
                         console.log(err);
                         res.json({

@@ -62,11 +62,18 @@ module.exports = (router) => {
     } else {
       DetailsDevis.create(req.body, (err, data) => {
         if (err) {
-          res.json({
-            success: false,
-            message: 'Erreur création details devis',
-            err: err
-          });
+          if (err.errors.montantHt) {
+            res.json({
+              success: false,
+              message: err.errors.montantHt.message
+            })
+          } else {
+            res.json({
+              success: false,
+              message: 'Erreur création details devis',
+              err: err
+            });
+          }
         } else {
           res.json({
             success: true,
@@ -90,11 +97,18 @@ module.exports = (router) => {
     } else {
       DetailsDevis.findByIdAndUpdate(req.params.id, req.body, (err, data) => {
         if (err) {
-          res.json({
-            success: false,
-            message: 'Erreur modification Details devis',
-            err: err
-          });
+          if (err.errors.montantHt) {
+            res.json({
+              success: false,
+              message: err.errors.montantHt.message
+            })
+          } else {
+            res.json({
+              success: false,
+              message: 'Erreur modification Details devis',
+              err: err
+            });
+          }
         } else {
           res.json({
             success: true,

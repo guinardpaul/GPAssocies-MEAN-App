@@ -7,7 +7,7 @@ let validNomChecker = (nom) => {
     if (!nom) {
         return false;
     } else {
-        const regExp = new RegExp(/^[A-Za-z]+([ \-']?[A-Za-z]+[ \-']?[A-Za-z]+[ \-']?)[A-Za-z]+$/);
+        const regExp = new RegExp(/[a-zA-z-_éè]+$/);
         return regExp.test(nom);
     }
 };
@@ -16,7 +16,7 @@ let validPrenomChecker = (prenom) => {
     if (!prenom) {
         return false;
     } else {
-        const regExp = new RegExp(/^[A-Za-z]+([ \-']?[A-Za-z]+[ \-']?[A-Za-z]+[ \-']?)[A-Za-z]+$/);
+        const regExp = new RegExp(/[a-zA-z-_éè]+$/);
         return regExp.test(prenom);
     }
 };
@@ -57,11 +57,13 @@ const ClientSchema = new mongoose.Schema({
     },
     nom: {
         type: String,
-        required: true
+        required: true,
+        validate: nomValidator
     },
     prenom: {
         type: String,
-        required: true
+        required: true,
+        validate: prenomValidator
     },
     email: {
         type: String,

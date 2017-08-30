@@ -6,13 +6,17 @@
         </div>
         <div class="panel-body">
             <form class="form-horizontal" [formGroup]="validerDevisForm" (submit)="validerDevis()">
-                <div class="form-group">
+                <div class="form-group" [ngClass]="{'has-error': (validerDevisForm.controls.ref_factureGlobal.errors && validerDevisForm.controls.ref_factureGlobal.dirty),
+                'has-success': (!validerDevisForm.controls.ref_factureGlobal.errors)}">
                     <label class="control-label" for="ref_factureGlobal">Ref :</label>
                     <input type="text" class="form-control" name="ref_factureGlobal" id="ref_factureGlobal" formControlName="ref_factureGlobal"
                         value="{{devis.ref_devis}}" (blur)="verifRef()" autofocus required />
                     <ul class="list-group">
                         <li class="list-group-item list-group-item-danger" *ngIf="validationRef">
                             Ref déjà utilisée
+                        </li>
+                        <li class="list-group-item list-group-item-danger" *ngIf="validerDevisForm.controls.ref_factureGlobal.errors?.required && validerDevisForm.controls.ref_factureGlobal.dirty">
+                            Ce champ est requis
                         </li>
                     </ul>
                 </div>

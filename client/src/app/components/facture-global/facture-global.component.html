@@ -63,10 +63,16 @@
             </div>
             <div class="panel-body">
                 <form class="form-horizontal" [formGroup]="factureForm" (submit)="updateFacture()">
-                    <div class="form-group">
+                    <div class="form-group" [ngClass]="{'has-error': (factureForm.controls.ref_factureGlobal.errors && factureForm.controls.ref_factureGlobal.dirty),
+                    'has-success': (!factureForm.controls.ref_factureGlobal.errors)}">
                         <label class="control-label" for="ref_factureGlobal">Ref :</label>
                         <input type="text" class="form-control" name="ref_factureGlobal" id="ref_factureGlobal" formControlName="ref_factureGlobal"
                             value="{{factureGlobal.ref_factureGlobal}}" autofocus required />
+                        <ul class="list-group">
+                            <li class="list-group-item list-group-item-danger" *ngIf="factureForm.controls.ref_factureGlobal.errors?.required && factureForm.controls.ref_factureGlobal.dirty">
+                                Ce champ est requis
+                            </li>
+                        </ul>
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="date_creation">Date création :</label>

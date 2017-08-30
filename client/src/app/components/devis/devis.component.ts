@@ -557,17 +557,20 @@ export class DevisComponent implements OnInit {
       date_creation: [ Date.now ],
       // DetailsDevis data
       montantHt1: [ this.detailsDevis1.montantHt, Validators.compose([
-        Validators.required
+        Validators.required,
+        this.isNumber
       ]) ],
       tauxTva1: [ { value: this.detailsDevis1.tauxTva, disabled: true }, Validators.required ],
       montantTtc1: [ { value: this.detailsDevis1.montantTtc, disabled: true }, Validators.required ],
       montantHt2: [ this.detailsDevis2.montantHt, Validators.compose([
-        Validators.required
+        Validators.required,
+        this.isNumber
       ]) ],
       tauxTva2: [ { value: this.detailsDevis2.tauxTva, disabled: true }, Validators.required ],
       montantTtc2: [ { value: this.detailsDevis2.montantTtc, disabled: true }, Validators.required ],
       montantHt3: [ this.detailsDevis3.montantHt, Validators.compose([
-        Validators.required
+        Validators.required,
+        this.isNumber
       ]) ],
       tauxTva3: [ { value: this.detailsDevis3.tauxTva, disabled: true }, Validators.required ],
       montantTtc3: [ { value: this.detailsDevis3.montantTtc, disabled: true }, Validators.required ],
@@ -682,20 +685,19 @@ export class DevisComponent implements OnInit {
   // VALIDATIONS
   /**
    * Validation for number
-   * NOT USED
    * 
-   * @param {*} n number to check
+   * @param {*} n string to check
    * @returns 
    * @memberof DevisComponent
    */
   isNumber(controls) {
-    console.log(isNaN(controls));
-    if (isNaN(controls)) {
+    const regExp = new RegExp(/^[0-9]{0,20}(\.[0-9]{0,4})?$/);
+    if (regExp.test(controls.value)) {
+      return null;
+    } else {
       return {
         isNumber: true
       };
-    } else {
-      return null;
     }
   }
 

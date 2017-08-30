@@ -40,6 +40,8 @@ export class FactureAccompteComponent implements OnInit {
   processing = false;
   mode = false;
   modeAddReglement = false;
+  montantTTCTotal: number;
+  montantTTCFacture: number;
   factureForm: FormGroup;
   reglementForm: FormGroup;
   // Status images
@@ -69,7 +71,7 @@ export class FactureAccompteComponent implements OnInit {
     private clientService: ClientService,
     private reglementService: ReglementService
   ) {
-    this.generateForm();
+    //this.generateForm();
     this.generateReglementForm();
   }
 
@@ -113,6 +115,7 @@ export class FactureAccompteComponent implements OnInit {
       .subscribe(
       data => {
         this.factureGlobal = data;
+        console.log(this.factureGlobal);
         this.getOneClient(data.client);
       },
       err => console.log(err)
@@ -340,7 +343,7 @@ export class FactureAccompteComponent implements OnInit {
         if (data.success) {
           console.log(data.message);
           this.flashMessages.show(data.message, {
-            classes: [ 'alert', 'alert-success' ],
+            classes: [ 'alert', 'alert-warning' ],
             timeout: 3000
           });
           // Update facture accompte reglementClient
@@ -604,7 +607,10 @@ export class FactureAccompteComponent implements OnInit {
     this.factureForm = this.formBuilder.group({
       ref_factureAccompte: [ this.factureGlobal.ref_factureGlobal, Validators.required ],
       date_creation: [ Date.now ],
-      montantFacture: [ this.factureGlobal.montantFacture, Validators.required ],
+      montantFacture: [ this.factureGlobal.montantTtcTotal, Validators.compose([
+        Validators.required,
+        this.isNumber
+      ]) ],
       factureGlobal: [ { value: this.factureAccompte.factureGlobal, disabled: true }, Validators.required ]
     });
   }
@@ -619,7 +625,10 @@ export class FactureAccompteComponent implements OnInit {
       ref_factureAccompte: [ { value: this.factureAccompte.ref_factureAccompte, disabled: true }, Validators.required ],
       date_creation: [ { value: this.factureAccompte.date_creation }],
       montantFacture: [ { value: this.factureAccompte.montantFacture, disabled: true }],
-      reglementTtc: [ this.reglement.reglementTtc, Validators.required ]
+      reglementTtc: [ this.reglement.reglementTtc, Validators.compose([
+        Validators.required,
+        this.isNumber
+      ]) ]
     });
   }
 
@@ -652,6 +661,44 @@ export class FactureAccompteComponent implements OnInit {
   enableReglementForm() {
     this.reglementForm.controls[ 'date_creation' ].enable();
     this.reglementForm.controls[ 'reglementTtc' ].enable();
+  }
+
+  // VALIDATIONS
+  /**
+   * Check if controls.value is a number
+   * 
+   * @param {any} controls value to check
+   * @returns 
+   * @memberof FactureAccompteComponent
+   */
+  isNumber(controls) {
+    const regExp = new RegExp(/^[0-9]{0,20}(\.[0-9]{0,4})?$/);
+    if (regExp.test(controls.value)) {
+      return null;
+    } else {
+      return {
+        isNumber: true
+      };
+    }
+  }
+
+  /**
+   * Check si SOMME(montant facture accompte) < montant facture total facture global
+   * 
+   * @param {any} controls value to check
+   * @returns 
+   * @memberof FactureAccompteComponent
+   */
+  montantFactureValidation(controls) {
+    this.getOneFactureGlobal(this.id_fact)
+    let montantFactureGlobal = this.montantTTCTotal - this.montantTTCFacture
+    if (Number(controls.value) <= montantFactureGlobal) {
+      return null;
+    } else {
+      return {
+        montantFactureValidation: true
+      };
+    }
   }
 
   /**
