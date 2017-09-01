@@ -8,7 +8,7 @@ module.exports = (router) => {
   router.get('/reglements', (req, res, next) => {
     Reglement.find((err, data) => {
       if (err) return next(err);
-      res.json(data);
+      return res.json(data);
     });
   });
 
@@ -17,20 +17,20 @@ module.exports = (router) => {
    */
   router.get('/reglements/:factureAccompte', (req, res, next) => {
     if (!req.params.factureAccompte) {
-      res.json({
+      return res.json({
         success: false,
         message: 'id not provided'
       });
     } else {
       Reglement.find({ 'factureAccompte': req.params.factureAccompte }, (err, data) => {
         if (err) {
-          res.json({
+          return res.json({
             success: false,
             message: 'facture d\'accompte not found',
             err: err
           });
         } else {
-          res.json(data);
+          return res.json(data);
         }
       });
     }
@@ -41,7 +41,7 @@ module.exports = (router) => {
    */
   router.post('/reglements', (req, res, next) => {
     if (!req.body) {
-      res.json({
+      return res.json({
         success: false,
         message: 'body not provided'
       });
@@ -49,19 +49,19 @@ module.exports = (router) => {
       Reglement.create(req.body, (err, data) => {
         if (err) {
           if (err.errors.reglementTtc) {
-            res.json({
+            return res.json({
               success: false,
               message: err.errors.reglementTtc.message
             });
           } else {
-            res.json({
+            return res.json({
               success: false,
               message: 'Erreur création réglement',
               err: err
             });
           }
         } else {
-          res.json({
+          return res.json({
             success: true,
             message: 'Reglement créé'
           });
@@ -75,14 +75,14 @@ module.exports = (router) => {
      */
   router.put('/reglements/:id', (req, res, next) => {
     if (!req.params.id) {
-      res.json({
+      return res.json({
         success: false,
         message: 'id not provided'
       });
     } else {
       Reglement.findByIdAndUpdate(req.params.id, req.body, (err, data) => {
         if (err) {
-          res.json({
+          return res.json({
             success: false,
             message: 'facture d\'accompte not found',
             err: err
@@ -90,7 +90,7 @@ module.exports = (router) => {
         } else {
           // Récupère Reglement Updated
           Reglement.findById(req.params.id, (err, data) => {
-            res.json({
+            return res.json({
               success: true,
               obj: data,
               message: 'Reglement modifié'
@@ -106,19 +106,19 @@ module.exports = (router) => {
    */
   router.delete('/reglements/:id', (req, res, next) => {
     if (!req.params.id) {
-      res.json({
+      return res.json({
         success: false,
         message: 'id not provided'
       });
     } else {
       Reglement.findByIdAndRemove(req.params.id, req.body, (err, data) => {
         if (data) {
-          res.json({
+          return res.json({
             success: true,
             message: 'Reglement supprimé'
           });
         } else {
-          res.json({
+          return res.json({
             success: false,
             message: 'Erreur suppression réglement',
             err: err

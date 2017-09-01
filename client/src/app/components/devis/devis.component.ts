@@ -37,6 +37,7 @@ export class DevisComponent implements OnInit {
   detailsDevis3: any = { tauxTva: CONST_TAUX[ 3 ] };
   //listDetailsDevis = [ this.detailsDevis1, this.detailsDevis2, this.detailsDevis3 ];
   client = new Client();
+  validationRef: boolean;
   id_client: number;
   mode = false;
   processing = false;
@@ -699,6 +700,32 @@ export class DevisComponent implements OnInit {
         isNumber: true
       };
     }
+  }
+
+  /**
+   * 
+   * (blur) listener : Verification de la ref_devis.
+   * - si data.success === true && ref != devis.ref => ref_devis utilisée => validationRef = true,
+   * - si data.success === false => ref_devis non utilisée => validationRef = false
+   *
+   * @memberof ValiderDevisComponent
+   */
+  verifRef() {
+    this.devisService.getOneDevisByRef(this.client._id, this.devisForm.get('ref_devis').value)
+      .subscribe(
+      data => {
+        if (data.success) {
+          // onUpdate : Vérif si ref dans l'input == ref initial du devis 
+          if (this.devisForm.get('ref_devis').value != this.devis.ref_devis) {
+            return this.validationRef = true;
+          }
+        }
+      },
+      error => {
+        console.log(error)
+      }
+      );
+    return this.validationRef = false;
   }
 
   /**

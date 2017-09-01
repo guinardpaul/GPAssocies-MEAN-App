@@ -75,16 +75,18 @@ export class FactureGlobalService {
     return this.http.get(devUrl + 'devis/' + id)
       .map(res => res.json());
   }
-	/**
+
+  /**
    * Get One Facture Global by ref.
 	 * Method to check unique key of ref_factureGlobal.
-   *
-   * @param {string} ref factureGlobal.ref
-   * @returns
+   * 
+   * @param {number} id_client client id
+   * @param {string} ref ref facture global
+   * @returns 
    * @memberof FactureGlobalService
    */
-  getOneFactureGlobalByRef(ref: string) {
-    return this.http.get(devUrl + 'ref/' + ref)
+  getOneFactureGlobalByRef(id_client: number, ref: string) {
+    return this.http.get(devUrl + 'client/' + id_client + '/ref/' + ref)
       .map(res => res.json());
   }
 

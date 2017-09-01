@@ -6,7 +6,7 @@ const Devis = require('./Devis');
 const FactureGlobalSchema = new mongoose.Schema({
     status_factureGlobal: {
         type: Boolean,
-        default: false
+        default: true
     },
     ref_factureGlobal: {
         type: String,

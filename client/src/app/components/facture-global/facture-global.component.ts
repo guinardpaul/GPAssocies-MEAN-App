@@ -31,6 +31,7 @@ export class FactureGlobalComponent implements OnInit {
   listFactureGlobals: FactureGlobal[];
   client = new Client();
   id_client: number;
+  validationRef: boolean;
   mode = false;
   processing = false;
   factureForm: FormGroup;
@@ -167,7 +168,6 @@ export class FactureGlobalComponent implements OnInit {
     this.factureAccompteService.getAllFactureAccompteByFactureGlobal(id)
       .subscribe(
       data => {
-        console.log(data);
         if (data.length === 0) {
           this.factureGlobalService.deleteFactureGlobal(id)
             .subscribe(
@@ -230,49 +230,37 @@ export class FactureGlobalComponent implements OnInit {
    * @memberof ValiderDevisComponent
    */
   updateStatusClient(client: Client) {
-    // Initialise listFactureGlobals
-    this.listFactureGlobals = [];
-
+    let status_client: boolean = true;
     // Fetch Facture Globals from Database
     this.factureGlobalService.getAllFactureGlobalByClient(client._id)
       .subscribe(
-      FactureGlobals =>
-        this.listFactureGlobals = FactureGlobals,
+      FactureGlobals => {
+        // Check each factureGlobal.status dans listFactureGlobals
+        if (FactureGlobals.length > 0) {
+          for (var factureGlobal in FactureGlobals) {
+            if (FactureGlobals.hasOwnProperty(factureGlobal)) {
+              if (FactureGlobals[ factureGlobal ].status_factureGlobal === false) {
+                status_client = false;
+              }
+            }
+          }
+        } else {
+          status_client = false;
+        }
+
+        // Check difference entre status_facture et status_client avant de requêter à la database
+        // si status_facture === true && status_client !== true || 
+        // status_facture === false && status_client !== false
+        if ((status_client && this.client.status_client !== true) || (!status_client && this.client.status_client === true)) {
+          this.clientService.updateStatus(client, status_client)
+            .subscribe(
+            data => console.log('Status client mis à jour :' + data.obj.status_client),
+            err => console.log('Erreur mis à jour status client :' + err)
+            );
+        }
+      },
       err => console.log(err)
       );
-
-    // Check each factureGlobal.status dans listFactureGlobals
-    let status_client: boolean = true;
-    if (this.listFactureGlobals.length > 0) {
-      for (var factureGlobal in this.listFactureGlobals) {
-        if (this.listFactureGlobals.hasOwnProperty(factureGlobal)) {
-          if (this.listFactureGlobals[ factureGlobal ].status_factureGlobal === false) {
-            status_client = false;
-          }
-        }
-      }
-    } else {
-      status_client = false;
-    }
-
-    // OPTIONNEL : faire 2 cas. si status_client == true et status_client == false
-    // pour éviter requete database si status déja set comme il faut.
-    // Si status_facture === true && status_client !== true
-    if (status_client && this.client.status_client === false) {
-      this.clientService.updateStatus(client, status_client)
-        .subscribe(
-        data => console.log('Status client mis à jour :' + data.obj.status_client),
-        err => console.log('Erreur mis à jour status client :' + err)
-        );
-    }
-
-    if (!(status_client) && this.client.status_client === true) {
-      this.clientService.updateStatus(client, status_client)
-        .subscribe(
-        data => console.log('Status client mis à jour :' + data.obj.status_client),
-        err => console.log('Erreur mis à jour status client :' + err)
-        );
-    }
   }
 
   /**
@@ -286,6 +274,7 @@ export class FactureGlobalComponent implements OnInit {
     this.mode = false;
     this.factureGlobal = {};
     this.processing = false;
+    this.getAllFactureGlobalByClient(this.id_client);
   }
 
   /**
@@ -346,6 +335,32 @@ export class FactureGlobalComponent implements OnInit {
       this.factureForm.controls[ 'montantTtc' ].setValue(Number(montantTTC).toFixed(2));
       this.factureGlobal.montantTtc = Number(montantTTC).toFixed(2);
     }
+  }
+
+  /**
+   * 
+   * (blur) listener : Verification de la ref_factureGlobal.
+   * - si data.success === true && ref != factureGlobal.ref => ref_factureGlobal utilisée => validationRef = true,
+   * - si data.success === false => ref_factureGlobal non utilisée => validationRef = false
+   *
+   * @memberof ValiderDevisComponent
+   */
+  verifRef() {
+    this.factureGlobalService.getOneFactureGlobalByRef(this.client._id, this.factureForm.get('ref_factureGlobal').value)
+      .subscribe(
+      data => {
+        if (data.success) {
+          // onUpdate : Vérif si ref dans l'input == ref initial de la facture global 
+          if (this.factureForm.get('ref_factureGlobal').value != this.factureGlobal.ref_factureGlobal) {
+            return this.validationRef = true;
+          }
+        }
+      },
+      error => {
+        console.log(error)
+      }
+      );
+    return this.validationRef = false;
   }
 
   /**

@@ -37,6 +37,9 @@ export class FactureAccompteComponent implements OnInit {
   listFactureAccompte: FactureAccompte[];
   listReglement: Reglement[] = [];
   listFactureGlobal: FactureGlobal[] = [];
+  validationRef: boolean;
+  validationMontantFacture: boolean;
+  validationReglement: boolean;
   processing = false;
   mode = false;
   modeAddReglement = false;
@@ -176,7 +179,7 @@ export class FactureAccompteComponent implements OnInit {
    */
   addFactureAccompte() {
     this.processing = true;
-    this.disableForm();
+    this.disableFactureForm();
     let newFacture = {
       ref_factureAccompte: this.factureForm.get('ref_factureAccompte').value,
       date_creation: this.factureForm.get('date_creation').value,
@@ -220,7 +223,7 @@ export class FactureAccompteComponent implements OnInit {
    */
   addReglement() {
     this.processing = true;
-    this.disableForm();
+    this.disableReglementForm();
     // Récupère Reglement data du form
     let newReglement = {
       date_reglement: this.reglementForm.get('date_creation').value,
@@ -633,12 +636,20 @@ export class FactureAccompteComponent implements OnInit {
   }
 
   /**
-   * Disable form controls
+   * Disable facture accompte form controls
    * 
    * @memberof FactureAccompteComponent
    */
-  disableForm() {
+  disableFactureForm() {
     this.factureForm.disable();
+  }
+
+  /**
+   * Disable reglement form controls
+   * 
+   * @memberof FactureAccompteComponent
+   */
+  disableReglementForm() {
     this.reglementForm.disable();
   }
 
@@ -683,22 +694,51 @@ export class FactureAccompteComponent implements OnInit {
   }
 
   /**
-   * Check si SOMME(montant facture accompte) < montant facture total facture global
    * 
-   * @param {any} controls value to check
+   * (blur) listener : Verification de la ref_factureAccompte.
+   * - si data.success === true && ref != factureAccompte.ref => ref_factureAccompte utilisée => validationRef = true,
+   * - si data.success === false => ref_factureAccompte non utilisée => validationRef = false
+   *
+   * @memberof ValiderDevisComponent
+   */
+  verifRef() {
+    this.factureAccompteService.getOneFactureAccompteByRef(this.factureGlobal._id, this.factureForm.get('ref_factureAccompte').value)
+      .subscribe(
+      data => {
+        if (data.success) {
+          // onUpdate : Vérif si ref dans l'input == ref initial du factureAccompte 
+          if (this.factureForm.get('ref_factureAccompte').value != this.factureAccompte.ref_factureAccompte) {
+            return this.validationRef = true;
+          }
+        }
+      },
+      error => {
+        console.log(error)
+      }
+      );
+    return this.validationRef = false;
+  }
+
+  /**
+   * (blur) listener : Vérification du montantFacturé de la facture accompte
+   * 
    * @returns 
    * @memberof FactureAccompteComponent
    */
-  montantFactureValidation(controls) {
-    this.getOneFactureGlobal(this.id_fact)
-    let montantFactureGlobal = this.montantTTCTotal - this.montantTTCFacture
-    if (Number(controls.value) <= montantFactureGlobal) {
-      return null;
-    } else {
-      return {
-        montantFactureValidation: true
-      };
+  verifMontantFacture() {
+    let montantRestant = this.factureGlobal.montantTtcTotal - this.factureGlobal.montantTtcFacture;
+    if (this.factureForm.get('montantFacture').value > montantRestant) {
+      return this.validationMontantFacture = true;
     }
+    return this.validationMontantFacture = false;
+  }
+
+  verifReglement() {
+    let reglementRestant = this.factureAccompte.montantFacture - this.factureAccompte.reglementClient;
+    if (this.reglementForm.get('reglementTtc').value > reglementRestant) {
+      return this.validationReglement = true;
+    }
+    return this.validationReglement = false;
   }
 
   /**

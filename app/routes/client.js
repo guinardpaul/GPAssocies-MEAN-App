@@ -8,7 +8,7 @@ module.exports = (router) => {
     router.get('/clients', (req, res, next) => {
         Client.find((err, data) => {
             if (err) return next(err);
-            res.json(data);
+            return res.json(data);
         });
     });
 
@@ -17,16 +17,16 @@ module.exports = (router) => {
      */
     router.get('/clients/:id', (req, res, next) => {
         if (!req.params.id) {
-            res.json({
+            return res.json({
                 success: false,
                 message: 'id not provided'
             });
         } else {
             Client.findById(req.params.id, (err, data) => {
                 if (data) {
-                    res.json(data);
+                    return res.json(data);
                 } else {
-                    res.json({
+                    return res.json({
                         success: false,
                         message: 'Client not found',
                         err: err
@@ -41,7 +41,7 @@ module.exports = (router) => {
      */
     router.post('/clients', (req, res, next) => {
         if (!req.body) {
-            res.json({
+            return res.json({
                 success: false,
                 message: 'data not provided'
             });
@@ -49,35 +49,35 @@ module.exports = (router) => {
             Client.create(req.body, (err, data) => {
                 if (err) {
                     if (err.code === 11000) {
-                        res.json({
+                        return res.json({
                             success: false,
                             message: 'Email déjà utilisé'
                         });
                     } else if (err.errors.email) {
-                        res.json({
+                        return res.json({
                             success: false,
                             message: err.errors.email.message
                         });
                     } else if (err.errors.nom) {
-                        res.json({
+                        return res.json({
                             success: false,
                             message: err.errors.nom.message
                         });
                     } else if (err.errors.prenom) {
-                        res.json({
+                        return res.json({
                             success: false,
                             message: err.errors.prenom.message
                         });
                     } else {
                         console.log(err);
-                        res.json({
+                        return res.json({
                             success: false,
                             message: 'Erreur création client',
                             err: err
                         });
                     }
                 }
-                res.json({
+                return res.json({
                     success: true,
                     obj: data,
                     message: 'Client créé'
@@ -91,7 +91,7 @@ module.exports = (router) => {
      */
     router.put('/clients/:id', (req, res, next) => {
         if (!req.params.id) {
-            res.json({
+            return res.json({
                 success: false,
                 message: 'id not provided'
             });
@@ -99,12 +99,12 @@ module.exports = (router) => {
             Client.findByIdAndUpdate(req.params.id, req.body, (err, data) => {
                 if (err) {
                     /* if (err.errors.email) {
-                        res.json({
+                        return res.json({
                             success: false,
                             message: err.errors.email.message
                         });
                     } else { */
-                    res.json({
+                    return res.json({
                         success: false,
                         message: 'Erreur modification client',
                         err: err
@@ -112,7 +112,7 @@ module.exports = (router) => {
                     // }
                 } else {
                     Client.findById(req.params.id, (err, data) => {
-                        res.json({
+                        return res.json({
                             success: true,
                             obj: data,
                             message: 'Client modifié'
@@ -128,19 +128,19 @@ module.exports = (router) => {
      */
     router.delete('/clients/:id', (req, res, next) => {
         if (!req.params.id) {
-            res.json({
+            return res.json({
                 success: false,
                 message: 'id not provided'
             });
         } else {
             Client.findByIdAndRemove(req.params.id, req.body, (err, data) => {
                 if (data) {
-                    res.json({
+                    return res.json({
                         success: true,
                         message: 'Client supprimé'
                     });
                 } else {
-                    res.json({
+                    return res.json({
                         success: false,
                         message: 'Erreur suppression client',
                         err: err

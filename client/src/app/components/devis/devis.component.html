@@ -66,14 +66,18 @@
       </div>
       <div class="panel-body">
         <form class="form-horizontal" [formGroup]="devisForm" (submit)="addDevis()">
-          <div class="form-group" [ngClass]="{'has-error': (devisForm.controls.ref_devis.errors && devisForm.controls.ref_devis.dirty),
-          'has-success': (!devisForm.controls.ref_devis.errors)}">
+          <div class="form-group" [ngClass]="{'has-error': (devisForm.controls.ref_devis.errors && devisForm.controls.ref_devis.dirty) 
+          || (validationRef && devisForm.controls.ref_devis.dirty),
+          'has-success': (!devisForm.controls.ref_devis.errors && !validationRef)}">
             <label class="control-label" for="ref_devis">Ref :</label>
             <input type="text" class="form-control" name="ref_devis" id="ref_devis" formControlName="ref_devis" value="{{devis.ref_devis}}"
-              autofocus required />
+              (blur)="verifRef()" autofocus required />
             <ul class="list-group">
               <li class="list-group-item list-group-item-danger" *ngIf="devisForm.controls.ref_devis.errors?.required && devisForm.controls.ref_devis.dirty">
                 Ce champ est requis
+              </li>
+              <li class="list-group-item list-group-item-danger" *ngIf="validationRef">
+                Ref déjà utilisée
               </li>
             </ul>
           </div>

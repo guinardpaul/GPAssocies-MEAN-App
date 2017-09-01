@@ -64,6 +64,20 @@ export class FactureAccompteService {
       .map(res => res.json());
   }
 
+  /**
+   * Get One Facture accompte by ref.
+	 * Method to check unique key of ref_factureAccompte.
+   * 
+   * @param {number} id_factureGlobal facture global id
+   * @param {any} ref_factureAccompte facture accompte ref
+   * @returns 
+   * @memberof FactureAccompteService
+   */
+  getOneFactureAccompteByRef(id_factureGlobal: number, ref_factureAccompte) {
+    return this.http.get(devUrl + 'facture-global/' + id_factureGlobal + '/ref/' + ref_factureAccompte)
+      .map(res => res.json());
+  }
+
 	/**
    * Add Facture Accompte.
    *

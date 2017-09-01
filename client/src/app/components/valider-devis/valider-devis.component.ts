@@ -137,7 +137,7 @@ export class ValiderDevisComponent implements OnInit {
       .subscribe(
       data => {
         console.log('Devis Validé' + data);
-        this.flashMessages.show('Facture créée', {
+        this.flashMessages.show(data.message, {
           classes: [ 'alert', 'alert-success' ],
           timeout: 3000
         });
@@ -163,37 +163,38 @@ export class ValiderDevisComponent implements OnInit {
    * @memberof ValiderDevisComponent
    */
   updateStatusClient(client: Client) {
+    let status_facture: boolean = true;
     // Fetch Facture Globals from Database
     this.factureGlobalService.getAllFactureGlobalByClient(client._id)
       .subscribe(
-      FactureGlobals => this.listFactureGlobals = FactureGlobals,
-      err => console.log(err)
-      );
+      FactureGlobals => {
+        // Check each factureGlobal.status dans listFactureGlobals       
+        if (FactureGlobals !== null) {
+          for (var factureGlobal in FactureGlobals) {
+            if (FactureGlobals.hasOwnProperty(factureGlobal)) {
+              if (FactureGlobals[ factureGlobal ].status_factureGlobal === false) {
+                status_facture = false;
+              }
+            }
+          }
 
-    // Check each factureGlobal.status dans listFactureGlobals
-    let status_facture: boolean = true;
-    if (this.listFactureGlobals !== null) {
-      for (var factureGlobal in this.listFactureGlobals) {
-        if (this.listFactureGlobals.hasOwnProperty(factureGlobal)) {
-          if (this.listFactureGlobals[ factureGlobal ].status_factureGlobal === false) {
-            status_facture = false;
+          // Check difference entre status_facture et status_client avant de requêter à la database
+          // si status_facture === true && status_client !== true || 
+          // status_facture === false && status_client !== false
+          if ((status_facture && this.client.status_client !== true) || (!status_facture && this.client.status_client === true)) {
+            this.clientService.updateStatus(client, status_facture)
+              .subscribe(
+              data => console.log('Status client mis à jour :' + data.obj.status_client),
+              err => console.log('Erreur mis à jour status client :' + err)
+              );
           }
         }
-      }
-    }
-
-    // si status_facture === true && status_client !== true
-    if ((status_facture && this.client.status_client !== true) || (!status_facture && this.client.status_client === true)) {
-      this.clientService.updateStatus(client, status_facture)
-        .subscribe(
-        data => console.log('Status client mis à jour :' + data.obj.status_client),
-        err => console.log('Erreur mis à jour status client :' + err)
-        );
-    }
+      },
+      err => console.log(err)
+      );
   }
 
   /**
-   * NOT USED
    * 
    * (blur) listener : Verification de la ref_factureGlobal.
    * - si data.success === true => ref_factureGlobal utilisée => validationRef = true,
@@ -202,20 +203,18 @@ export class ValiderDevisComponent implements OnInit {
    * @memberof ValiderDevisComponent
    */
   verifRef() {
-    this.factureGlobal = new FactureGlobal();
-    this.factureGlobalService.getOneFactureGlobalByRef(this.validerDevisForm.get('ref_factureGlobal').value)
+    this.factureGlobalService.getOneFactureGlobalByRef(this.client._id, this.validerDevisForm.get('ref_factureGlobal').value)
       .subscribe(
       data => {
         if (data.success) {
-          this.validationRef = true;
-        } else {
-          this.validationRef = false;
+          return this.validationRef = true;
         }
       },
       error => {
         console.log(error)
       }
       );
+    return this.validationRef = false;
   }
 
   /**
@@ -265,7 +264,9 @@ export class ValiderDevisComponent implements OnInit {
    */
   generateForm() {
     this.validerDevisForm = this.formBuilder.group({
-      ref_factureGlobal: [ '', Validators.required ],
+      ref_factureGlobal: [ '', Validators.compose([
+        Validators.required
+      ]) ],
       date_creation: [ this.devis.date_creation ],
       montantHt: [ { value: this.devis.montantHt, disabled: true }],
       tauxTva: [ { value: this.devis.tauxTva, disabled: true }],

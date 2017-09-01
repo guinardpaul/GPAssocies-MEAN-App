@@ -64,6 +64,20 @@ export class DevisService {
       .map(res => res.json());
   }
 
+  /**
+   * Get One Devis by ref.
+	 * Method to check unique key of ref_devis.
+   * 
+   * @param {number} id_client client id
+   * @param {number} ref_devis ref devis
+   * @returns 
+   * @memberof DevisService
+   */
+  getOneDevisByRef(id_client: number, ref_devis: number) {
+    return this.http.get(devUrl + 'client/' + id_client + '/ref/' + ref_devis)
+      .map(res => res.json());
+  }
+
 	/**
    * Add Devis.
    *

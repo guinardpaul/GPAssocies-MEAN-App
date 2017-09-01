@@ -7,16 +7,16 @@ module.exports = (router) => {
    */
   router.get('/details-devis/:devis', (req, res, next) => {
     if (!req.params.devis) {
-      res.json({
+      return res.json({
         success: false,
         message: 'Devis._id not provided'
       });
     } else {
       DetailsDevis.find({ 'devis': req.params.devis }, {}, (err, data) => {
         if (data) {
-          res.json(data);
+          return res.json(data);
         } else {
-          res.json({
+          return res.json({
             success: false,
             message: 'Details Devis not found',
             err: err
@@ -31,20 +31,20 @@ module.exports = (router) => {
    */
   router.get('/details-devis/:id', (req, res, next) => {
     if (!req.params.id) {
-      res.json({
+      return res.json({
         success: false,
         message: 'detailsDevis._id not provided'
       });
     } else {
       DetailsDevis.findById(req.params.id, (err, data) => {
         if (err) {
-          res.json({
+          return res.json({
             success: false,
             message: 'Details Devis not found',
             err: err
           });
         } else {
-          res.json(data);
+          return res.json(data);
         }
       });
     }
@@ -55,7 +55,7 @@ module.exports = (router) => {
    */
   router.post('/details-devis/', (req, res, next) => {
     if (!req.body) {
-      res.json({
+      return res.json({
         success: false,
         message: 'data not provided'
       });
@@ -63,19 +63,19 @@ module.exports = (router) => {
       DetailsDevis.create(req.body, (err, data) => {
         if (err) {
           if (err.errors.montantHt) {
-            res.json({
+            return res.json({
               success: false,
               message: err.errors.montantHt.message
             })
           } else {
-            res.json({
+            return res.json({
               success: false,
               message: 'Erreur création details devis',
               err: err
             });
           }
         } else {
-          res.json({
+          return res.json({
             success: true,
             message: 'DetailsDevis créé',
             obj: data
@@ -90,7 +90,7 @@ module.exports = (router) => {
    */
   router.put('/details-devis/:id', (req, res, next) => {
     if (!req.params.id) {
-      res.json({
+      return res.json({
         success: false,
         message: 'id not provided'
       });
@@ -98,19 +98,19 @@ module.exports = (router) => {
       DetailsDevis.findByIdAndUpdate(req.params.id, req.body, (err, data) => {
         if (err) {
           if (err.errors.montantHt) {
-            res.json({
+            return res.json({
               success: false,
               message: err.errors.montantHt.message
             })
           } else {
-            res.json({
+            return res.json({
               success: false,
               message: 'Erreur modification Details devis',
               err: err
             });
           }
         } else {
-          res.json({
+          return res.json({
             success: true,
             message: 'Détails devis modifié',
             obj: data
@@ -125,20 +125,20 @@ module.exports = (router) => {
    */
   router.delete('/details-devis/:id', (req, res, next) => {
     if (!req.params.id) {
-      res.json({
+      return res.json({
         success: false,
         message: 'id not provided'
       });
     } else {
       DetailsDevis.findByIdAndRemove(req.params.id, (err, data) => {
         if (err) {
-          res.json({
+          return res.json({
             success: false,
             message: 'Details devis not found',
             err: err
           });
         } else {
-          res.json({
+          return res.json({
             success: true,
             message: 'Details Devis supprimé'
           });

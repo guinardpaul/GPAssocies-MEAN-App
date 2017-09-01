@@ -16,7 +16,7 @@ isNumberChecker = (montantHt) => {
 // Validators
 const montantValidator = [{
     validator: isNumberChecker,
-    message: 'Le montant doit être positif et au maximum 4 chiffres après la virgule'
+    message: 'Le montant doit être positif et doit avoir au maximum 4 chiffres après la virgule'
 }];
 
 const DetailsDevisSchema = mongoose.Schema({
