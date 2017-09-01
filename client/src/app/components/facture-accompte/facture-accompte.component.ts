@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 // Models
@@ -17,7 +17,8 @@ import { ReglementService } from '../../service/reglement.service';
 import { FlashMessagesService } from 'ngx-flash-messages';
 
 /**
- *
+ * Component used for facture accompte and reglement
+ * 
  * @author Paul GUINARD
  * @export
  * @class FactureAccompteComponent
@@ -29,26 +30,162 @@ import { FlashMessagesService } from 'ngx-flash-messages';
   styleUrls: [ './facture-accompte.component.css' ]
 })
 export class FactureAccompteComponent implements OnInit {
-  id_fact: number;
-  factureGlobal: any = {};
-  factureAccompte: any = {};
-  reglement: any = {};
-  client: Client;
-  listFactureAccompte: FactureAccompte[];
+  /**
+   * list factures accomptes
+   * 
+   * @type {FactureAccompte[]}
+   * @memberof FactureAccompteComponent
+   */
+  listFactureAccompte: FactureAccompte[] = [];
+
+  /**
+   * list reglements
+   * 
+   * @type {Reglement[]}
+   * @memberof FactureAccompteComponent
+   */
   listReglement: Reglement[] = [];
+
+  /**
+   * list factures global
+   * 
+   * @type {FactureGlobal[]}
+   * @memberof FactureAccompteComponent
+   */
   listFactureGlobal: FactureGlobal[] = [];
+
+  /**
+   * facture global id
+   * 
+   * @type {number}
+   * @memberof FactureAccompteComponent
+   */
+  id_fact: number;
+
+  /**
+   * facture global
+   * 
+   * @type {*}
+   * @memberof FactureAccompteComponent
+   */
+  factureGlobal: any = {};
+
+  /**
+   * facture accompte
+   * 
+   * @type {*}
+   * @memberof FactureAccompteComponent
+   */
+  factureAccompte: any = {};
+
+  /**
+   * reglement
+   * 
+   * @type {*}
+   * @memberof FactureAccompteComponent
+   */
+  reglement: any = {};
+
+  /**
+   * client
+   * 
+   * @type {Client}
+   * @memberof FactureAccompteComponent
+   */
+  client: Client;
+
+  // Validation form
+  /**
+   * validation ref facture accompte
+   * 
+   * @type {boolean}
+   * @memberof FactureAccompteComponent
+   */
   validationRef: boolean;
+
+  /**
+   * validation montant facture accompte
+   * 
+   * @type {boolean}
+   * @memberof FactureAccompteComponent
+   */
   validationMontantFacture: boolean;
+
+  /**
+   * validation reglement facture accompte
+   * 
+   * @type {boolean}
+   * @memberof FactureAccompteComponent
+   */
   validationReglement: boolean;
+
+  /**
+   * on process
+   * 
+   * @memberof FactureAccompteComponent
+   */
   processing = false;
+
+  // Mode display form
+  /**
+   * mode form facture accompte
+   * 
+   * @memberof FactureAccompteComponent
+   */
   mode = false;
+
+  /**
+   * mode form reglement
+   * 
+   * @memberof FactureAccompteComponent
+   */
   modeAddReglement = false;
+
+  /**
+   * montant TTC total
+   * 
+   * @type {number}
+   * @memberof FactureAccompteComponent
+   */
   montantTTCTotal: number;
+
+  /**
+   * montant TTC facturé
+   * 
+   * @type {number}
+   * @memberof FactureAccompteComponent
+   */
   montantTTCFacture: number;
+
+  /**
+   * facture form
+   * 
+   * @type {FormGroup}
+   * @memberof FactureAccompteComponent
+   */
   factureForm: FormGroup;
+
+  /**
+   * reglement form
+   * 
+   * @type {FormGroup}
+   * @memberof FactureAccompteComponent
+   */
   reglementForm: FormGroup;
+
   // Status images
+  /**
+   * image status true
+   * 
+   * @memberof FactureAccompteComponent
+   */
   status_true = '../../assets/images/status_true.png';
+
+  /**
+   * image status false
+   * 
+   * @memberof FactureAccompteComponent
+   */
   status_false = '../../assets/images/status_false.png';
 
   /**
@@ -60,8 +197,9 @@ export class FactureAccompteComponent implements OnInit {
    * @param {DatePipe} datePipe format date
    * @param {FormBuilder} formBuilder reactive form builder
    * @param {FlashMessagesService} flashMessages Angular flash messages
-   * @param {ClientService} ClientService client service
-   * @param {ReglementService} ReglementService reglement service
+   * @param {ClientService} clientService client service
+   * @param {ReglementService} reglementService reglement service
+   * @param {Router} router router
    * @memberof FactureAccompteComponent
    */
   constructor(
@@ -72,9 +210,10 @@ export class FactureAccompteComponent implements OnInit {
     private formBuilder: FormBuilder,
     private flashMessages: FlashMessagesService,
     private clientService: ClientService,
-    private reglementService: ReglementService
+    private reglementService: ReglementService,
+    private router: Router
   ) {
-    //this.generateForm();
+    this.generateForm();
     this.generateReglementForm();
   }
 
@@ -164,12 +303,11 @@ export class FactureAccompteComponent implements OnInit {
   getAllReglementByFactureAccompte(id: number) {
     this.reglementService.getReglementByFactureAccompte(id)
       .subscribe(
-      reglements => {
-        this.listReglement = reglements;
-        console.log(reglements);
+      listReglements => {
+        this.listReglement = listReglements;
       },
-      err => console.log(err)
-      );
+      err => console.log(err),
+    );
   }
 
   /**
@@ -549,24 +687,48 @@ export class FactureAccompteComponent implements OnInit {
     this.mode = false;
     this.modeAddReglement = false;
     this.processing = false;
+    this.factureAccompte = {};
+    this.reglement = {};
     this.generateForm();
     this.generateReglementForm();
   }
 
   /**
    * onAdd Facture accompte
+   * affiche le form seulement si l'ajout d'une facture d'accompte est possible
+   * cad somme montant facturé < montantTotalTtc facture global
    *
    * @memberof FactureAccompteComponent
    */
   onAddFactureAccompte() {
-    this.generateForm();
-    let latest_date = this.datePipe.transform(Date.now(), 'yyyy-MM-dd');
-    this.factureForm.get('ref_factureAccompte').setValue(this.factureGlobal.ref_factureGlobal);
-    this.factureForm.get('date_creation').setValue(latest_date);
-    this.factureGlobal.date_creation = latest_date;
-    this.factureForm.get('montantFacture').setValue(this.factureGlobal.montantTtcTotal);
-    this.mode = true;
     this.modeAddReglement = false;
+    // Calcul la somme montantFacture des facture d'accompte
+    let sommeMontantFacture = 0;
+    let montantFactureRestant = 0;
+    for (var facture in this.listFactureAccompte) {
+      if (this.listFactureAccompte.hasOwnProperty(facture)) {
+        sommeMontantFacture += this.listFactureAccompte[ facture ].montantFacture;
+      }
+    }
+    // Vérif si somme des Montants Facturés est égale montant TTC total de la facture
+    if (this.factureGlobal.montantTtcTotal > sommeMontantFacture) {
+      // Calcul montant facturé max restant
+      montantFactureRestant = this.factureGlobal.montantTtcTotal - sommeMontantFacture;
+      // Generate form and set values
+      this.generateForm();
+      let latest_date = this.datePipe.transform(Date.now(), 'yyyy-MM-dd');
+      this.factureForm.get('ref_factureAccompte').setValue(this.factureGlobal.ref_factureGlobal);
+      this.factureForm.get('date_creation').setValue(latest_date);
+      this.factureGlobal.date_creation = latest_date;
+      this.factureForm.get('montantFacture').setValue(montantFactureRestant.toFixed(2));
+      this.factureAccompte.montantFacture = montantFactureRestant;
+      this.mode = true;
+    } else {
+      this.flashMessages.show('Création impossible : le montant total de la facture est égal à la somme des montants facturés', {
+        classes: [ 'alert', 'alert-warning' ],
+        timeout: 6000
+      });
+    }
   }
 
   /**
@@ -578,12 +740,13 @@ export class FactureAccompteComponent implements OnInit {
    * @memberof FactureAccompteComponent
    */
   onAddReglement(factureAccompte: FactureAccompte) {
+    this.getAllReglementByFactureAccompte(factureAccompte._id);
+    this.reglement = {};
     this.generateReglementForm();
     this.factureAccompte = factureAccompte;
     let latest_date = this.datePipe.transform(this.factureAccompte.date_creation, 'yyyy-MM-dd');
     this.factureAccompte.date_creation = latest_date;
     this.reglementForm.get('date_creation').setValue(latest_date);
-    this.getAllReglementByFactureAccompte(factureAccompte._id);
     this.modeAddReglement = true;
     this.mode = false;
   }
@@ -598,7 +761,11 @@ export class FactureAccompteComponent implements OnInit {
     this.generateReglementForm();
     this.mode = false;
     this.modeAddReglement = false;
+    this.validationMontantFacture = false;
+    this.validationRef = false;
+    this.validationReglement = false;
     this.factureAccompte = {};
+    this.reglement = {};
   }
 
   /**
@@ -610,7 +777,7 @@ export class FactureAccompteComponent implements OnInit {
     this.factureForm = this.formBuilder.group({
       ref_factureAccompte: [ this.factureGlobal.ref_factureGlobal, Validators.required ],
       date_creation: [ Date.now ],
-      montantFacture: [ this.factureGlobal.montantTtcTotal, Validators.compose([
+      montantFacture: [ this.factureAccompte.montantFacture, Validators.compose([
         Validators.required,
         this.isNumber
       ]) ],
@@ -628,7 +795,7 @@ export class FactureAccompteComponent implements OnInit {
       ref_factureAccompte: [ { value: this.factureAccompte.ref_factureAccompte, disabled: true }, Validators.required ],
       date_creation: [ { value: this.factureAccompte.date_creation }],
       montantFacture: [ { value: this.factureAccompte.montantFacture, disabled: true }],
-      reglementTtc: [ this.reglement.reglementTtc, Validators.compose([
+      reglementTtc: [ this.factureAccompte.reglementClient, Validators.compose([
         Validators.required,
         this.isNumber
       ]) ]
@@ -674,6 +841,38 @@ export class FactureAccompteComponent implements OnInit {
     this.reglementForm.controls[ 'reglementTtc' ].enable();
   }
 
+  /**
+   * Somme montantFacture
+   * 
+   * @returns {number} somme
+   * @memberof FactureAccompteComponent
+   */
+  getSumMontantFacture(): number {
+    let sum = 0;
+    for (var fact in this.listFactureAccompte) {
+      if (this.listFactureAccompte.hasOwnProperty(fact)) {
+        sum += this.listFactureAccompte[ fact ].montantFacture;
+      }
+    }
+    return sum;
+  }
+
+  /**
+   * Somme reglementClient
+   * 
+   * @returns {number} somme
+   * @memberof FactureAccompteComponent
+   */
+  getSumReglementClient(): number {
+    let sum = 0;
+    for (var fact in this.listFactureAccompte) {
+      if (this.listFactureAccompte.hasOwnProperty(fact)) {
+        sum += this.listFactureAccompte[ fact ].reglementClient;
+      }
+    }
+    return sum;
+  }
+
   // VALIDATIONS
   /**
    * Check if controls.value is a number
@@ -698,10 +897,10 @@ export class FactureAccompteComponent implements OnInit {
    * (blur) listener : Verification de la ref_factureAccompte.
    * - si data.success === true && ref != factureAccompte.ref => ref_factureAccompte utilisée => validationRef = true,
    * - si data.success === false => ref_factureAccompte non utilisée => validationRef = false
-   *
+   * @returns {boolean} set validationRef
    * @memberof ValiderDevisComponent
    */
-  verifRef() {
+  verifRef(): boolean {
     this.factureAccompteService.getOneFactureAccompteByRef(this.factureGlobal._id, this.factureForm.get('ref_factureAccompte').value)
       .subscribe(
       data => {
@@ -722,10 +921,10 @@ export class FactureAccompteComponent implements OnInit {
   /**
    * (blur) listener : Vérification du montantFacturé de la facture accompte
    * 
-   * @returns 
+   * @returns {boolean} set validationMontantFacture
    * @memberof FactureAccompteComponent
    */
-  verifMontantFacture() {
+  verifMontantFacture(): boolean {
     let montantRestant = this.factureGlobal.montantTtcTotal - this.factureGlobal.montantTtcFacture;
     if (this.factureForm.get('montantFacture').value > montantRestant) {
       return this.validationMontantFacture = true;
@@ -733,7 +932,13 @@ export class FactureAccompteComponent implements OnInit {
     return this.validationMontantFacture = false;
   }
 
-  verifReglement() {
+  /**
+   * (blur) listener : Vérifiaction du reglement de la facture accompte
+   * 
+   * @returns {boolean} set validationReglement
+   * @memberof FactureAccompteComponent
+   */
+  verifReglement(): boolean {
     let reglementRestant = this.factureAccompte.montantFacture - this.factureAccompte.reglementClient;
     if (this.reglementForm.get('reglementTtc').value > reglementRestant) {
       return this.validationReglement = true;
@@ -754,6 +959,8 @@ export class FactureAccompteComponent implements OnInit {
       this.id_fact = this.activatedRoute.snapshot.params[ 'id_fact' ];
       this.getAllFactureAccompteByFactureGlobal(this.id_fact);
       this.getOneFactureGlobal(this.id_fact);
+    } else {
+      this.router.navigate([ '/pageNotFound' ]);
     }
   }
 

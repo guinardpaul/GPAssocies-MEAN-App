@@ -159,7 +159,7 @@ module.exports = (router) => {
                     return res.json({
                         success: true,
                         obj: data,
-                        message: 'Facture Global created'
+                        message: 'Facture créée'
                     });
                 }
             });
@@ -188,7 +188,7 @@ module.exports = (router) => {
                         return res.json({
                             success: true,
                             obj: data,
-                            message: 'Facture Global updated'
+                            message: 'Facture modifiée'
                         });
                     });
                 }
@@ -216,7 +216,7 @@ module.exports = (router) => {
                 } else {
                     return res.json({
                         success: true,
-                        message: 'Facture Global deleted'
+                        message: 'Facture supprimée'
                     });
                 }
             });

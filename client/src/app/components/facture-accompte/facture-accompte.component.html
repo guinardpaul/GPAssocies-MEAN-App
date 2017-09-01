@@ -32,6 +32,15 @@
           </div>
         </td>
       </tr>
+      <tr>
+        <th>Total</th>
+        <th>:</th>
+        <th></th>
+        <th>{{getSumMontantFacture()}}</th>
+        <th>{{getSumReglementClient()}}</th>
+        <th></th>
+        <th></th>
+      </tr>
     </tbody>
   </table>
   <button class="btn btn-primary" (click)="onAddFactureAccompte()">Ajouter facture d'accompte</button>
@@ -90,8 +99,8 @@
            || (validationMontantFacture && factureForm.controls.montantFacture.dirty),
           'has-success': (!factureForm.controls.montantFacture.errors && !validationMontantFacture)}">
             <label class="control-label" for="montantFacture">Montant facturé :</label>
-            <input type="text" class="form-control" name="montantFacture" id="montantFacture" formControlName="montantFacture" value="{{factureGlobal.montantTtcTotal}}"
-              (blur)="verifMontantFacture()" required />
+            <input type="text" class="form-control" name="montantFacture" id="montantFacture" formControlName="montantFacture" (blur)="verifMontantFacture()"
+              required />
             <ul class="list-group">
               <li class="list-group-item list-group-item-danger" *ngIf="factureForm.controls.montantFacture.errors?.required && factureForm.controls.montantFacture.dirty">
                 Ce champ est requis
@@ -145,8 +154,8 @@
           || (validationReglement && reglementForm.controls.reglementTtc.dirty),
          'has-success': (!reglementForm.controls.reglementTtc.errors && !validationReglement)}">
             <label class="control-label" for="reglementTtc">Règlement client :</label>
-            <input type="text" class="form-control" name="reglementTtc" id="reglementTtc" formControlName="reglementTtc" value="{{reglement.reglementTtc}}"
-              (blur)="verifReglement()" autofocus required />
+            <input type="text" class="form-control" name="reglementTtc" id="reglementTtc" formControlName="reglementTtc" (blur)="verifReglement()"
+              autofocus required />
             <ul class="list-group">
               <li class="list-group-item list-group-item-danger" *ngIf="reglementForm.controls.reglementTtc.errors?.required && reglementForm.controls.reglementTtc.dirty">
                 Ce champ est requis

@@ -24,16 +24,81 @@ import { FlashMessagesService } from 'ngx-flash-messages';
   styleUrls: [ './client.component.css' ]
 })
 export class ClientComponent implements OnInit {
+  /**
+   * liste clients
+   * 
+   * @type {any[]}
+   * @memberof ClientComponent
+   */
   listClient: any[];
+
+  /**
+   * client
+   * 
+   * @type {*}
+   * @memberof ClientComponent
+   */
   client: any = {};
+
+  /**
+   * id client
+   * 
+   * @type {number}
+   * @memberof ClientComponent
+   */
   client_id: number = null;
+
+  /**
+   * keys for select option
+   * 
+   * @type {any[]}
+   * @memberof ClientComponent
+   */
   keys: any[];
+
+  /**
+   * enum CIVILITE
+   * 
+   * @memberof ClientComponent
+   */
   civilite = CIVILITE;
+
+  /**
+   * mode form
+   * 
+   * @memberof ClientComponent
+   */
   mode = false;
+
+  /**
+   * on process
+   * 
+   * @memberof ClientComponent
+   */
   processing = false;
+
+  /**
+   * client form
+   * 
+   * @type {FormGroup}
+   * @memberof ClientComponent
+   */
   clientForm: FormGroup;
+
   // Status images
+
+  /**
+   * image status true
+   * 
+   * @memberof ClientComponent
+   */
   status_true = '../../assets/images/status_true.png';
+
+  /**
+   * image status false
+   * 
+   * @memberof ClientComponent
+   */
   status_false = '../../assets/images/status_false.png';
 
 	/**

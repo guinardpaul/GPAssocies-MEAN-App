@@ -27,16 +27,80 @@ import { FlashMessagesService } from 'ngx-flash-messages';
   styleUrls: [ './facture-global.component.css' ]
 })
 export class FactureGlobalComponent implements OnInit {
+  /**
+   * facture global
+   * 
+   * @type {*}
+   * @memberof FactureGlobalComponent
+   */
   factureGlobal: any = {};
+
+  /**
+   * list factures globals
+   * 
+   * @type {FactureGlobal[]}
+   * @memberof FactureGlobalComponent
+   */
   listFactureGlobals: FactureGlobal[];
+
+  /**
+   * client
+   * 
+   * @memberof FactureGlobalComponent
+   */
   client = new Client();
+
+  /**
+   * client id
+   * 
+   * @type {number}
+   * @memberof FactureGlobalComponent
+   */
   id_client: number;
+
+  /**
+   * validation ref facture global
+   * 
+   * @type {boolean}
+   * @memberof FactureGlobalComponent
+   */
   validationRef: boolean;
+
+  /**
+   * 
+   * mode form
+   * @memberof FactureGlobalComponent
+   */
   mode = false;
+
+  /**
+   * on process
+   * 
+   * @memberof FactureGlobalComponent
+   */
   processing = false;
+
+  /**
+   * facture global form
+   * 
+   * @type {FormGroup}
+   * @memberof FactureGlobalComponent
+   */
   factureForm: FormGroup;
+
   // Status images
+  /**
+   * image status true
+   * 
+   * @memberof FactureGlobalComponent
+   */
   status_true = '../../assets/images/status_true.png';
+
+  /**
+   * image status false
+   * 
+   * @memberof FactureGlobalComponent
+   */
   status_false = '../../assets/images/status_false.png';
 
   /**
@@ -335,6 +399,54 @@ export class FactureGlobalComponent implements OnInit {
       this.factureForm.controls[ 'montantTtc' ].setValue(Number(montantTTC).toFixed(2));
       this.factureGlobal.montantTtc = Number(montantTTC).toFixed(2);
     }
+  }
+
+  /**
+   * somme montant total
+   * 
+   * @returns {number} somme
+   * @memberof FactureGlobalComponent
+   */
+  getSumMontantTotal(): number {
+    let sum = 0;
+    for (var fact in this.listFactureGlobals) {
+      if (this.listFactureGlobals.hasOwnProperty(fact)) {
+        sum += this.listFactureGlobals[ fact ].montantTtcTotal;
+      }
+    }
+    return sum;
+  }
+
+  /**
+   * somme montant facturé
+   * 
+   * @returns {number} somme
+   * @memberof FactureGlobalComponent
+   */
+  getSumMontantFacture(): number {
+    let sum = 0;
+    for (var fact in this.listFactureGlobals) {
+      if (this.listFactureGlobals.hasOwnProperty(fact)) {
+        sum += this.listFactureGlobals[ fact ].montantTtcFacture;
+      }
+    }
+    return sum;
+  }
+
+  /**
+   * somme montant réglé
+   * 
+   * @returns {number} somme
+   * @memberof FactureGlobalComponent
+   */
+  getSumMontantRegle(): number {
+    let sum = 0;
+    for (var fact in this.listFactureGlobals) {
+      if (this.listFactureGlobals.hasOwnProperty(fact)) {
+        sum += this.listFactureGlobals[ fact ].montantTtcRegle;
+      }
+    }
+    return sum;
   }
 
   /**

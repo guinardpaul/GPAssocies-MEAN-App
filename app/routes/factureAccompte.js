@@ -85,7 +85,7 @@ module.exports = (router) => {
                 if (err) {
                     return res.json({
                         success: false,
-                        message: 'Facture Accompte global not found',
+                        message: 'Facture Accompte not found',
                         err: err
                     });
                 }
@@ -106,7 +106,7 @@ module.exports = (router) => {
                     } else {
                         return res.json({
                             success: false,
-                            message: 'Facture Accompte Global not found'
+                            message: 'Facture Accompte not found'
                         });
                     }
                 }

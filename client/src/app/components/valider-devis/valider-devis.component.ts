@@ -28,14 +28,73 @@ import { FlashMessagesService } from 'ngx-flash-messages';
   styleUrls: [ './valider-devis.component.css' ]
 })
 export class ValiderDevisComponent implements OnInit {
+  /**
+   * list clients
+   * 
+   * @type {Client[]}
+   * @memberof ValiderDevisComponent
+   */
   listClient: Client[];
+
+  /**
+   * list factures globals
+   * 
+   * @type {FactureGlobal[]}
+   * @memberof ValiderDevisComponent
+   */
   listFactureGlobals: FactureGlobal[];
+
+  /**
+   * devis
+   * 
+   * @type {*}
+   * @memberof ValiderDevisComponent
+   */
   devis: any = {};
+
+  /**
+   * id devis
+   * 
+   * @type {number}
+   * @memberof ValiderDevisComponent
+   */
   id_devis: number;
+
+  /**
+   * client
+   * 
+   * @memberof ValiderDevisComponent
+   */
   client = new Client();
+
+  /**
+   * validation ref facture global
+   * 
+   * @type {boolean}
+   * @memberof ValiderDevisComponent
+   */
   validationRef: boolean;
+
+  /**
+   * facture global
+   * 
+   * @memberof ValiderDevisComponent
+   */
   factureGlobal = new FactureGlobal();
+
+  /**
+   * valider devis form
+   * 
+   * @type {FormGroup}
+   * @memberof ValiderDevisComponent
+   */
   validerDevisForm: FormGroup;
+
+  /**
+   * on process
+   * 
+   * @memberof ValiderDevisComponent
+   */
   processing = false;
 
   /**
@@ -264,7 +323,7 @@ export class ValiderDevisComponent implements OnInit {
    */
   generateForm() {
     this.validerDevisForm = this.formBuilder.group({
-      ref_factureGlobal: [ '', Validators.compose([
+      ref_factureGlobal: [ this.devis.ref_devis, Validators.compose([
         Validators.required
       ]) ],
       date_creation: [ this.devis.date_creation ],

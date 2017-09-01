@@ -28,6 +28,7 @@ const routes: Routes = [
   { path: 'facture/facture-accompte/:id_fact', component: FactureAccompteComponent },
   // path bugs
   { path: 'bug', component: BugsComponent },
+  { path: 'pageNotFound', component: PageNotFoundComponent },
   // default path redirect to 'client'
   { path: '', redirectTo: 'client', pathMatch: 'full' },
   // Undefined page path

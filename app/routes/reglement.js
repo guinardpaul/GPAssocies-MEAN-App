@@ -63,7 +63,7 @@ module.exports = (router) => {
         } else {
           return res.json({
             success: true,
-            message: 'Reglement créé'
+            message: 'Règlement créé'
           });
         }
       });
@@ -93,7 +93,7 @@ module.exports = (router) => {
             return res.json({
               success: true,
               obj: data,
-              message: 'Reglement modifié'
+              message: 'Règlement modifié'
             });
           });
         }
@@ -115,7 +115,7 @@ module.exports = (router) => {
         if (data) {
           return res.json({
             success: true,
-            message: 'Reglement supprimé'
+            message: 'Règlement supprimé'
           });
         } else {
           return res.json({

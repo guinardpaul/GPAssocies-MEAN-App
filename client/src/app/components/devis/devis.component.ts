@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 // Models
@@ -29,18 +29,97 @@ import { DetailsDevisService } from '../../service/details-devis.service';
   styleUrls: [ './devis.component.css' ]
 })
 export class DevisComponent implements OnInit {
+  /**
+   * list devis
+   * 
+   * @type {Devis[]}
+   * @memberof DevisComponent
+   */
   listDevis: Devis[];
+
+  /**
+   * list clients
+   * 
+   * @type {Client[]}
+   * @memberof DevisComponent
+   */
   listClient: Client[];
+
+  /**
+   * devis
+   * 
+   * @type {*}
+   * @memberof DevisComponent
+   */
   devis: any = {};
+
+  /**
+   * DetailsDevis1
+   * 
+   * @type {*}
+   * @memberof DevisComponent
+   */
   detailsDevis1: any = { tauxTva: CONST_TAUX[ 1 ] };
+
+  /**
+   * DetailsDevis2
+   * 
+   * @type {*}
+   * @memberof DevisComponent
+   */
   detailsDevis2: any = { tauxTva: CONST_TAUX[ 2 ] };
+
+  /**
+   * DetailsDevis3
+   * 
+   * @type {*}
+   * @memberof DevisComponent
+   */
   detailsDevis3: any = { tauxTva: CONST_TAUX[ 3 ] };
-  //listDetailsDevis = [ this.detailsDevis1, this.detailsDevis2, this.detailsDevis3 ];
+
+  /**
+   * client
+   * 
+   * @memberof DevisComponent
+   */
   client = new Client();
+
+  /**
+   * validation ref devis
+   * 
+   * @type {boolean}
+   * @memberof DevisComponent
+   */
   validationRef: boolean;
+
+  /**
+   * client id
+   * 
+   * @type {number}
+   * @memberof DevisComponent
+   */
   id_client: number;
+
+  /**
+   * mode form
+   * 
+   * @memberof DevisComponent
+   */
   mode = false;
+
+  /**
+   * on process
+   * 
+   * @memberof DevisComponent
+   */
   processing = false;
+
+  /**
+   * devis form
+   * 
+   * @type {FormGroup}
+   * @memberof DevisComponent
+   */
   devisForm: FormGroup;
 
   /**
@@ -53,6 +132,7 @@ export class DevisComponent implements OnInit {
    * @param {FlashMessagesService} flashMessages angular flash messages
    * @param {DetailsDevisService} detailsDevisService Details Devis service
    * @param {FactureGlobalService} factureGlobalService Facture global service
+   * @param {Router} router router
    * @memberof DevisComponent
    */
   constructor(
@@ -63,7 +143,8 @@ export class DevisComponent implements OnInit {
     private clientService: ClientService,
     private flashMessages: FlashMessagesService,
     private detailsDevisService: DetailsDevisService,
-    private factureGlobalService: FactureGlobalService
+    private factureGlobalService: FactureGlobalService,
+    private router: Router
   ) {
     this.generateForm()
   }
@@ -683,6 +764,54 @@ export class DevisComponent implements OnInit {
     this.devisForm.get('montantTtc').setValue(Number(montantTtc).toFixed(2));
   }
 
+  /**
+   * somme montant HT
+   * 
+   * @returns {number} somme
+   * @memberof DevisComponent
+   */
+  getSumMontantHt(): number {
+    let sum = 0;
+    for (var dev in this.listDevis) {
+      if (this.listDevis.hasOwnProperty(dev)) {
+        sum += this.listDevis[ dev ].montantHt;
+      }
+    }
+    return sum;
+  }
+
+  /**
+   * somme taux TVA
+   * 
+   * @returns {number} somme
+   * @memberof DevisComponent
+   */
+  getSumTauxTva(): number {
+    let sum = 0;
+    for (var dev in this.listDevis) {
+      if (this.listDevis.hasOwnProperty(dev)) {
+        sum += this.listDevis[ dev ].tauxTva;
+      }
+    }
+    return sum;
+  }
+
+  /**
+   * somme montant TTC
+   * 
+   * @returns {number} somme
+   * @memberof DevisComponent
+   */
+  getSumMontantTtc(): number {
+    let sum = 0;
+    for (var dev in this.listDevis) {
+      if (this.listDevis.hasOwnProperty(dev)) {
+        sum += this.listDevis[ dev ].montantTtc;
+      }
+    }
+    return sum;
+  }
+
   // VALIDATIONS
   /**
    * Validation for number
@@ -745,7 +874,7 @@ export class DevisComponent implements OnInit {
       this.getAllDevisByClient(this.id_client);
       this.getClient(this.id_client);
     } else {
-      this.getAllDevis();
+      this.router.navigate([ '/pageNotFound' ]);
     }
   }
 
