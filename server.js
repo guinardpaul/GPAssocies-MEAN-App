@@ -35,11 +35,11 @@ const bug = require('./app/routes/bug')(router);
 
 // MIDDLEWARE
 // log into console (dev)
-app.use(logger('dev'));
+//app.use(logger('dev'));
 // Log into file
 // create a write stream (in append mode) 
-//var accessLogStream = fs.createWriteStream(path.join(__dirname, 'server.log'), { flags: 'a' })
-//app.use(logger('common', { stream: accessLogStream }))
+var accessLogStream = fs.createWriteStream(path.join(__dirname, 'server.log'), { flags: 'a' })
+app.use(logger('common', { stream: accessLogStream }))
 
 // Favicon
 app.use(favicon(path.join(__dirname, 'client/src', 'favicon.ico')))
