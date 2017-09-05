@@ -16,7 +16,7 @@ import { PageNotFoundComponent } from './components/page-not-found/page-not-foun
  */
 const routes: Routes = [
   // uncomment dashboard when implemented
-  //{ path: 'dashboard', component: DashboardComponent },
+  { path: 'dashboard', component: DashboardComponent },
   { path: 'client', component: ClientComponent },
   //{ path: 'devis', component: DevisComponent },
   // path Devis by client._id

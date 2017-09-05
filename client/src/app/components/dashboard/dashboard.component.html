@@ -1,4 +1,7 @@
-<div class="container-fluid">
+<button class="btn btn-primary" (click)="annulerSelection()">Voir tous les clients</button>
+<br>
+<div class="container-fluid col-sm-6 col-md-6">
+  <h4 style="text-align: center;">Client</h4>
   <!-- Client table -->
   <table class="table table-striped">
     <thead>
@@ -12,50 +15,26 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let client of listClient">
-        <td>{{client.status_client}}</td>
+      <tr *ngFor="let client of listClient" [ngClass]="{'rowColor' : activeClient}">
+        <td *ngIf="client.status_client"><img src="{{status_true}}" alt="true"></td>
+        <td *ngIf="!client.status_client"><img src="{{status_false}}" alt="false"></td>
         <td>{{client.nom}}</td>
         <td>{{client.prenom}}</td>
         <td>{{client.email}}</td>
         <td>{{client.numTel}}</td>
         <td>
           <div class="btn-group-vertical">
-            <a class="btn btn-success" (click)="onSelect(client)">Select</a>
+            <a class="btn btn-success" (click)="onSelect(client)">Selectionnez</a>
           </div>
         </td>
       </tr>
     </tbody>
   </table>
-  <button class="btn btn-primary" (click)="annulerSelection()">Voir tous les clients</button>
+
   <br>
 
-  <!-- Devis table -->
-  <div class="container-fluid col-sm-6 col-md-6">
-    <h4 style="text-align: center;">Devis</h4>
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>Ref</th>
-          <th>Date</th>
-          <th>Montant HT</th>
-          <th>Taux TVA €</th>
-          <th>Montant TTC</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let d of listDevis">
-          <td>{{d.ref_devis}}</td>
-          <td>{{d.date_creation | date: 'dd/MM/yyyy'}}</td>
-          <td>{{d.montantHt}}</td>
-          <td>{{d.tauxTva}}</td>
-          <td>{{d.montantTtc}}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
   <!-- Facture global table -->
-  <div class="container-fluid col-sm-6 col-md-6">
+  <div class="container-fluid">
     <h4 style="text-align: center;">Factures</h4>
     <table class="table table-striped">
       <thead>
@@ -70,7 +49,8 @@
       </thead>
       <tbody>
         <tr *ngFor="let fg of listFactureGlobal">
-          <td>{{fg.status_factureGlobal}}</td>
+          <td *ngIf="fg.status_factureGlobal"><img src="{{status_true}}" alt="true"></td>
+          <td *ngIf="!fg.status_factureGlobal"><img src="{{status_false}}" alt="false"></td>
           <td>{{fg.ref_factureGlobal}}</td>
           <td>{{fg.date_creation | date: 'dd/MM/yyyy'}}</td>
           <td>{{fg.montantTtcTotal}}</td>
@@ -80,7 +60,34 @@
       </tbody>
     </table>
   </div>
+</div>
+
+<!-- Devis table -->
+<div class="container-fluid col-sm-6 col-md-6">
+  <h4 style="text-align: center;">Devis</h4>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Ref</th>
+        <th>Date</th>
+        <th>Montant HT</th>
+        <th>Taux TVA €</th>
+        <th>Montant TTC</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let d of listDevis">
+        <td>{{d.ref_devis}}</td>
+        <td>{{d.date_creation | date: 'dd/MM/yyyy'}}</td>
+        <td>{{d.montantHt}}</td>
+        <td>{{d.tauxTva}}</td>
+        <td>{{d.montantTtc}}</td>
+      </tr>
+    </tbody>
+  </table>
+
   <br>
+  <br><br>
 
   <!-- Facture accompte table -->
   <div class="container-fluid">
@@ -97,7 +104,8 @@
       </thead>
       <tbody>
         <tr *ngFor="let f of listFactureAccompte">
-          <td>{{f.status_factureAccompte}}</td>
+          <td *ngIf="f.status_factureAccompte"><img src="{{status_true}}" alt="true"></td>
+          <td *ngIf="!f.status_factureAccompte"><img src="{{status_false}}" alt="false"></td>
           <td>{{f.ref_factureAccompte}}</td>
           <td>{{f.date_creation | date: 'dd/MM/yyyy'}}</td>
           <td>{{f.montantFacture}}</td>

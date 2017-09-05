@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 
 import { ClientComponent } from './client.component';
 
@@ -26,12 +27,8 @@ describe('ClientComponent', () => {
       .compileComponents();
   }));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(ClientComponent);
-    component = fixture.componentInstance;
-
-    fixture.detectChanges();
-  });
+  fixture = TestBed.createComponent(ClientComponent);
+  component = fixture.componentInstance;
 
   // Inject services into component
   let clientService = fixture.debugElement.injector.get(ClientService);
@@ -45,4 +42,5 @@ describe('ClientComponent', () => {
   it('should be created', () => {
     expect(component).toBeTruthy();
   });
+
 });

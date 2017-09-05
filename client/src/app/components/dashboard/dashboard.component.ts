@@ -30,8 +30,32 @@ export class DashboardComponent implements OnInit {
   listFactureGlobal: FactureGlobal[] = [];
   listFactureAccompte: FactureAccompte[] = [];
   selectedClient: Client;
+  activeClient: boolean;
+  // Status images
+
+  /**
+   * image status true
+   * 
+   * @memberof ClientComponent
+   */
+  status_true = '../../assets/images/status_true.png';
+
+  /**
+   * image status false
+   * 
+   * @memberof ClientComponent
+   */
+  status_false = '../../assets/images/status_false.png';
 
 
+  /**
+   * Creates an instance of DashboardComponent.
+   * @param {ClientService} clientService client service
+   * @param {DevisService} devisService devis service
+   * @param {FactureGlobalService} factureGlobalService facture global service 
+   * @param {FactureAccompteService} factureAccompteService facture accompte service
+   * @memberof DashboardComponent
+   */
   constructor(
     private clientService: ClientService,
     private devisService: DevisService,
@@ -46,6 +70,7 @@ export class DashboardComponent implements OnInit {
    * @memberof DashboardComponent
    */
   onSelect(client: Client) {
+    this.activeClient = true;
     this.selectedClient = client
     this.getDevisByClient(client._id);
     this.getAllFactureGlobalbyClient(client._id);
