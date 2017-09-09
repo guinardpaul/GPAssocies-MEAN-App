@@ -35,7 +35,7 @@ export class ClientService {
    * @returns
    * @memberof ClientService
    */
-  getAllClients() {
+  getAllClients(): Observable<Client[]> {
     return this.http.get(devUrl)
       .map(res => res.json());
   }
@@ -47,7 +47,7 @@ export class ClientService {
    * @returns
    * @memberof ClientService
    */
-  getOneClient(id: number) {
+  getOneClient(id: number): Observable<Client> {
     return this.http.get(devUrl + id)
       .map(res => res.json());
   }
@@ -90,10 +90,10 @@ export class ClientService {
 
   /**
    * Update Status Client
-   * 
+   *
    * @param {Client} client client body
    * @param {boolean} status status_client
-   * @returns 
+   * @returns
    * @memberof ClientService
    */
   updateStatus(client: Client, status: boolean) {
