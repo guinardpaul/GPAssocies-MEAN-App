@@ -478,6 +478,7 @@ export class FactureAccompteComponent implements OnInit {
    * @memberof FactureAccompteComponent
    */
   deleteReglement(id: number, reglementClient: number) {
+    this.processing = true;
     this.reglementService.deleteReglement(id)
       .subscribe(
       data => {
@@ -493,12 +494,15 @@ export class FactureAccompteComponent implements OnInit {
           this.updateReglementClientFactureGlobal(this.factureGlobal, -reglementClient);
           // Get all reglement by facture accompte
           this.getAllReglementByFactureAccompte(this.factureAccompte._id);
+
+          this.processing = false;
         } else {
           console.log(data.message + ' :' + data.err);
           this.flashMessages.show(data.message, {
             classes: [ 'alert', 'alert-danger' ],
             timeout: 3000
           });
+          this.processing = false;
         }
       }
       );

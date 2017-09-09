@@ -185,6 +185,7 @@
             <input type="text" name="client" id="client" formControlName="client" value="{{client.nom}} {{client.prenom}}" />
           </div>
           <div class="form-group">
+            <md-spinner *ngIf="processing" style="float: left;width: 24px;height: 24px;"></md-spinner>
             <button [disabled]="!devisForm.valid || processing" type="submit" class="btn btn-success">Sauver</button>
             <button [disabled]="processing" class="btn btn-default" (click)="onCancel()">Annuler</button>
           </div>

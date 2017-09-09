@@ -119,6 +119,7 @@
               required />
           </div>
           <div class="form-group">
+            <md-spinner *ngIf="processing" style="float: left;width: 24px;height: 24px;"></md-spinner>
             <button [disabled]="!factureForm.valid || processing || validationMontantFacture" (click)="addFactureAccompte()" class="btn btn-success">Créer facture d'accompte</button>
             <button [disabled]="processing" (click)="onCancel()" class="btn btn-default">Annuler</button>
           </div>
@@ -169,6 +170,7 @@
             </ul>
           </div>
           <div class="form-group">
+            <md-spinner *ngIf="processing" style="float: left;width: 24px;height: 24px;"></md-spinner>
             <button [disabled]="!reglementForm.valid || processing || validationReglement" (click)="addReglement()" class="btn btn-success">Ajouter règlement</button>
             <button [disabled]="processing" (click)="onCancel()" class="btn btn-default">Annuler</button>
           </div>
@@ -190,7 +192,8 @@
             <td>{{r.date_reglement | date :'dd/MM/yyyy'}}</td>
             <td>{{r.reglementTtc}}</td>
             <td>
-              <button class="btn btn-danger" (click)="deleteReglement(r._id, r.reglementTtc)">Supprimer</button>
+              <md-spinner *ngIf="processing" style="float: left;width: 24px;height: 24px;"></md-spinner>
+              <button [disabled]="processing" class="btn btn-danger" (click)="deleteReglement(r._id, r.reglementTtc)">Supprimer</button>
             </td>
           </tr>
         </tbody>
