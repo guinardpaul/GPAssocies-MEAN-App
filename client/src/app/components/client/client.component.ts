@@ -177,7 +177,7 @@ export class ClientComponent implements OnInit {
             this.processing = false;
             this.enableForm();
           } else {
-            this.flashMessages.show('Client créé', {
+            this.flashMessages.show(data.message, {
               classes: [ 'alert', 'alert-success' ],
               timeout: 3000
             });
