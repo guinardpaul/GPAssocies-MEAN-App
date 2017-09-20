@@ -47,6 +47,16 @@ const FactureAccompteSchema = new mongoose.Schema({
         ref: 'FactureGlobal',
         required: true
     },
+    valid: {
+        type: Boolean,
+        default: true
+    },
+    description: {
+        type: String
+    },
+    updated_at: {
+        type: Date
+    }
 });
 
 module.exports = mongoose.model('FactureAccompte', FactureAccompteSchema);

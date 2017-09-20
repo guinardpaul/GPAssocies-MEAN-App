@@ -1,17 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 
-// Models
 import { Client } from '../../models/client';
 import { Devis } from '../../models/devis';
-import { FactureGlobal } from '../../models/factureGlobal';
 import { FactureAccompte } from '../../models/factureAccompte';
-
-// Services
+import { FactureGlobal } from '../../models/factureGlobal';
 import { ClientService } from '../../service/client.service';
 import { DevisService } from '../../service/devis.service';
-import { FactureGlobalService } from '../../service/facture-global.service';
 import { FactureAccompteService } from '../../service/facture-accompte.service';
+import { FactureGlobalService } from '../../service/facture-global.service';
 
+// Models
+// Services
 /**
  *
  * @author Paul GUINARD
@@ -139,7 +138,11 @@ export class DashboardComponent implements OnInit {
       .subscribe(
       data => {
         this.listFactureGlobal = data;
-        this.getAllFactureAccomptebyFactureGlobal(data[ 0 ]._id);
+        if (this.listFactureGlobal.length > 0) {
+          this.getAllFactureAccomptebyFactureGlobal(data[ 0 ]._id);
+        } else {
+          this.listFactureAccompte = [];
+        }
       },
       err => console.log('Erreur :' + err)
       );

@@ -1,21 +1,19 @@
-import { Component, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { FlashMessagesService } from 'ngx-flash-messages';
+
+import { Client } from '../../models/client';
+import { Devis } from '../../models/devis';
+import { CONST_TAUX } from '../../models/taux.const';
+import { ClientService } from '../../service/client.service';
+import { DetailsDevisService } from '../../service/details-devis.service';
+import { DevisService } from '../../service/devis.service';
+import { FactureGlobalService } from '../../service/facture-global.service';
 
 // Models
-import { Devis } from '../../models/devis';
-import { DetailsDevis } from '../../models/detailsDevis';
-import { Client } from '../../models/client';
-import { CONST_TAUX } from '../../models/taux.const';
-
 // Services
-import { DevisService } from '../../service/devis.service';
-import { ClientService } from '../../service/client.service';
-import { FactureGlobalService } from '../../service/facture-global.service';
-import { FlashMessagesService } from 'ngx-flash-messages';
-import { DetailsDevisService } from '../../service/details-devis.service';
-
 /**
  *
  * @author Paul GUINARD
@@ -35,7 +33,7 @@ export class DevisComponent implements OnInit {
    * @type {Devis[]}
    * @memberof DevisComponent
    */
-  listDevis: Devis[];
+  listDevis: Devis[] = [];
 
   /**
    * list clients
@@ -181,13 +179,12 @@ export class DevisComponent implements OnInit {
 
   /**
    * GET ALL DEVIS BY CLIENT.
-	 * Method used when params['id_client']  set into url.
+	 * Method used when params['id_client'] set into url.
    *
-   * @param {any} id client._id
+   * @param {number} id client._id
    * @memberof DevisComponent
    */
-  getAllDevisByClient(id) {
-    this.getClient(id);
+  getAllDevisByClient(id: number) {
     this.devisService.getAllDevisByClient(id)
       .subscribe(
       devis => this.listDevis = devis,
@@ -196,13 +193,39 @@ export class DevisComponent implements OnInit {
   }
 
   /**
+   * GET ALL VALID DEVIS BY CLIENT:
+   * - Method used when params['id_client'] set into url
+   * - return Devis valid
+   * 
+   * @param {number} id client._id
+   * @memberof DevisComponent
+   */
+  getAllValidDevisByClient(id: number) {
+    this.listDevis = [];
+    this.devisService.getAllDevisByClient(id)
+      .subscribe(
+      devis => {
+        for (var dev in devis) {
+          if (devis.hasOwnProperty(dev)) {
+            if (devis[ dev ].valid) {
+              this.listDevis.push(devis[ dev ]);
+            }
+          }
+        }
+      },
+      error => console.log('Erreur :' + error)
+      );
+    console.log(this.listDevis);
+  }
+
+  /**
    * GET ONE CLIENT by ID
 	 * Set current Client informations for view.
    *
-   * @param {any} id client._id
+   * @param {number} id client._id
    * @memberof DevisComponent
    */
-  getClient(id) {
+  getClient(id: number) {
     this.clientService.getOneClient(id)
       .subscribe(
       client => this.client = client,
@@ -236,7 +259,7 @@ export class DevisComponent implements OnInit {
     this.processing = true;
     this.disableForm();
     // Set Devis data to save
-    var newDevis = {
+    const newDevis = {
       ref_devis: this.devisForm.get('ref_devis').value,
       date_creation: this.devisForm.get('date_creation').value,
       montantHt: this.devisForm.get('montantHt').value,
@@ -245,7 +268,7 @@ export class DevisComponent implements OnInit {
       client: this.id_client,
     };
     // Check si Add ou Update
-    if (this.devis._id == null || this.devis._id == 0 || this.devis._id == '') {
+    if (this.devis._id == null || this.devis._id === 0 || this.devis._id === '') {
       this.devisService.addDevis(newDevis)
         .subscribe(
         data => {
@@ -272,7 +295,7 @@ export class DevisComponent implements OnInit {
         );
     } else {
       // Set Devis data to update
-      var udpateDevis = {
+      const udpateDevis = {
         _id: this.devis._id,
         ref_devis: this.devisForm.get('ref_devis').value,
         date_creation: this.devisForm.get('date_creation').value,
@@ -577,7 +600,7 @@ export class DevisComponent implements OnInit {
   onUpdate(d) {
     this.getClient(d.client);
     this.devis = d;
-    let latest_date = this.datepipe.transform(this.devis.date_creation, 'yyyy-MM-dd');
+    const latest_date = this.datepipe.transform(this.devis.date_creation, 'yyyy-MM-dd');
     this.devis.date_creation = latest_date;
     this.devis.client = this.client._id;
     this.mode = true;
@@ -697,7 +720,7 @@ export class DevisComponent implements OnInit {
    */
   calculMontant1() {
     if (!(this.devisForm.controls[ 'montantHt1' ].value === '') && !(this.devisForm.controls[ 'tauxTva1' ].value === '')) {
-      let montantTTC = Number(this.devisForm.get('montantHt1').value) * (1 + Number(this.devisForm.get('tauxTva1').value) / 100);
+      const montantTTC = Number(this.devisForm.get('montantHt1').value) * (1 + Number(this.devisForm.get('tauxTva1').value) / 100);
       this.devisForm.get('montantTtc1').setValue((montantTTC).toFixed(2));
     }
   }
@@ -709,7 +732,7 @@ export class DevisComponent implements OnInit {
    */
   calculMontant2() {
     if (!(this.devisForm.controls[ 'montantHt2' ].value === '') && !(this.devisForm.controls[ 'tauxTva2' ].value === '')) {
-      let montantTTC = Number(this.devisForm.get('montantHt2').value) * (1 + Number(this.devisForm.get('tauxTva2').value) / 100);
+      const montantTTC = Number(this.devisForm.get('montantHt2').value) * (1 + Number(this.devisForm.get('tauxTva2').value) / 100);
       this.devisForm.get('montantTtc2').setValue((montantTTC).toFixed(2));
     }
   }
@@ -721,7 +744,7 @@ export class DevisComponent implements OnInit {
    */
   calculMontant3() {
     if (!(this.devisForm.controls[ 'montantHt3' ].value === '') && !(this.devisForm.controls[ 'tauxTva3' ].value === '')) {
-      let montantTTC = Number(this.devisForm.get('montantHt3').value) * (1 + Number(this.devisForm.get('tauxTva3').value) / 100);
+      const montantTTC = Number(this.devisForm.get('montantHt3').value) * (1 + Number(this.devisForm.get('tauxTva3').value) / 100);
       this.devisForm.get('montantTtc3').setValue((montantTTC).toFixed(2));
     }
   }
@@ -732,7 +755,7 @@ export class DevisComponent implements OnInit {
    * @memberof DevisComponent
    */
   calculTauxTva() {
-    let tauxTva = this.devisForm.get('montantHt1').value * this.devisForm.get('tauxTva1').value / 100
+    const tauxTva = this.devisForm.get('montantHt1').value * this.devisForm.get('tauxTva1').value / 100
       + this.devisForm.get('montantHt2').value * this.devisForm.get('tauxTva2').value / 100
       + this.devisForm.get('montantHt3').value * this.devisForm.get('tauxTva3').value / 100;
     this.devisForm.get('tauxTva').setValue(Number(tauxTva).toFixed(2));
@@ -746,7 +769,7 @@ export class DevisComponent implements OnInit {
   calculMontantHt() {
     if (!(this.devisForm.get('montantHt1').value === '') && !(this.devisForm.get('montantHt2').value === '')
       && !(this.devisForm.get('montantHt3').value === '')) {
-      let montantHT = Number(this.devisForm.get('montantHt1').value) + Number(this.devisForm.get('montantHt2').value)
+      const montantHT = Number(this.devisForm.get('montantHt1').value) + Number(this.devisForm.get('montantHt2').value)
         + Number(this.devisForm.get('montantHt3').value);
       this.devisForm.get('montantHt').setValue(Number(montantHT).toFixed(2));
     }
@@ -758,7 +781,7 @@ export class DevisComponent implements OnInit {
    * @memberof DevisComponent
    */
   calculMontantTtc() {
-    let montantTtc = Number(this.devisForm.get('montantTtc1').value)
+    const montantTtc = Number(this.devisForm.get('montantTtc1').value)
       + Number(this.devisForm.get('montantTtc2').value)
       + Number(this.devisForm.get('montantTtc3').value);
     this.devisForm.get('montantTtc').setValue(Number(montantTtc).toFixed(2));
@@ -767,49 +790,49 @@ export class DevisComponent implements OnInit {
   /**
    * somme montant HT
    * 
-   * @returns {number} somme
+   * @returns {string} somme
    * @memberof DevisComponent
    */
-  getSumMontantHt(): number {
+  getSumMontantHt(): string {
     let sum = 0;
     for (var dev in this.listDevis) {
       if (this.listDevis.hasOwnProperty(dev)) {
         sum += this.listDevis[ dev ].montantHt;
       }
     }
-    return sum;
+    return sum.toFixed(2);
   }
 
   /**
    * somme taux TVA
    * 
-   * @returns {number} somme
+   * @returns {string} somme
    * @memberof DevisComponent
    */
-  getSumTauxTva(): number {
+  getSumTauxTva(): string {
     let sum = 0;
     for (var dev in this.listDevis) {
       if (this.listDevis.hasOwnProperty(dev)) {
         sum += this.listDevis[ dev ].tauxTva;
       }
     }
-    return sum;
+    return sum.toFixed(2);
   }
 
   /**
    * somme montant TTC
    * 
-   * @returns {number} somme
+   * @returns {string} somme
    * @memberof DevisComponent
    */
-  getSumMontantTtc(): number {
+  getSumMontantTtc(): string {
     let sum = 0;
     for (var dev in this.listDevis) {
       if (this.listDevis.hasOwnProperty(dev)) {
         sum += this.listDevis[ dev ].montantTtc;
       }
     }
-    return sum;
+    return sum.toFixed(2);
   }
 
   // VALIDATIONS
@@ -857,6 +880,10 @@ export class DevisComponent implements OnInit {
     return this.validationRef = false;
   }
 
+  /* getAllValidDevis() {
+    this.devisService.getAllValidDevis()
+      .subscribe(data => this.listDevis = data);
+  } */
   /**
    * OnInit :
 	 * check if params['id_client'] set into url.

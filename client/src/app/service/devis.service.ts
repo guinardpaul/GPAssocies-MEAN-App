@@ -1,13 +1,13 @@
-import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/mergeMap';
+
+import { Injectable } from '@angular/core';
+import { Http } from '@angular/http';
 
 // Models
-import { Devis } from '../models/devis';
-
 /**
  * Set dev url accessing app/routes/ url
  */
@@ -39,6 +39,13 @@ export class DevisService {
     return this.http.get(devUrl)
       .map(res => res.json());
   }
+
+  /* getAllValidDevis(): Observable<Devis> {
+    return this.http.get(devUrl)
+      .flatMap(res => res.json())
+      .filter(dev => dev[1].valid)
+      .map(dev => dev.json());
+  } */
 
 	/**
    * Get All Devis By Client.
@@ -93,12 +100,12 @@ export class DevisService {
 	/**
    * Update Devis.
    *
-   * @param {Devis} devis devis body
+   * @param {any} devis devis body
    * @param {number} id_dev devis._id
    * @returns
    * @memberof DevisService
    */
-  updateDevis(devis: Devis) {
+  updateDevis(devis: any) {
     return this.http.put(devUrl + devis._id, devis)
       .map(res => res.json());
   }

@@ -12,6 +12,9 @@ export class Devis {
 	tauxTva: number;
 	montantTtc: number;
 	client: number;
+	valid: boolean;
+	description?: string;
+	updated_at?: Date;
 
 	/**
    * Creates an instance of Devis.

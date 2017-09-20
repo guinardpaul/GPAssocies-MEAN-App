@@ -47,6 +47,16 @@ const FactureGlobalSchema = new mongoose.Schema({
         ref: 'Devis',
         required: true
     },
+    valid: {
+        type: Boolean,
+        default: true
+    },
+    description: {
+        type: String
+    },
+    updated_at: {
+        type: Date
+    }
 });
 
 module.exports = mongoose.model('FactureGlobal', FactureGlobalSchema);

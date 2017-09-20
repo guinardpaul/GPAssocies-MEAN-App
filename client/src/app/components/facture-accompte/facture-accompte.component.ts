@@ -1,21 +1,20 @@
-import { Component, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-
-// Models
-import { FactureGlobal } from '../../models/factureGlobal';
-import { FactureAccompte } from '../../models/factureAccompte';
-import { Reglement } from '../../models/reglement';
-import { Client } from '../../models/client';
-
-// Services
-import { FactureGlobalService } from '../../service/facture-global.service';
-import { FactureAccompteService } from '../../service/facture-accompte.service';
-import { ClientService } from '../../service/client.service';
-import { ReglementService } from '../../service/reglement.service';
 import { FlashMessagesService } from 'ngx-flash-messages';
 
+import { Client } from '../../models/client';
+import { FactureAccompte } from '../../models/factureAccompte';
+import { FactureGlobal } from '../../models/factureGlobal';
+import { Reglement } from '../../models/reglement';
+import { ClientService } from '../../service/client.service';
+import { FactureAccompteService } from '../../service/facture-accompte.service';
+import { FactureGlobalService } from '../../service/facture-global.service';
+import { ReglementService } from '../../service/reglement.service';
+
+// Models
+// Services
 /**
  * Component used for facture accompte and reglement
  * 
@@ -848,33 +847,33 @@ export class FactureAccompteComponent implements OnInit {
   /**
    * Somme montantFacture
    * 
-   * @returns {number} somme
+   * @returns {string} somme
    * @memberof FactureAccompteComponent
    */
-  getSumMontantFacture(): number {
+  getSumMontantFacture(): string {
     let sum = 0;
     for (var fact in this.listFactureAccompte) {
       if (this.listFactureAccompte.hasOwnProperty(fact)) {
         sum += this.listFactureAccompte[ fact ].montantFacture;
       }
     }
-    return sum;
+    return sum.toFixed(2);
   }
 
   /**
    * Somme reglementClient
    * 
-   * @returns {number} somme
+   * @returns {string} somme
    * @memberof FactureAccompteComponent
    */
-  getSumReglementClient(): number {
+  getSumReglementClient(): string {
     let sum = 0;
     for (var fact in this.listFactureAccompte) {
       if (this.listFactureAccompte.hasOwnProperty(fact)) {
         sum += this.listFactureAccompte[ fact ].reglementClient;
       }
     }
-    return sum;
+    return sum.toFixed(2);
   }
 
   // VALIDATIONS

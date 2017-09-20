@@ -12,6 +12,9 @@ export class FactureAccompte {
     montantFacture: number;
     reglementClient: number;
     factureGlobal: number;
+    valid: boolean;
+    description: string;
+    updated_at: Date;
 
     /**
      * Creates an instance of FactureAccompte.

@@ -35,6 +35,16 @@ const ReglementSchema = mongoose.Schema({
         ref: 'FactureAccompte',
         required: true
     },
+    valid: {
+        type: Boolean,
+        default: true
+    },
+    description: {
+        type: String
+    },
+    updated_at: {
+        type: Date
+    }
 });
 
 module.exports = mongoose.model('Reglement', ReglementSchema);

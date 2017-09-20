@@ -16,6 +16,9 @@ export class FactureGlobal {
     montantTtcRegle: number;
     client: number;
     devis: number;
+    valid: boolean;
+    description: string;
+    updated_at: Date;
 
     /**
      * Creates an instance of FactureGlobal.

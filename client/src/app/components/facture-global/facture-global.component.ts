@@ -1,19 +1,17 @@
-import { Component, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-
-// Models
-import { FactureGlobal } from '../../models/factureGlobal';
-import { Devis } from '../../models/devis';
-import { Client } from '../../models/client';
-
-// Services
-import { FactureGlobalService } from '../../service/facture-global.service';
-import { FactureAccompteService } from '../../service/facture-accompte.service';
-import { ClientService } from '../../service/client.service';
 import { FlashMessagesService } from 'ngx-flash-messages';
 
+import { Client } from '../../models/client';
+import { FactureGlobal } from '../../models/factureGlobal';
+import { ClientService } from '../../service/client.service';
+import { FactureAccompteService } from '../../service/facture-accompte.service';
+import { FactureGlobalService } from '../../service/facture-global.service';
+
+// Models
+// Services
 /**
  *
  * @author Paul GUINARD
@@ -41,7 +39,7 @@ export class FactureGlobalComponent implements OnInit {
    * @type {FactureGlobal[]}
    * @memberof FactureGlobalComponent
    */
-  listFactureGlobals: FactureGlobal[];
+  listFactureGlobals: FactureGlobal[] = [];
 
   /**
    * client
@@ -404,49 +402,49 @@ export class FactureGlobalComponent implements OnInit {
   /**
    * somme montant total
    * 
-   * @returns {number} somme
+   * @returns {string} somme
    * @memberof FactureGlobalComponent
    */
-  getSumMontantTotal(): number {
+  getSumMontantTotal(): string {
     let sum = 0;
     for (var fact in this.listFactureGlobals) {
       if (this.listFactureGlobals.hasOwnProperty(fact)) {
         sum += this.listFactureGlobals[ fact ].montantTtcTotal;
       }
     }
-    return sum;
+    return sum.toFixed(2);
   }
 
   /**
    * somme montant facturé
    * 
-   * @returns {number} somme
+   * @returns {string} somme
    * @memberof FactureGlobalComponent
    */
-  getSumMontantFacture(): number {
+  getSumMontantFacture(): string {
     let sum = 0;
     for (var fact in this.listFactureGlobals) {
       if (this.listFactureGlobals.hasOwnProperty(fact)) {
         sum += this.listFactureGlobals[ fact ].montantTtcFacture;
       }
     }
-    return sum;
+    return sum.toFixed(2);
   }
 
   /**
    * somme montant réglé
    * 
-   * @returns {number} somme
+   * @returns {string} somme
    * @memberof FactureGlobalComponent
    */
-  getSumMontantRegle(): number {
+  getSumMontantRegle(): string {
     let sum = 0;
     for (var fact in this.listFactureGlobals) {
       if (this.listFactureGlobals.hasOwnProperty(fact)) {
         sum += this.listFactureGlobals[ fact ].montantTtcRegle;
       }
     }
-    return sum;
+    return sum.toFixed(2);
   }
 
   /**

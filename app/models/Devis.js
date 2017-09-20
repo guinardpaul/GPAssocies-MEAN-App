@@ -28,6 +28,16 @@ const DevisSchema = new mongoose.Schema({
 		ref: 'Client',
 		required: true
 	},
+	valid: {
+		type: Boolean,
+		default: true
+	},
+	description: {
+		type: String
+	},
+	updated_at: {
+		type: Date
+	}
 });
 
 module.exports = mongoose.model('Devis', DevisSchema);
