@@ -42,7 +42,7 @@ app.use(logger('dev'));
 //app.use(logger('common', { stream: accessLogStream }))
 
 // Favicon
-app.use(favicon(path.join(__dirname, 'dist/src', 'favicon.ico')))
+app.use(favicon(path.join(__dirname, 'dist/', 'favicon.ico')))
 // Allows cross origin in development only
 app.use(cors({ origin: 'http://gp-suivifact.herokuapp.com/' }));
 // body-parser
