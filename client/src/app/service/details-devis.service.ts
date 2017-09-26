@@ -11,7 +11,7 @@ import { DetailsDevis } from '../models/detailsDevis';
 /**
  * Set dev url accessing app/routes/ url
  */
-const devUrl = 'http://localhost:3001/api/details-devis/';
+const devUrl = 'http://gp-suivifact.herokuapp.com/api/details-devis/';
 
 /**
  * 

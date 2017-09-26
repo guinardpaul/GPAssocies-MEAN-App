@@ -11,7 +11,7 @@ import { FactureGlobal } from '../models/factureGlobal';
 /**
 * Set dev url accessing app/routes/ url
 */
-const devUrl = 'http://localhost:3001/api/facture-global/';
+const devUrl = 'http://gp-suivifact.herokuapp.com/api/facture-global/';
 
 /**
  *
