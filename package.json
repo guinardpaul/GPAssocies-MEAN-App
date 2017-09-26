@@ -4,8 +4,7 @@
   "description": "GP Associes Suivie Fact MEAN App",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "postinstall": "ng build"
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
