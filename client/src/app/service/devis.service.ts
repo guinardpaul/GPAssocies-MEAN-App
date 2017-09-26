@@ -11,7 +11,7 @@ import { Http } from '@angular/http';
 /**
  * Set dev url accessing app/routes/ url
  */
-const devUrl = 'http://gp-suivifact.herokuapp.com/api/devis/'
+const devUrl = '/api/devis/'
 
 /**
  *

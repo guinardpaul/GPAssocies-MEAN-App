@@ -3905,7 +3905,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 /**
  * Set dev url accessing app/routes/ url
  */
-var devUrl = 'http://gp-suivifact.herokuapp.com/api/clients/';
+var devUrl = '/api/clients/';
 /**
  *
  * @author Paul GUINARD
@@ -4032,7 +4032,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 /**
  * Set dev url accessing app/routes/ url
  */
-var devUrl = 'http://gp-suivifact.herokuapp.com/api/details-devis/';
+var devUrl = '/api/details-devis/';
 /**
  *
  * @author Paul GUINARD
@@ -4141,7 +4141,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 /**
  * Set dev url accessing app/routes/ url
  */
-var devUrl = 'http://gp-suivifact.herokuapp.com/api/devis/';
+var devUrl = '/api/devis/';
 /**
  *
  * @author Paul GUINARD
@@ -4285,7 +4285,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 /**
  * Set dev url accessing app/routes/ url
  */
-var devUrl = 'http://gp-suivifact.herokuapp.com/api/facture-accompte/';
+var devUrl = '/api/facture-accompte/';
 /**
  *
  * @author Paul GUINARD
@@ -4435,7 +4435,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 /**
 * Set dev url accessing app/routes/ url
 */
-var devUrl = 'http://gp-suivifact.herokuapp.com/api/facture-global/';
+var devUrl = '/api/facture-global/';
 /**
  *
  * @author Paul GUINARD
@@ -4596,7 +4596,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 /**
  * Set dev url accessing app/routes/ url
  */
-var devUrl = 'http://gp-suivifact.herokuapp.com/api/reglements/';
+var devUrl = '/api/reglements/';
 /**
  *
  * @author Paul GUINARD

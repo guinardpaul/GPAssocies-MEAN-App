@@ -11,7 +11,7 @@ import { FactureAccompte } from '../models/factureAccompte';
 /**
  * Set dev url accessing app/routes/ url
  */
-const devUrl = 'http://gp-suivifact.herokuapp.com/api/facture-accompte/';
+const devUrl = '/api/facture-accompte/';
 
 /**
  *

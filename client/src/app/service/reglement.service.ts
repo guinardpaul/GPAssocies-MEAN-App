@@ -11,7 +11,7 @@ import { Reglement } from '../models/reglement';
 /**
  * Set dev url accessing app/routes/ url
  */
-const devUrl = 'http://gp-suivifact.herokuapp.com/api/reglements/'
+const devUrl = '/api/reglements/'
 
 /**
  * 

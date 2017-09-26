@@ -11,7 +11,7 @@ import { Client } from '../models/client';
 /**
  * Set dev url accessing app/routes/ url
  */
-const devUrl = 'http://gp-suivifact.herokuapp.com/api/clients/';
+const devUrl = '/api/clients/';
 
 /**
  *
