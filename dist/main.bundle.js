@@ -19,13 +19,12 @@ webpackEmptyContext.id = "../../../../../src async recursive";
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_dashboard_dashboard_component__ = __webpack_require__("../../../../../src/app/components/dashboard/dashboard.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_client_client_component__ = __webpack_require__("../../../../../src/app/components/client/client.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_devis_devis_component__ = __webpack_require__("../../../../../src/app/components/devis/devis.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_valider_devis_valider_devis_component__ = __webpack_require__("../../../../../src/app/components/valider-devis/valider-devis.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_facture_accompte_facture_accompte_component__ = __webpack_require__("../../../../../src/app/components/facture-accompte/facture-accompte.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_bugs_bugs_component__ = __webpack_require__("../../../../../src/app/components/bugs/bugs.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_page_not_found_page_not_found_component__ = __webpack_require__("../../../../../src/app/components/page-not-found/page-not-found.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_client_client_component__ = __webpack_require__("../../../../../src/app/components/client/client.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_devis_devis_component__ = __webpack_require__("../../../../../src/app/components/devis/devis.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_valider_devis_valider_devis_component__ = __webpack_require__("../../../../../src/app/components/valider-devis/valider-devis.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_facture_accompte_facture_accompte_component__ = __webpack_require__("../../../../../src/app/components/facture-accompte/facture-accompte.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_bugs_bugs_component__ = __webpack_require__("../../../../../src/app/components/bugs/bugs.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_page_not_found_page_not_found_component__ = __webpack_require__("../../../../../src/app/components/page-not-found/page-not-found.component.ts");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppRoutingModule; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -34,8 +33,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 
-
-// Components
 
 
 
@@ -48,23 +45,23 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
  */
 var routes = [
     // uncomment dashboard when implemented
-    { path: 'dashboard', component: __WEBPACK_IMPORTED_MODULE_2__components_dashboard_dashboard_component__["a" /* DashboardComponent */] },
-    { path: 'client', component: __WEBPACK_IMPORTED_MODULE_3__components_client_client_component__["a" /* ClientComponent */] },
+    //{ path: 'dashboard', component: DashboardComponent },
+    { path: 'client', component: __WEBPACK_IMPORTED_MODULE_2__components_client_client_component__["a" /* ClientComponent */] },
     //{ path: 'devis', component: DevisComponent },
     // path Devis by client._id
-    { path: 'devis/client/:id_client', component: __WEBPACK_IMPORTED_MODULE_4__components_devis_devis_component__["a" /* DevisComponent */] },
+    { path: 'devis/client/:id_client', component: __WEBPACK_IMPORTED_MODULE_3__components_devis_devis_component__["a" /* DevisComponent */] },
     // { path: 'facture', component: FactureComponent },
     // path valider Devis into facture global
-    { path: 'devis/client/valider-devis/:id_devis', component: __WEBPACK_IMPORTED_MODULE_5__components_valider_devis_valider_devis_component__["a" /* ValiderDevisComponent */] },
+    { path: 'devis/client/valider-devis/:id_devis', component: __WEBPACK_IMPORTED_MODULE_4__components_valider_devis_valider_devis_component__["a" /* ValiderDevisComponent */] },
     // path facture d'accompte / facture mois
-    { path: 'facture/facture-accompte/:id_fact', component: __WEBPACK_IMPORTED_MODULE_6__components_facture_accompte_facture_accompte_component__["a" /* FactureAccompteComponent */] },
+    { path: 'facture/facture-accompte/:id_fact', component: __WEBPACK_IMPORTED_MODULE_5__components_facture_accompte_facture_accompte_component__["a" /* FactureAccompteComponent */] },
     // path bugs
-    { path: 'bug', component: __WEBPACK_IMPORTED_MODULE_7__components_bugs_bugs_component__["a" /* BugsComponent */] },
-    { path: 'pageNotFound', component: __WEBPACK_IMPORTED_MODULE_8__components_page_not_found_page_not_found_component__["a" /* PageNotFoundComponent */] },
+    { path: 'bug', component: __WEBPACK_IMPORTED_MODULE_6__components_bugs_bugs_component__["a" /* BugsComponent */] },
+    { path: 'pageNotFound', component: __WEBPACK_IMPORTED_MODULE_7__components_page_not_found_page_not_found_component__["a" /* PageNotFoundComponent */] },
     // default path redirect to 'client'
     { path: '', redirectTo: 'client', pathMatch: 'full' },
     // Undefined page path
-    { path: '**', component: __WEBPACK_IMPORTED_MODULE_8__components_page_not_found_page_not_found_component__["a" /* PageNotFoundComponent */] }
+    { path: '**', component: __WEBPACK_IMPORTED_MODULE_7__components_page_not_found_page_not_found_component__["a" /* PageNotFoundComponent */] }
 ];
 var AppRoutingModule = (function () {
     function AppRoutingModule() {
@@ -3182,7 +3179,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/components/navbar/navbar.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<nav class=\"navbar navbar-inverse\">\r\n    <div class=\"container-fluid\">\r\n        <div class=\"navbar-header\">\r\n            <a class=\"navbar-brand\" routerLink=\"client\"><img style=\"margin-top: -12px;\" src=\"../../../assets/images/GP.png\" alt=\"G & P\"></a>\r\n        </div>\r\n        <ul class=\"nav navbar-nav\">\r\n            <li routerLinkActive=\"active\"><a routerLink=\"dashboard\">Dashboard</a></li>\r\n            <li routerLinkActive=\"active\"><a routerLink=\"client\">Client</a></li>\r\n            <!-- <li routerLinkActive=\"active\"><a routerLink=\"devis\">Devis / Facture</a></li>\r\n            <li routerLinkActive=\"active\"><a [routerLink]=\"['facture/facture-accompte']\">Facture</a></li> -->\r\n            <li routerLinkActive=\"active\"><a routerLink=\"bug\">Bug</a></li>\r\n        </ul>\r\n    </div>\r\n</nav>"
+module.exports = "<nav class=\"navbar navbar-inverse\">\r\n    <div class=\"container-fluid\">\r\n        <div class=\"navbar-header\">\r\n            <a class=\"navbar-brand\" routerLink=\"client\"><img style=\"margin-top: -12px;\" src=\"../../../assets/images/GP.png\" alt=\"G & P\"></a>\r\n        </div>\r\n        <ul class=\"nav navbar-nav\">\r\n            <!-- <li routerLinkActive=\"active\"><a routerLink=\"dashboard\">Dashboard</a></li> -->\r\n            <li routerLinkActive=\"active\"><a routerLink=\"client\">Client</a></li>\r\n            <!-- <li routerLinkActive=\"active\"><a routerLink=\"devis\">Devis / Facture</a></li>\r\n            <li routerLinkActive=\"active\"><a [routerLink]=\"['facture/facture-accompte']\">Facture</a></li> -->\r\n            <li routerLinkActive=\"active\"><a routerLink=\"bug\">Bug</a></li>\r\n        </ul>\r\n    </div>\r\n</nav>"
 
 /***/ }),
 
