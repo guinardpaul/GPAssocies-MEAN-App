@@ -52,6 +52,14 @@ export class DevisComponent implements OnInit {
   devis: any = {};
 
   /**
+   * description field when update or delete devis
+   * 
+   * @type {string}
+   * @memberof DevisComponent
+   */
+  descriptionModif: string;
+
+  /**
    * DetailsDevis1
    * 
    * @type {*}
@@ -205,7 +213,7 @@ export class DevisComponent implements OnInit {
     this.devisService.getAllDevisByClient(id)
       .subscribe(
       devis => {
-        for (var dev in devis) {
+        for (const dev in devis) {
           if (devis.hasOwnProperty(dev)) {
             if (devis[ dev ].valid) {
               this.listDevis.push(devis[ dev ]);
@@ -375,20 +383,20 @@ export class DevisComponent implements OnInit {
     // Save DetailsDevis
     this.detailsDevisService.addDetailsDevis(this.detailsDevis1)
       .subscribe(
-      data => {
+      data1 => {
         console.log('Details Devis saved :' + this.detailsDevis1);
         this.detailsDevis1 = { tauxTva: CONST_TAUX[ 1 ] };
 
         this.detailsDevisService.addDetailsDevis(this.detailsDevis2)
           .subscribe(
-          data => {
+          data2 => {
             console.log('Details Devis saved :' + this.detailsDevis2);
             this.detailsDevis2 = {};
             this.detailsDevis2 = { tauxTva: CONST_TAUX[ 2 ] };
 
             this.detailsDevisService.addDetailsDevis(this.detailsDevis3)
               .subscribe(
-              data => {
+              data3 => {
                 console.log('Details Devis saved :' + this.detailsDevis3);
                 this.detailsDevis3 = {};
                 this.detailsDevis3 = { tauxTva: CONST_TAUX[ 3 ] };
@@ -433,20 +441,20 @@ export class DevisComponent implements OnInit {
     // Update DetailsDevis
     this.detailsDevisService.updateDetailsDevis(this.detailsDevis1)
       .subscribe(
-      data => {
+      data1 => {
         console.log('Details Devis update :' + this.detailsDevis1);
         this.detailsDevis1 = { tauxTva: CONST_TAUX[ 1 ] };
 
         this.detailsDevisService.updateDetailsDevis(this.detailsDevis2)
           .subscribe(
-          data => {
+          data2 => {
             console.log('Details Devis update :' + this.detailsDevis2);
             this.detailsDevis2 = {};
             this.detailsDevis2 = { tauxTva: CONST_TAUX[ 2 ] };
 
             this.detailsDevisService.updateDetailsDevis(this.detailsDevis3)
               .subscribe(
-              data => {
+              data3 => {
                 console.log('Details Devis update :' + this.detailsDevis3);
                 this.detailsDevis3 = {};
                 this.detailsDevis3 = { tauxTva: CONST_TAUX[ 3 ] };
@@ -479,49 +487,21 @@ export class DevisComponent implements OnInit {
     this.factureGlobalService.getAllFactureGlobalByDevis(devis._id)
       .subscribe(
       data => {
-        console.log(data);
         if (data.length === 0) {
+          devis.valid = false;
+          devis.description = this.descriptionModif;
+          devis.updated_at = new Date();
           // Delete Devis
           this.devisService.deleteDevis(devis._id)
-            .subscribe(
-            msg => {
-              console.log('Devis deleted');
+            .subscribe(msg => {
+              console.log('Devis mis a jour');
               this.flashMessages.show('Devis supprimé', {
                 classes: [ 'alert', 'alert-warning' ],
                 timeout: 3000
               });
               this.onSuccess();
-              // Fetch DetailsDevis by Devis._id
-              this.detailsDevisService.getDetailsDevisByDevis(devis._id)
-                .subscribe(
-                data => {
-                  // Delete detailsDevis
-                  this.detailsDevisService.deleteDetailsDevis(data[ 0 ]._id)
-                    .subscribe(
-                    data => {
-                      console.log('detailsDevis1 deleted' + data);
-                    }, (err) => {
-                      console.log('Erreur deleted :' + err);
-                    }
-                    );
-                  this.detailsDevisService.deleteDetailsDevis(data[ 1 ]._id)
-                    .subscribe(
-                    data => {
-                      console.log('detailsDevis2 deleted' + data);
-                    }, (err) => {
-                      console.log('Erreur deleted :' + err);
-                    }
-                    );
-                  this.detailsDevisService.deleteDetailsDevis(data[ 2 ]._id)
-                    .subscribe(
-                    data => {
-                      console.log('detailsDevis3 deleted' + data);
-                    }, (err) => {
-                      console.log('Erreur deleted :' + err);
-                    }
-                    );
-                }
-                );
+              // Fetch DetailsDevis by Devis._id & delete detailsDevis
+              this.fetchAnddeleteDetailsDevis(devis._id);
             },
             error => {
               console.log(error),
@@ -541,6 +521,28 @@ export class DevisComponent implements OnInit {
         }
       }, err => console.log('Erreur :' + err)
       );
+  }
+
+  /**
+   * get DetailsDevis list by devis Id & delete details devis
+   * 
+   * @param {number} id_devis devis ID
+   * @memberof DevisComponent
+   */
+  fetchAnddeleteDetailsDevis(id_devis: number) {
+    // Fetch DetailsDevis by Devis._id
+    this.detailsDevisService.getDetailsDevisByDevis(id_devis)
+      .subscribe(detailsDevisList => {
+        // Delete detailsDevis
+        detailsDevisList.forEach(detailsDevis => {
+          this.detailsDevisService.deleteDetailsDevis(detailsDevis._id)
+            .subscribe(data => {
+              console.log('details devis deleted ' + data);
+            }, err => {
+              console.log('Erreur deleted :' + err);
+            });
+        });
+      });
   }
 
   /**
@@ -588,7 +590,7 @@ export class DevisComponent implements OnInit {
     this.detailsDevis2 = { tauxTva: CONST_TAUX[ 2 ] };
     this.detailsDevis3 = { tauxTva: CONST_TAUX[ 3 ] };
     // Set controls['client'] touched for Validators.required
-    this.devisForm.controls[ 'client' ].markAsTouched;
+    // this.devisForm.controls[ 'client' ].markAsTouched;
   }
 
   /**
@@ -795,7 +797,7 @@ export class DevisComponent implements OnInit {
    */
   getSumMontantHt(): string {
     let sum = 0;
-    for (var dev in this.listDevis) {
+    for (const dev in this.listDevis) {
       if (this.listDevis.hasOwnProperty(dev)) {
         sum += this.listDevis[ dev ].montantHt;
       }
@@ -811,7 +813,7 @@ export class DevisComponent implements OnInit {
    */
   getSumTauxTva(): string {
     let sum = 0;
-    for (var dev in this.listDevis) {
+    for (const dev in this.listDevis) {
       if (this.listDevis.hasOwnProperty(dev)) {
         sum += this.listDevis[ dev ].tauxTva;
       }
@@ -827,7 +829,7 @@ export class DevisComponent implements OnInit {
    */
   getSumMontantTtc(): string {
     let sum = 0;
-    for (var dev in this.listDevis) {
+    for (const dev in this.listDevis) {
       if (this.listDevis.hasOwnProperty(dev)) {
         sum += this.listDevis[ dev ].montantTtc;
       }
@@ -868,7 +870,7 @@ export class DevisComponent implements OnInit {
       data => {
         if (data.success) {
           // onUpdate : Vérif si ref dans l'input == ref initial du devis 
-          if (this.devisForm.get('ref_devis').value != this.devis.ref_devis) {
+          if (this.devisForm.get('ref_devis').value !== this.devis.ref_devis) {
             return this.validationRef = true;
           }
         }
@@ -894,7 +896,7 @@ export class DevisComponent implements OnInit {
    */
   ngOnInit() {
     // used for <select> client options
-    //this.getAllClient();
+    // this.getAllClient();
     // différentes routes à utiliser quand le dashboard sera implémenté
     if (this.activatedRoute.snapshot.params[ 'id_client' ] !== undefined) {
       this.id_client = this.activatedRoute.snapshot.params[ 'id_client' ];

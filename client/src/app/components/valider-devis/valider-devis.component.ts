@@ -166,7 +166,7 @@ export class ValiderDevisComponent implements OnInit {
       devis => {
         this.devis = devis;
         // Change devis.date_creation
-        let latest_date = this.datePipe.transform(this.devis.date_creation, 'yyyy-MM-dd');
+        const latest_date = this.datePipe.transform(this.devis.date_creation, 'yyyy-MM-dd');
         this.devis.date_creation = latest_date;
         this.getOneClient(this.devis.client);
         this.generateForm();
@@ -184,7 +184,7 @@ export class ValiderDevisComponent implements OnInit {
     this.disableForm();
     this.processing = true;
     // Set newFacture body
-    var newFacture = this.validerDevisForm.value;
+    const newFacture = this.validerDevisForm.value;
     newFacture.montantTtcTotal = this.devis.montantTtc;
     newFacture.client = this.devis.client;
     newFacture.montantHt = this.devis.montantHt;
@@ -222,14 +222,14 @@ export class ValiderDevisComponent implements OnInit {
    * @memberof ValiderDevisComponent
    */
   updateStatusClient(client: Client) {
-    let status_facture: boolean = true;
+    let status_facture = true;
     // Fetch Facture Globals from Database
     this.factureGlobalService.getAllFactureGlobalByClient(client._id)
       .subscribe(
       FactureGlobals => {
         // Check each factureGlobal.status dans listFactureGlobals       
         if (FactureGlobals !== null) {
-          for (var factureGlobal in FactureGlobals) {
+          for (const factureGlobal in FactureGlobals) {
             if (FactureGlobals.hasOwnProperty(factureGlobal)) {
               if (FactureGlobals[ factureGlobal ].status_factureGlobal === false) {
                 status_facture = false;
@@ -310,7 +310,7 @@ export class ValiderDevisComponent implements OnInit {
    */
   calculMontant() {
     if (!(this.validerDevisForm.controls[ 'montantHt' ].value === '') && !(this.validerDevisForm.controls[ 'tauxTva' ].value === '')) {
-      let montantTTC = this.validerDevisForm.controls[ 'montantHt' ].value * (1 + this.validerDevisForm.controls[ 'tauxTva' ].value / 100);
+      const montantTTC = this.validerDevisForm.controls[ 'montantHt' ].value * (1 + this.validerDevisForm.controls[ 'tauxTva' ].value / 100);
       this.validerDevisForm.controls[ 'montantTtc' ].setValue(Number(montantTTC).toFixed(2));
       this.devis.montantTtc = Number(montantTTC).toFixed(2);
     }
@@ -362,8 +362,8 @@ export class ValiderDevisComponent implements OnInit {
    * @memberof ValiderDevisComponent
    */
   ngOnInit() {
-    //this.getAllClient();
-    //this.onValiderDevis();
+    // this.getAllClient();
+    // this.onValiderDevis();
     /* if (this.activatedRoute.snapshot.params['id_client'] !== undefined) {
       this.id_client = this.activatedRoute.snapshot.params['id_client'];
       this.getOneClient(this.id_client);

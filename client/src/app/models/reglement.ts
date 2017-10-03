@@ -10,8 +10,8 @@ export class Reglement {
     reglementTtc: number;
     factureAccompte: number;
     valid: boolean;
-    description: string;
-    updated_at: Date;
+    description?: string;
+    updated_at?: Date;
 
     /**
      * Creates an instance of Reglement.

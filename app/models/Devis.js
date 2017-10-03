@@ -30,13 +30,16 @@ const DevisSchema = new mongoose.Schema({
 	},
 	valid: {
 		type: Boolean,
-		default: true
+		default: true,
+		required: true
 	},
 	description: {
 		type: String
 	},
 	updated_at: {
-		type: Date
+		type: Date,
+		default: new Date(),
+		required: true
 	}
 });
 

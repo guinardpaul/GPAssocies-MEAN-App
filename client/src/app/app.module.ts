@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MdButtonModule, MdCheckboxModule, MdProgressSpinnerModule } from '@angular/material';
@@ -50,6 +50,7 @@ import { BugsService } from './service/bugs.service';
     AppRoutingModule,
     HttpModule,
     ReactiveFormsModule,
+    FormsModule,
     FlashMessagesModule,
     BrowserAnimationsModule,
     MdProgressSpinnerModule

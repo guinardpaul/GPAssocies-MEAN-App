@@ -43,6 +43,8 @@ app.use(logger('dev'));
 
 // Favicon
 app.use(favicon(path.join(__dirname, 'client/src', 'favicon.ico')))
+//app.use(favicon(path.join(__dirname, 'dist', 'favicon.ico')))
+
 // Allows cross origin in development only
 app.use(cors({ origin: 'http://localhost:4200' }));
 // body-parser
