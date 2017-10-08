@@ -31,11 +31,11 @@ export class BugsComponent implements OnInit {
   ngOnInit() {
 
   }
-  // =======================================
+  //=======================================
   // Bug component
   // NOT USED
   // Use issues report on github instead
-  // =======================================
+  //=======================================
   /*   listBugs: Bug[] = [];
     bug: any = {};
     id_bug: number = 0;

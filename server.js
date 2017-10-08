@@ -10,7 +10,7 @@ mongoose.Promise = global.Promise;
 const cors = require('cors');
 const port = process.env.PORT || 3001;
 
-const database = 'mongodb://localhost:27017/GPSuivieFact';
+const database = 'mongodb://admin:admin@ds151024.mlab.com:51024/gp-suivi-fact';
 
 // mongoDB connection
 const promise = mongoose.connect(database, {
@@ -42,11 +42,9 @@ app.use(logger('dev'));
 //app.use(logger('common', { stream: accessLogStream }))
 
 // Favicon
-app.use(favicon(path.join(__dirname, 'client/src', 'favicon.ico')))
-//app.use(favicon(path.join(__dirname, 'dist', 'favicon.ico')))
-
+app.use(favicon(path.join(__dirname, 'dist/', 'favicon.ico')))
 // Allows cross origin in development only
-app.use(cors({ origin: 'http://localhost:4200' }));
+app.use(cors({ origin: 'http://gp-suivifact.herokuapp.com/' }));
 // body-parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));

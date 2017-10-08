@@ -49,16 +49,13 @@ const FactureAccompteSchema = new mongoose.Schema({
     },
     valid: {
         type: Boolean,
-        default: true,
-        required: true
+        default: true
     },
     description: {
         type: String
     },
     updated_at: {
-        type: Date,
-        default: new Date(),
-        required: true
+        type: Date
     }
 });
 

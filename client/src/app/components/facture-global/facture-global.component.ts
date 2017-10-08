@@ -4,15 +4,14 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { FlashMessagesService } from 'ngx-flash-messages';
 
-// Models
 import { Client } from '../../models/client';
 import { FactureGlobal } from '../../models/factureGlobal';
-
-// Services
 import { ClientService } from '../../service/client.service';
 import { FactureAccompteService } from '../../service/facture-accompte.service';
 import { FactureGlobalService } from '../../service/facture-global.service';
 
+// Models
+// Services
 /**
  *
  * @author Paul GUINARD
@@ -78,14 +77,6 @@ export class FactureGlobalComponent implements OnInit {
    * @memberof FactureGlobalComponent
    */
   processing = false;
-
-  /**
-   * Description Modification/delete facture global
-   * 
-   * @type {string}
-   * @memberof FactureGlobalComponent
-   */
-  descriptionModif: string;
 
   /**
    * facture global form
@@ -187,7 +178,7 @@ export class FactureGlobalComponent implements OnInit {
   onUpdate(facture: FactureGlobal) {
     this.mode = true;
     this.factureGlobal = facture;
-    const latest_date = this.datePipe.transform(this.factureGlobal.date_creation, 'yyyy-MM-dd');
+    let latest_date = this.datePipe.transform(this.factureGlobal.date_creation, 'yyyy-MM-dd');
     this.factureGlobal.date_creation = latest_date;
     this.factureForm.get('ref_factureGlobal').setValue(this.factureGlobal.ref_factureGlobal);
     this.factureForm.get('date_creation').setValue(latest_date);
@@ -201,12 +192,23 @@ export class FactureGlobalComponent implements OnInit {
   updateFacture() {
     this.disableForm();
     this.processing = true;
-    const newFacture = this.factureForm.value;
-    newFacture._id = this.factureGlobal._id;
-    newFacture.montantTtcTotal = this.factureGlobal.montantTtc;
-    newFacture.client = this.factureGlobal.client;
-    newFacture.ref_factureGlobal = this.factureForm.get('ref_factureGlobal').value;
-    newFacture.date_creation = this.factureForm.get('date_creation').value;
+    const newFacture: FactureGlobal = {
+      _id: this.factureGlobal._id,
+      status_factureGlobal: this.factureGlobal.status_factureGlobal,
+      ref_factureGlobal: this.factureForm.get('ref_factureGlobal').value,
+      date_creation: this.factureForm.get('date_creation').value,
+      montantHt: this.factureGlobal.montantHt,
+      tauxTva: this.factureGlobal.tauxTva,
+      montantTtcTotal: this.factureGlobal.montantTtcTotal,
+      montantTtcFacture: this.factureGlobal.montantTtcFacture,
+      montantTtcRegle: this.factureGlobal.montantTtcRegle,
+      client: this.factureGlobal.client,
+      devis: this.factureGlobal.devis,
+      valid: true,
+      updated_at: new Date(),
+      description: ''
+    };
+
     this.factureGlobalService.updateFactureGlobal(newFacture)
       .subscribe(
       data => {
@@ -235,7 +237,7 @@ export class FactureGlobalComponent implements OnInit {
    * @param {number} id factureGlobal._id
    * @memberof FactureGlobalComponent
    */
-  /* onDelete(id: number) {
+  onDelete(id: number) {
     this.factureAccompteService.getAllFactureAccompteByFactureGlobal(id)
       .subscribe(
       data => {
@@ -266,54 +268,6 @@ export class FactureGlobalComponent implements OnInit {
             timeout: 3000
           });
           this.factureGlobal = {};
-        }
-      }, err => console.log('Erreur :' + err)
-      );
-  } */
-
-  /**
-   * Change param valid facture global to false
-   * 
-   * @param {number} id factureGlobal id
-   * @memberof FactureGlobalComponent
-   */
-  onDelete(factureGlobal: FactureGlobal, id: number) {
-    this.factureAccompteService.getAllFactureAccompteByFactureGlobal(id)
-      .subscribe(
-      data => {
-        if (data.length === 0) {
-          const date = new Date(Number(Date.now));
-          factureGlobal.valid = false;
-          factureGlobal.updated_at = date
-          factureGlobal.description = this.descriptionModif;
-          this.factureGlobalService.updateFactureGlobal(factureGlobal)
-            .subscribe(
-            factureData => {
-              console.log('Facture Global deleted');
-              this.flashMessages.show('Facture supprimée', {
-                classes: [ 'alert', 'alert-warning' ],
-                timeout: 3000
-              });
-              this.onSuccess();
-              this.descriptionModif = '';
-            },
-            error => {
-              console.log(error);
-              this.flashMessages.show('Erreur: Facture non supprimée', {
-                classes: [ 'alert', 'alert-danger' ],
-                timeout: 3000
-              });
-              this.factureGlobal = {};
-            }
-            );
-        } else {
-          console.log('Suppression impossible');
-          this.flashMessages.show('Suppression impossible ! La facture est associée à des factures d\'accomptes', {
-            classes: [ 'alert', 'alert-danger' ],
-            timeout: 3000
-          });
-          this.factureGlobal = {};
-          this.descriptionModif = '';
         }
       }, err => console.log('Erreur :' + err)
       );
@@ -349,14 +303,14 @@ export class FactureGlobalComponent implements OnInit {
    * @memberof ValiderDevisComponent
    */
   updateStatusClient(client: Client) {
-    let status_client = true;
+    let status_client: boolean = true;
     // Fetch Facture Globals from Database
     this.factureGlobalService.getAllFactureGlobalByClient(client._id)
       .subscribe(
       FactureGlobals => {
         // Check each factureGlobal.status dans listFactureGlobals
         if (FactureGlobals.length > 0) {
-          for (const factureGlobal in FactureGlobals) {
+          for (var factureGlobal in FactureGlobals) {
             if (FactureGlobals.hasOwnProperty(factureGlobal)) {
               if (FactureGlobals[ factureGlobal ].status_factureGlobal === false) {
                 status_client = false;
@@ -450,7 +404,7 @@ export class FactureGlobalComponent implements OnInit {
    */
   calculMontant() {
     if (!(this.factureForm.controls[ 'montantHt' ].value === '') && !(this.factureForm.controls[ 'tauxTva' ].value === '')) {
-      const montantTTC = this.factureForm.controls[ 'montantHt' ].value + this.factureForm.controls[ 'tauxTva' ].value;
+      let montantTTC = this.factureForm.controls[ 'montantHt' ].value + this.factureForm.controls[ 'tauxTva' ].value;
       this.factureForm.controls[ 'montantTtc' ].setValue(Number(montantTTC).toFixed(2));
       this.factureGlobal.montantTtc = Number(montantTTC).toFixed(2);
     }
@@ -464,7 +418,7 @@ export class FactureGlobalComponent implements OnInit {
    */
   getSumMontantTotal(): string {
     let sum = 0;
-    for (const fact in this.listFactureGlobals) {
+    for (var fact in this.listFactureGlobals) {
       if (this.listFactureGlobals.hasOwnProperty(fact)) {
         sum += this.listFactureGlobals[ fact ].montantTtcTotal;
       }
@@ -480,7 +434,7 @@ export class FactureGlobalComponent implements OnInit {
    */
   getSumMontantFacture(): string {
     let sum = 0;
-    for (const fact in this.listFactureGlobals) {
+    for (var fact in this.listFactureGlobals) {
       if (this.listFactureGlobals.hasOwnProperty(fact)) {
         sum += this.listFactureGlobals[ fact ].montantTtcFacture;
       }
@@ -496,7 +450,7 @@ export class FactureGlobalComponent implements OnInit {
    */
   getSumMontantRegle(): string {
     let sum = 0;
-    for (const fact in this.listFactureGlobals) {
+    for (var fact in this.listFactureGlobals) {
       if (this.listFactureGlobals.hasOwnProperty(fact)) {
         sum += this.listFactureGlobals[ fact ].montantTtcRegle;
       }
@@ -518,7 +472,7 @@ export class FactureGlobalComponent implements OnInit {
       data => {
         if (data.success) {
           // onUpdate : Vérif si ref dans l'input == ref initial de la facture global 
-          if (this.factureForm.get('ref_factureGlobal').value !== this.factureGlobal.ref_factureGlobal) {
+          if (this.factureForm.get('ref_factureGlobal').value != this.factureGlobal.ref_factureGlobal) {
             return this.validationRef = true;
           }
         }
