@@ -58,6 +58,14 @@ export class FactureGlobalComponent implements OnInit {
   id_client: number;
 
   /**
+   * Attribut Description facture global
+   * 
+   * @type {string}
+   * @memberof FactureGlobalComponent
+   */
+  descriptionModif: string;
+
+  /**
    * validation ref facture global
    * 
    * @type {boolean}
@@ -78,14 +86,6 @@ export class FactureGlobalComponent implements OnInit {
    * @memberof FactureGlobalComponent
    */
   processing = false;
-
-  /**
-   * Description Modification/delete facture global
-   * 
-   * @type {string}
-   * @memberof FactureGlobalComponent
-   */
-  descriptionModif: string;
 
   /**
    * facture global form
@@ -148,6 +148,28 @@ export class FactureGlobalComponent implements OnInit {
   }
 
   /**
+   * Get All Valid facture global by client
+   * 
+   * @param {any} client_id client id
+   * @memberof FactureGlobalComponent
+   */
+  getAllValidFactureGlobalByClient(client_id) {
+    this.listFactureGlobals = [];
+    this.factureGlobalService.getAllFactureGlobalByClient(client_id)
+      .subscribe(fact => {
+        for (const f in fact) {
+          if (fact.hasOwnProperty(f)) {
+            if (fact[ f ].valid) {
+              this.listFactureGlobals.push(fact[ f ]);
+            }
+          }
+        }
+      }, err => console.log('Could not load valid factures')
+      );
+    console.log(this.listFactureGlobals);
+  }
+
+  /**
    * Get All Facture Global By Client._id.
    * Method used when params client._id set into url.
    *
@@ -201,16 +223,22 @@ export class FactureGlobalComponent implements OnInit {
   updateFacture() {
     this.disableForm();
     this.processing = true;
-    const newFacture = this.factureForm.value;
-    newFacture._id = this.factureGlobal._id;
-    newFacture.montantTtcTotal = this.factureGlobal.montantTtc;
-    newFacture.client = this.factureGlobal.client;
-    newFacture.ref_factureGlobal = this.factureForm.get('ref_factureGlobal').value;
-    newFacture.date_creation = this.factureForm.get('date_creation').value;
-    this.factureGlobalService.updateFactureGlobal(newFacture)
-      .subscribe(
-      data => {
-        this.onSuccess();
+
+    const newFacture = {
+      status_factureGlobal: this.factureGlobal.status_factureGlobal,
+      ref_factureGlobal: this.factureForm.get('ref_factureGlobal').value,
+      date_creation: this.factureForm.get('date_creation').value,
+      montantHt: this.factureGlobal.montantHt,
+      tauxTva: this.factureGlobal.tauxTva,
+      montantTtcTotal: this.factureGlobal.montantTtcTotal,
+      montantTtcFacture: this.factureGlobal.montantTtcFacture,
+      montantTtcRegle: this.factureGlobal.montantTtcRegle,
+      client: this.factureGlobal.client,
+      devis: this.factureGlobal.devis
+    };
+
+    this.factureGlobalService.addFactureGlobal(newFacture)
+      .subscribe(data => {
         console.log('Facture Modifiée');
         this.flashMessages.show('Facture modifiée', {
           classes: [ 'alert', 'alert-success' ],
@@ -225,66 +253,54 @@ export class FactureGlobalComponent implements OnInit {
         });
         this.processing = false;
         this.enableForm();
+      });
+
+    // Set old facture global data
+    this.factureGlobal.description = this.factureForm.get('descriptionModif').value;
+    this.factureGlobal.valid = false;
+
+    this.factureGlobalService.updateFactureGlobal(this.factureGlobal)
+      .subscribe(
+      data => {
+        this.onSuccess();
+      },
+      error => {
+        console.log('Erreur ' + error);
+        this.flashMessages.show('Erreur : Facture non modifiée', {
+          classes: [ 'alert', 'alert-danger' ],
+          timeout: 3000
+        });
+        this.processing = false;
+        this.enableForm();
       }
       );
   }
 
   /**
-   * Delete Facture Global by Id.
-   *
-   * @param {number} id factureGlobal._id
-   * @memberof FactureGlobalComponent
-   */
-  /* onDelete(id: number) {
-    this.factureAccompteService.getAllFactureAccompteByFactureGlobal(id)
-      .subscribe(
-      data => {
-        if (data.length === 0) {
-          this.factureGlobalService.deleteFactureGlobal(id)
-            .subscribe(
-            data => {
-              console.log('Facture Global deleted');
-              this.flashMessages.show('Facture supprimée', {
-                classes: [ 'alert', 'alert-warning' ],
-                timeout: 3000
-              });
-              this.onSuccess();
-            },
-            error => {
-              console.log(error);
-              this.flashMessages.show('Erreur: Facture non supprimée', {
-                classes: [ 'alert', 'alert-danger' ],
-                timeout: 3000
-              });
-              this.factureGlobal = {};
-            }
-            );
-        } else {
-          console.log('Suppression impossible');
-          this.flashMessages.show('Suppression impossible ! La facture est associée à des factures d\'accomptes', {
-            classes: [ 'alert', 'alert-danger' ],
-            timeout: 3000
-          });
-          this.factureGlobal = {};
-        }
-      }, err => console.log('Erreur :' + err)
-      );
-  } */
-
-  /**
    * Change param valid facture global to false
    * 
-   * @param {number} id factureGlobal id
+   * @param {FactureGlobal} factureGlobal facture global body
    * @memberof FactureGlobalComponent
    */
-  onDelete(factureGlobal: FactureGlobal, id: number) {
-    this.factureAccompteService.getAllFactureAccompteByFactureGlobal(id)
+  onDelete(factureGlobal: FactureGlobal) {
+    let factValid = false;
+    this.factureAccompteService.getAllFactureAccompteByFactureGlobal(factureGlobal._id)
       .subscribe(
       data => {
-        if (data.length === 0) {
-          const date = new Date(Number(Date.now));
+        console.log(data);
+        if (data.length > 0) {
+          for (const f in data) {
+            if (data.hasOwnProperty(f)) {
+              if (data[ f ].valid) {
+                factValid = true;
+              }
+            }
+          }
+        }
+
+        if (data.length === 0 || factValid === false) {
           factureGlobal.valid = false;
-          factureGlobal.updated_at = date
+          factureGlobal.updated_at = new Date();
           factureGlobal.description = this.descriptionModif;
           this.factureGlobalService.updateFactureGlobal(factureGlobal)
             .subscribe(
@@ -393,7 +409,7 @@ export class FactureGlobalComponent implements OnInit {
     this.mode = false;
     this.factureGlobal = {};
     this.processing = false;
-    this.getAllFactureGlobalByClient(this.id_client);
+    this.getAllValidFactureGlobalByClient(this.id_client);
   }
 
   /**
@@ -418,7 +434,8 @@ export class FactureGlobalComponent implements OnInit {
       ref_factureGlobal: [ this.factureGlobal.ref_factureGlobal, Validators.required ],
       date_creation: [ this.factureGlobal.date_creation ],
       montantTtcTotal: [ { value: this.factureGlobal.montantTtc, disabled: true }],
-      client: [ { value: this.factureGlobal.client, disabled: true }, Validators.required ]
+      client: [ { value: this.factureGlobal.client, disabled: true }, Validators.required ],
+      descriptionModif: [ this.factureGlobal.description, Validators.required ]
     });
   }
 
@@ -542,7 +559,7 @@ export class FactureGlobalComponent implements OnInit {
     // différentes routes à implémenter pour le dashboard
     if (this.activatedRoute.snapshot.params[ 'id_client' ] !== undefined) {
       this.id_client = this.activatedRoute.snapshot.params[ 'id_client' ];
-      this.getAllFactureGlobalByClient(this.id_client);
+      this.getAllValidFactureGlobalByClient(this.id_client);
       this.getClient(this.id_client);
     } else {
       this.getAllFactureGlobal();

@@ -114,6 +114,13 @@ export class DevisComponent implements OnInit {
   mode = false;
 
   /**
+   * updateMode form group for descriptionModif
+   * 
+   * @memberof DevisComponent
+   */
+  updateMode = false;
+
+  /**
    * on process
    * 
    * @memberof DevisComponent
@@ -203,7 +210,7 @@ export class DevisComponent implements OnInit {
   /**
    * GET ALL VALID DEVIS BY CLIENT:
    * - Method used when params['id_client'] set into url
-   * - return Devis valid
+   * - return seulement Devis valid
    * 
    * @param {number} id client._id
    * @memberof DevisComponent
@@ -223,7 +230,6 @@ export class DevisComponent implements OnInit {
       },
       error => console.log('Erreur :' + error)
       );
-    console.log(this.listDevis);
   }
 
   /**
@@ -258,7 +264,7 @@ export class DevisComponent implements OnInit {
 
   /**
    * ADD/UPDATE DEVIS.
-	 * - Si this.devis._id exists : updateDevis().
+	 * - Si this.devis._id exists : update old Devis() and Add new.
 	 * - Si this.devis._id == null || 0 : addDevis().
    *
    * @memberof DevisComponent
@@ -302,17 +308,26 @@ export class DevisComponent implements OnInit {
         }
         );
     } else {
-      // Set Devis data to update
-      const udpateDevis = {
-        _id: this.devis._id,
+      // Set new Devis data to add
+      const updateDevis = {
         ref_devis: this.devisForm.get('ref_devis').value,
         date_creation: this.devisForm.get('date_creation').value,
         montantHt: this.devisForm.get('montantHt').value,
         tauxTva: this.devisForm.get('tauxTva').value,
         montantTtc: this.devisForm.get('montantTtc').value,
-        client: this.id_client,
+        client: this.id_client
       };
-      this.devisService.updateDevis(udpateDevis)
+      // Save to database
+      this.devisService.addDevis(updateDevis)
+        .subscribe(data => {
+          console.log(data);
+        }, err => console.log(err)
+        );
+      // Set old devis description & valid
+      this.devis.description = this.devisForm.get('descriptionModif').value;
+      this.devis.valid = false;
+      this.devis.updated_at = new Date();
+      this.devisService.updateDevis(this.devis)
         .subscribe(
         data => {
           console.log('Devis updated' + data);
@@ -320,7 +335,7 @@ export class DevisComponent implements OnInit {
             classes: [ 'alert', 'alert-success' ],
             timeout: 3000
           });
-          this.updateDetailsDevis(data.obj);
+          this.fetchAnddeleteDetailsDevis(this.devis._id);
         },
         error => {
           console.log('Erreur :' + error);
@@ -364,22 +379,6 @@ export class DevisComponent implements OnInit {
       devis: devis._id
     };
 
-    /* for (var detailsDevis in this.listDetailsDevis) {
-      if (this.listDetailsDevis.hasOwnProperty(detailsDevis)) {
-        var element = this.listDetailsDevis[ detailsDevis ];
-        this.detailsDevisService.addDetailsDevis(this.listDetailsDevis[detailsDevis])
-        .subscribe(
-          data => {
-            console.log('Details Devis saved ' + this.detailsDevis1);
-            this.onSuccess();
-          }, (err) => {
-            console.log(err);
-            this.enableForm();
-          }
-        );
-      }
-    } */
-
     // Save DetailsDevis
     this.detailsDevisService.addDetailsDevis(this.detailsDevis1)
       .subscribe(
@@ -419,8 +418,8 @@ export class DevisComponent implements OnInit {
   }
 
   /**
-   *
-   * update DetailsDevis
+   *update DetailsDevis
+   * 
    * @param {any} devis devis
    * @memberof DevisComponent
    */
@@ -480,21 +479,30 @@ export class DevisComponent implements OnInit {
    * Delete devis and DetailsDevis associé fetch from database by getDetailsDevisByDevis() method SI :
    * - le client ne possède pas de facture global
    *
-   * @param {Devis} devis devis data
+   * @param {Devis} devis devis body
    * @memberof DevisComponent
    */
   onDelete(devis: Devis) {
+    let devisValid = false;
     this.factureGlobalService.getAllFactureGlobalByDevis(devis._id)
       .subscribe(
       data => {
-        if (data.length === 0) {
+        if (data.length > 0) {
+          for (const d in data) {
+            if (data.hasOwnProperty(d)) {
+              if (data[ d ].valid) {
+                devisValid = true;
+              }
+            }
+          }
+        }
+        if (data.length === 0 || devisValid === false) {
           devis.valid = false;
           devis.description = this.descriptionModif;
           devis.updated_at = new Date();
           // Delete Devis
-          this.devisService.deleteDevis(devis._id)
+          this.devisService.updateDevis(devis)
             .subscribe(msg => {
-              console.log('Devis mis a jour');
               this.flashMessages.show('Devis supprimé', {
                 classes: [ 'alert', 'alert-warning' ],
                 timeout: 3000
@@ -512,11 +520,10 @@ export class DevisComponent implements OnInit {
             }
             );
         } else {
-          console.log('Impossible de supprimer'),
-            this.flashMessages.show('Suppression impossible ! Le devis est associé à des factures.', {
-              classes: [ 'alert', 'alert-danger' ],
-              timeout: 3000
-            });
+          this.flashMessages.show('Suppression impossible ! Le devis est associé à des factures.', {
+            classes: [ 'alert', 'alert-danger' ],
+            timeout: 3000
+          });
           this.onSuccess();
         }
       }, err => console.log('Erreur :' + err)
@@ -538,6 +545,8 @@ export class DevisComponent implements OnInit {
           this.detailsDevisService.deleteDetailsDevis(detailsDevis._id)
             .subscribe(data => {
               console.log('details devis deleted ' + data);
+              this.onSuccess();
+
             }, err => {
               console.log('Erreur deleted :' + err);
             });
@@ -556,12 +565,14 @@ export class DevisComponent implements OnInit {
 
   /**
    * Function success for all request to service.
-	 * Reset table by fetching data from database.
+   * Reset table by fetching data from database.
    *
    * @memberof DevisComponent
    */
   onSuccess() {
     this.mode = false;
+    this.updateMode = false;
+    this.descriptionModif = '';
     this.generateForm();
     this.devis = {};
     this.processing = false;
@@ -571,7 +582,8 @@ export class DevisComponent implements OnInit {
     this.enableForm();
     // Différente route à utiliser une fois le dashboard implémenté
     if (this.activatedRoute.snapshot.params[ 'id_client' ] !== undefined) {
-      this.getAllDevisByClient(this.id_client);
+      // this.getAllDevisByClient(this.id_client);
+      this.getAllValidDevisByClient(this.id_client);
     } else {
       this.getAllDevis();
     }
@@ -584,6 +596,7 @@ export class DevisComponent implements OnInit {
    */
   onAdd() {
     this.mode = true;
+    this.updateMode = false;
     this.generateForm();
     this.devis = {};
     this.detailsDevis1 = { tauxTva: CONST_TAUX[ 1 ] };
@@ -606,12 +619,12 @@ export class DevisComponent implements OnInit {
     this.devis.date_creation = latest_date;
     this.devis.client = this.client._id;
     this.mode = true;
+    this.updateMode = true;
     this.devisForm.get('ref_devis').setValue(this.devis.ref_devis);
 
     this.detailsDevisService.getDetailsDevisByDevis(d._id)
       .subscribe(
       data => {
-        console.log(data);
         // Fetch data from database
         this.detailsDevis1 = data[ 0 ];
         this.detailsDevis2 = data[ 1 ];
@@ -686,6 +699,9 @@ export class DevisComponent implements OnInit {
       tauxTva: [ { value: this.devis.tauxTva, disabled: true }],
       montantTtc: [ { value: this.devis.montantTtc, disabled: true }],
       client: [ { value: this.id_client, disabled: true }, Validators.compose([
+        Validators.required
+      ]) ],
+      descriptionModif: [ { value: this.descriptionModif }, Validators.compose([
         Validators.required
       ]) ],
     });
@@ -882,15 +898,16 @@ export class DevisComponent implements OnInit {
     return this.validationRef = false;
   }
 
-  /* getAllValidDevis() {
-    this.devisService.getAllValidDevis()
-      .subscribe(data => this.listDevis = data);
-  } */
+  /*  getAllValidDevis() {
+     this.devisService.getAllValidDevis()
+       .subscribe(data => this.listDevis = data);
+   } */
+
   /**
    * OnInit :
-	 * check if params['id_client'] set into url.
-	 * - set this.id_client = params['id_client'].
-	 * - get Client using this.id_client.
+   * check if params['id_client'] set into url.
+   * - set this.id_client = params['id_client'].
+   * - get Client using this.id_client.
    *
    * @memberof DevisComponent
    */
@@ -900,7 +917,8 @@ export class DevisComponent implements OnInit {
     // différentes routes à utiliser quand le dashboard sera implémenté
     if (this.activatedRoute.snapshot.params[ 'id_client' ] !== undefined) {
       this.id_client = this.activatedRoute.snapshot.params[ 'id_client' ];
-      this.getAllDevisByClient(this.id_client);
+      // this.getAllDevisByClient(this.id_client);
+      this.getAllValidDevisByClient(this.id_client);
       this.getClient(this.id_client);
     } else {
       this.router.navigate([ '/pageNotFound' ]);

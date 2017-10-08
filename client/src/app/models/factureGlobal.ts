@@ -16,7 +16,7 @@ export class FactureGlobal {
     montantTtcRegle: number;
     client: number;
     devis: number;
-    valid: boolean;
+    valid?: boolean;
     description?: string;
     updated_at?: Date;
 

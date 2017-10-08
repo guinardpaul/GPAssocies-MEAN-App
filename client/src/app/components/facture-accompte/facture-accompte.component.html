@@ -18,8 +18,12 @@
     </thead>
     <tbody>
       <tr *ngFor="let f of listFactureAccompte">
-        <td *ngIf="f.status_factureAccompte"><img src="{{status_true}}" alt="true"></td>
-        <td *ngIf="!f.status_factureAccompte"><img src="{{status_false}}" alt="false"></td>
+        <td *ngIf="f.status_factureAccompte">
+          <img src="{{status_true}}" alt="true">
+        </td>
+        <td *ngIf="!f.status_factureAccompte">
+          <img src="{{status_false}}" alt="false">
+        </td>
         <td>{{f.ref_factureAccompte}}</td>
         <td>{{f.date_creation | date: 'dd/MM/yyyy'}}</td>
         <td>{{f.montantFacture}}</td>
@@ -44,26 +48,31 @@
     </tbody>
   </table>
   <button class="btn btn-primary" (click)="onAddFactureAccompte()">Ajouter facture d'accompte</button>
-  <br/><br/>
+  <br/>
+  <br/>
 
   <!-- Confirm delete Modal -->
   <div id="myModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
       <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Confirmer suppression</h4>
+      <form #modalForm="ngForm">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Confirmer suppression</h4>
+          </div>
+          <div class="modal-body">
+            <p>Etes-vous sûr de vouloir supprimer {{factureAccompte.ref_factureAccompte}} ?</p>
+            <label for="descriptionModif">Description :</label>
+            <input type="text" class="form-control" id="descriptionModif" name="descriptionModif" [(ngModel)]="descriptionModif" placeholder="description de la suppression ..."
+              required />
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-danger" (click)="deleteFactureAccompte(factureAccompte)" [disabled]="!modalForm.form.valid" data-dismiss="modal">Supprimer</button>
+            <button class="btn btn-default" data-dismiss="modal" (click)="closeModal()">Annuler</button>
+          </div>
         </div>
-        <div class="modal-body">
-          <p>Etes-vous sûr de vouloir supprimer {{factureAccompte.ref_factureAccompte}} ?</p>
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-danger" (click)="deleteFactureAccompte(factureAccompte._id, factureAccompte.montantFacture, factureAccompte.reglementClient)"
-            data-dismiss="modal">Supprimer</button>
-          <button class="btn btn-default" data-dismiss="modal" (click)="closeModal()">Annuler</button>
-        </div>
-      </div>
+      </form>
     </div>
   </div>
 

@@ -93,6 +93,14 @@ export class FactureAccompteComponent implements OnInit {
    */
   client: Client;
 
+  /**
+   * Description modif on delete facture accompte
+   * 
+   * @type {string}
+   * @memberof FactureAccompteComponent
+   */
+  descriptionModif: string;
+
   // Validation form
   /**
    * validation ref facture accompte
@@ -294,6 +302,29 @@ export class FactureAccompteComponent implements OnInit {
   }
 
   /**
+  * Get All Valid Facture Mois By Facture Global
+  *
+  * @param {number} id factureGlobal._id
+  * @memberof FactureAccompteComponent
+  */
+  getAllValidFactureAccompteByFactureGlobal(id: number) {
+    this.listFactureAccompte = [];
+    this.factureAccompteService.getAllFactureAccompteByFactureGlobal(id)
+      .subscribe(
+      factureAccompte => {
+        for (const f in factureAccompte) {
+          if (factureAccompte.hasOwnProperty(f)) {
+            if (factureAccompte[ f ].valid) {
+              this.listFactureAccompte.push(factureAccompte[ f ]);
+            }
+          }
+        }
+      },
+      err => console.log(err)
+      );
+  }
+
+  /**
    * Get All Reglement by factureAccompte
    *
    * @param {number} id factureAccompte._id
@@ -407,12 +438,17 @@ export class FactureAccompteComponent implements OnInit {
    * @param {number} reglementClient factureAccomte montantTtcRegle
    * @memberof FactureAccompteComponent
    */
-  deleteFactureAccompte(id: number, montantFacture: number, reglementClient: number) {
-    this.reglementService.getReglementByFactureAccompte(id)
+  deleteFactureAccompte(factureAccompte: FactureAccompte) {
+    console.log('in');
+    this.reglementService.getReglementByFactureAccompte(factureAccompte._id)
       .subscribe(
       data => {
         if (data.length === 0) {
-          this.factureAccompteService.deleteFactureAccompte(id)
+          // Set value delete
+          factureAccompte.valid = false;
+          factureAccompte.description = this.descriptionModif;
+          factureAccompte.updated_at = new Date();
+          this.factureAccompteService.updateFactureAccompte(factureAccompte)
             .subscribe(
             factureData => {
               if (factureData.success) {
@@ -422,9 +458,9 @@ export class FactureAccompteComponent implements OnInit {
                   timeout: 3000
                 });
                 // Update Facture global montantTtcFacture
-                this.updateMontantFactureGlobal(this.factureGlobal, -montantFacture);
+                this.updateMontantFactureGlobal(this.factureGlobal, -factureAccompte.montantFacture);
                 // Update facture global reglementTtcTotal
-                this.updateReglementClientFactureGlobal(this.factureGlobal, -reglementClient);
+                this.updateReglementClientFactureGlobal(this.factureGlobal, -factureAccompte.reglementClient);
 
                 this.onSuccess();
               } else {
@@ -464,6 +500,7 @@ export class FactureAccompteComponent implements OnInit {
    */
   closeModal() {
     this.factureAccompte = {};
+    this.descriptionModif = '';
   }
 
   /**
@@ -556,7 +593,7 @@ export class FactureAccompteComponent implements OnInit {
       err => console.log(err)
       );
     // Get all facture accompte by facture global
-    this.getAllFactureAccompteByFactureGlobal(this.id_fact);
+    this.getAllValidFactureAccompteByFactureGlobal(this.id_fact);
   }
 
   /**
@@ -686,12 +723,13 @@ export class FactureAccompteComponent implements OnInit {
    * @memberof FactureAccompteComponent
    */
   onSuccess() {
-    this.getAllFactureAccompteByFactureGlobal(this.id_fact);
+    this.getAllValidFactureAccompteByFactureGlobal(this.id_fact);
     this.mode = false;
     this.modeAddReglement = false;
     this.processing = false;
     this.factureAccompte = {};
     this.reglement = {};
+    this.descriptionModif = '';
     this.generateForm();
     this.generateReglementForm();
   }
@@ -960,7 +998,7 @@ export class FactureAccompteComponent implements OnInit {
   ngOnInit() {
     if (this.activatedRoute.snapshot.params[ 'id_fact' ] !== undefined) {
       this.id_fact = this.activatedRoute.snapshot.params[ 'id_fact' ];
-      this.getAllFactureAccompteByFactureGlobal(this.id_fact);
+      this.getAllValidFactureAccompteByFactureGlobal(this.id_fact);
       this.getOneFactureGlobal(this.id_fact);
     } else {
       this.router.navigate([ '/pageNotFound' ]);

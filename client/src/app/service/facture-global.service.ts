@@ -97,7 +97,7 @@ export class FactureGlobalService {
    * @returns
    * @memberof FactureGlobalService
    */
-  addFactureGlobal(factureGlobal: FactureGlobal) {
+  addFactureGlobal(factureGlobal) {
     return this.http.post(devUrl, factureGlobal)
       .map(res => res.json());
   }
