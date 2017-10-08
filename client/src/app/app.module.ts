@@ -4,7 +4,7 @@ import { HttpModule } from '@angular/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MdButtonModule, MdCheckboxModule, MdProgressSpinnerModule } from '@angular/material';
+import { MatButtonModule, MatCheckboxModule, MatProgressSpinnerModule } from '@angular/material';
 // Angular Flash messages
 import { FlashMessagesModule } from 'ngx-flash-messages';
 
@@ -52,7 +52,7 @@ import { BugsService } from './service/bugs.service';
     ReactiveFormsModule,
     FlashMessagesModule,
     BrowserAnimationsModule,
-    MdProgressSpinnerModule
+    MatProgressSpinnerModule
   ],
   providers: [
     ClientService,
