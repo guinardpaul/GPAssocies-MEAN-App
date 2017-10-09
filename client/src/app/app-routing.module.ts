@@ -18,7 +18,7 @@ const routes: Routes = [
   // uncomment dashboard when implemented
   { path: 'dashboard', component: DashboardComponent },
   { path: 'client', component: ClientComponent },
-  //{ path: 'devis', component: DevisComponent },
+  // { path: 'devis', component: DevisComponent },
   // path Devis by client._id
   { path: 'devis/client/:id_client', component: DevisComponent },
   // { path: 'facture', component: FactureComponent },
