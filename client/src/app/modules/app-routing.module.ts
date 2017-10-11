@@ -2,14 +2,14 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 // Components
-import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { ClientComponent } from './components/client/client.component';
-import { DevisComponent } from './components/devis/devis.component';
-import { FactureGlobalComponent } from './components/facture-global/facture-global.component';
-import { ValiderDevisComponent } from './components/valider-devis/valider-devis.component';
-import { FactureAccompteComponent } from './components/facture-accompte/facture-accompte.component';
-import { BugsComponent } from './components/bugs/bugs.component';
-import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
+import { DashboardComponent } from '../components/dashboard/dashboard.component';
+import { ClientComponent } from '../components/client/client.component';
+import { DevisComponent } from '../components/devis/devis.component';
+import { FactureGlobalComponent } from '../components/facture-global/facture-global.component';
+import { ValiderDevisComponent } from '../components/valider-devis/valider-devis.component';
+import { FactureAccompteComponent } from '../components/facture-accompte/facture-accompte.component';
+import { BugsComponent } from '../components/bugs/bugs.component';
+import { PageNotFoundComponent } from '../components/page-not-found/page-not-found.component';
 
 /**
  * routes definition

@@ -171,11 +171,7 @@ export class DevisComponent implements OnInit {
    * @memberof DevisComponent
    */
   getAllClient() {
-    this.clientService.getAllClients()
-      .subscribe(
-      clients => this.listClient = clients,
-      error => console.log('Erreur :' + error)
-      );
+    this.clientService.getAllClients();
   }
 
   /**

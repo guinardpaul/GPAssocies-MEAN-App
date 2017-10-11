@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import 'rxjs/add/operator/startWith';
+import 'rxjs/add/observable/merge';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
@@ -21,13 +24,22 @@ const devUrl = 'http://localhost:3001/api/clients/';
  */
 @Injectable()
 export class ClientService {
-
+  clients: Observable<Client[]>;
+  _clients: BehaviorSubject<Client[]>;
+  dataStore: {
+    clients: Client[]
+  };
+  get data(): Client[] { return this._clients.value; }
   /**
    * Creates an instance of ClientService.
    * @param {Http} http http module
    * @memberof ClientService client service
    */
-  constructor(private http: Http) { }
+  constructor(private http: Http) {
+    this.dataStore = { clients: [] };
+    this._clients = <BehaviorSubject<Client[]>>new BehaviorSubject([]);
+    this.clients = this._clients.asObservable();
+  }
 
   /**
    * Get all clients.
@@ -35,9 +47,14 @@ export class ClientService {
    * @returns
    * @memberof ClientService
    */
-  getAllClients(): Observable<Client[]> {
+  getAllClients() {
     return this.http.get(devUrl)
-      .map(res => res.json());
+      .map(res => res.json())
+      .subscribe(data => {
+        this.dataStore.clients = data;
+        this._clients.next(Object.assign({}, this.dataStore).clients);
+      }, err => console.log(err)
+      );
   }
 
   /**

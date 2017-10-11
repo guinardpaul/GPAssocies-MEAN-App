@@ -1,0 +1,24 @@
+.button-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.addClientForm {
+  display: flex;
+  flex-direction: column;
+}
+
+.addClientForm > * {
+  width: 100%;
+}
+
+.addButton {
+  margin-left: 10px;
+}
+
+.spinner {
+  float: left;
+  width: 24px;
+  height: 24px;
+}

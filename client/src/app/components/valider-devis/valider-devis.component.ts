@@ -129,11 +129,7 @@ export class ValiderDevisComponent implements OnInit {
    * @memberof ValiderDevisComponent
    */
   getAllClient() {
-    this.clientService.getAllClients()
-      .subscribe(
-      clients => this.listClient = clients,
-      error => console.log('Error ' + error)
-      );
+    this.clientService.getAllClients();
   };
 
   /**

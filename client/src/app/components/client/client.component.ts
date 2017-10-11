@@ -1,5 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { DataSource } from '@angular/cdk/collections';
+import { MatSort } from '@angular/material';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/startWith';
+import 'rxjs/add/observable/merge';
+import 'rxjs/add/operator/map';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 
 // Models
@@ -24,6 +31,10 @@ import { FlashMessagesService } from 'ngx-flash-messages';
   styleUrls: [ './client.component.css' ]
 })
 export class ClientComponent implements OnInit {
+  displayedColumns = [ 'statut', 'nom', 'prenom', 'adresseFact', 'adresseChantier', 'email', 'numTel', 'actions' ];
+  dataSource: ExampleDataSource | null;
+
+  @ViewChild(MatSort) sort: MatSort;
   /**
    * liste clients
    * 
@@ -126,13 +137,7 @@ export class ClientComponent implements OnInit {
    * @memberof ClientComponent
    */
   getAllClients() {
-    this.clientService.getAllClients()
-      .subscribe(
-      data => {
-        this.listClient = data;
-      },
-      error => console.log(error)
-      );
+    this.clientService.getAllClients();
   }
 
 	/**
@@ -450,6 +455,36 @@ export class ClientComponent implements OnInit {
     };
   }
 
+  getSatusImage(client): string {
+    let image: string;
+    if (client.status_client) {
+      image = this.status_true;
+    } else {
+      image = this.status_false;
+    }
+    return image;
+  }
+
+  getErrorMessage(arg: string): string {
+    let msg: string;
+    switch (arg) {
+      case 'nom':
+        break;
+      case 'prenom':
+
+        break;
+      case 'email':
+
+        break;
+      case 'numTel':
+
+        break;
+
+      default:
+        return msg;
+    }
+  }
+
   /**
    * Fetch All Clients from database
    *
@@ -457,6 +492,54 @@ export class ClientComponent implements OnInit {
    */
   ngOnInit() {
     this.getAllClients();
+    this.dataSource = new ExampleDataSource(this.clientService, this.sort);
   }
 
+}
+
+export class ExampleDataSource extends DataSource<any> {
+  constructor(private _clientService: ClientService, private _sort: MatSort) {
+    super();
+  }
+
+  /** Connect function called by the table to retrieve one stream containing the data to render. */
+  connect(): Observable<Client[]> {
+    const displayDataChanges = [
+      this._clientService._clients,
+      this._sort.sortChange,
+    ];
+    console.log(displayDataChanges);
+
+    return Observable.merge(...displayDataChanges).map(() => {
+      return this.getSortedData();
+    });
+  }
+
+  disconnect() { }
+
+  /** Returns a sorted copy of the database data. */
+  getSortedData(): Client[] {
+    const data = this._clientService.data.slice();
+    if (!this._sort.active || this._sort.direction == '') { return data; }
+
+    return data.sort((a, b) => {
+      let propertyA: boolean | number | string = '';
+      let propertyB: boolean | number | string = '';
+
+      switch (this._sort.active) {
+        case 'statut_client': [ propertyA, propertyB ] = [ a.status_client, b.status_client ]; break;
+        case 'nom': [ propertyA, propertyB ] = [ a.nom, b.nom ]; break;
+        case 'prenom': [ propertyA, propertyB ] = [ a.prenom, b.prenom ]; break;
+        case 'adresseFact': [ propertyA, propertyB ] = [ a.adresseFact, b.adresseFact ]; break;
+        case 'adresseChantier': [ propertyA, propertyB ] = [ a.adresseChantier, b.adresseChantier ]; break;
+        case 'email': [ propertyA, propertyB ] = [ a.email, b.email ]; break;
+        case 'numTel': [ propertyA, propertyB ] = [ a.numTel, b.numTel ]; break;
+      }
+
+      let valueA = isNaN(+propertyA) ? propertyA : +propertyA;
+      let valueB = isNaN(+propertyB) ? propertyB : +propertyB;
+
+      return (valueA < valueB ? -1 : 1) * (this._sort.direction == 'asc' ? 1 : -1);
+    });
+  }
 }

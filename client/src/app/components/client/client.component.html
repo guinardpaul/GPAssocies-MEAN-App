@@ -1,38 +1,72 @@
 <div class="container-fluid">
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Statut</th>
-                <th>Nom</th>
-                <th>Prénom</th>
-                <th>Adresse Facturation</th>
-                <th>Adresse Chantier</th>
-                <th>Email</th>
-                <th>Tél</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let client of listClient">
-                <td *ngIf="client.status_client"><img src="{{status_true}}" alt="true"></td>
-                <td *ngIf="!client.status_client"><img src="{{status_false}}" alt="false"></td>
-                <td>{{client.nom}}</td>
-                <td>{{client.prenom}}</td>
-                <td>{{client.adresseFact}} {{client.complAdresseFact}} <br/> {{client.cpFact}} {{client.villeFact}}</td>
-                <td>{{client.adresseChantier}} {{client.complAdresseChantier}} <br/> {{client.cpChantier}} {{client.villeChantier}}</td>
-                <td>{{client.email}}</td>
-                <td>{{client.numTel}}</td>
-                <td>
-                    <div class="btn-group-vertical">
-                        <a class="btn btn-success" [routerLink]="['/devis/client', client._id]">Consulter</a>
-                        <button class="btn btn-warning" (click)="onUpdate(client)">Modifier</button>
-                        <button class="btn btn-danger" data-toggle="modal" data-target="#myModal" (click)="getClientToDelete(client)">Supprimer</button>
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <button class="btn btn-primary" (click)="onAdd()">Ajouter client</button>
+    <mat-table #table [dataSource]="dataSource" matSort>
+
+        <!--- Note that these columns can be defined in any order.
+                          The actual rendered columns are set as a property on the row definition" -->
+
+        <!-- ID Column -->
+        <ng-container matColumnDef="statut">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Statut </mat-header-cell>
+            <mat-cell *matCellDef="let row">
+                <img src="{{getSatusImage(row)}}">
+            </mat-cell>
+        </ng-container>
+
+        <!-- Progress Column -->
+        <ng-container matColumnDef="nom">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Nom </mat-header-cell>
+            <mat-cell *matCellDef="let row"> {{row.nom}} </mat-cell>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="prenom">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Prénom </mat-header-cell>
+            <mat-cell *matCellDef="let row"> {{row.prenom}} </mat-cell>
+        </ng-container>
+
+        <!-- Color Column -->
+        <ng-container matColumnDef="adresseFact">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Adresse Facturation </mat-header-cell>
+            <mat-cell *matCellDef="let row">
+                {{row.adresseFact}} {{row.complAdresseFact}}
+                <br/> {{row.cpFact}} {{row.villeFact}}
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="adresseChantier">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Adresse Chantier </mat-header-cell>
+            <mat-cell *matCellDef="let row">
+                {{row.adresseChantier}} {{row.complAdresseChantier}}
+                <br/> {{row.cpChantier}} {{row.villeChantier}}
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="email">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Email </mat-header-cell>
+            <mat-cell *matCellDef="let row"> {{row.email}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="numTel">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Tél </mat-header-cell>
+            <mat-cell *matCellDef="let row"> {{row.numTel}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Actions </mat-header-cell>
+            <mat-cell *matCellDef="let row">
+                <div class="button-row">
+                    <a mat-raised-button color="primary" [routerLink]="['/devis/client', client._id]">Consulter</a>
+                    <button mat-raised-button color="accent" (click)="onUpdate(client)">Modifier</button>
+                    <button mat-raised-button color="warn" data-toggle="modal" data-target="#myModal" (click)="getClientToDelete(client)">Supprimer</button>
+                </div>
+            </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+    <br/>
+    <button mat-raised-button color="primary" (click)="onAdd()">Ajouter client</button>
 </div>
 <br/>
 
@@ -58,126 +92,212 @@
 
 <!-- Add/Update Client form -->
 <div class="container" *ngIf="mode">
-    <div class="panel-group">
-        <form class="form-horizontal" [formGroup]="clientForm" (submit)="addClient()">
-            <div class="panel-info col-sm-4">
-                <div class="panel-heading">Client</div>
-                <div class="panel-body">
-                    <div class="form-group">
-                        <label for="civilite">Civilité :</label>
-                        <select class="form-control" name="civilite" id="civilite" formControlName="civilite">
-                            <option>Civilité...</option>
-                            <option *ngFor="let key of keys" ([ngValue])="key">{{civilite[key]}}</option>
-                          </select>
-                    </div>
-                    <div class="form-group" [ngClass]="{'has-error': (clientForm.controls.nom.errors && clientForm.controls.nom.dirty),
-              'has-success': (!clientForm.controls.nom.errors)}">
-                        <label for="nom">Nom :</label>
-                        <input type="text" class="form-control" name="nom" value="{{client.nom}}" id="nom" formControlName="nom" autofocus required
-                        />
-                        <ul class="list-group">
-                            <li class="list-group-item list-group-item-danger" *ngIf="clientForm.controls.nom.errors?.required && clientForm.controls.nom.dirty">
-                                Ce champ est requis
-                            </li>
-                            <li class="list-group-item list-group-item-danger" *ngIf="clientForm.controls.nom.errors?.nomPrenomValidation && clientForm.controls.nom.dirty
-                && !clientForm.controls.nom.errors?.required">
-                                Le nom doit être composé uniquement de lettres
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="form-group" [ngClass]="{'has-error': (clientForm.controls.prenom.errors && clientForm.controls.prenom.dirty),
-          'has-success': (!clientForm.controls.prenom.errors)}">
-                        <label for="prenom">Prénom :</label>
-                        <input type="text" class="form-control" name="prenom" value="{{client.prenom}}" id="prenom" formControlName="prenom" required
-                        />
-                        <ul class="list-group">
-                            <li class="list-group-item list-group-item-danger" *ngIf="clientForm.controls.prenom.errors?.required && clientForm.controls.prenom.dirty">Ce champ est requis</li>
-                            <li class="list-group-item list-group-item-danger" *ngIf="clientForm.controls.prenom.errors?.nomPrenomValidation && clientForm.controls.prenom.dirty
-            && !clientForm.controls.prenom.errors?.required">
-                                Le prénom doit être composé uniquement de lettres
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="form-group" [ngClass]="{'has-error': (clientForm.controls.email.errors && clientForm.controls.email.dirty),
-      'has-success': (!clientForm.controls.email.errors)}">
-                        <label for="email">Email :</label>
-                        <input type="text" class="form-control" name="email" value="{{client.email}}" id="email" formControlName="email" required
-                        />
-                        <ul class="list-group">
-                            <li class="list-group-item list-group-item-danger" *ngIf="clientForm.controls.email.errors?.required && clientForm.controls.email.dirty">Ce champ est requis</li>
-                            <li class="list-group-item list-group-item-danger" *ngIf="clientForm.controls.email.errors?.emailValidation && clientForm.controls.email.dirty
-        && !clientForm.controls.email.errors?.required">
-                                L'email n'est pas valide
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="form-group" [ngClass]="{'has-error': (clientForm.controls.numTel.errors && clientForm.controls.numTel.dirty), 'has-success': (!clientForm.controls.numTel.errors)}">
-                        <label for="numTel">Tél :</label>
-                        <input type="text" class="form-control" name="numTel" value="{{client.numTel}}" id="numTel" formControlName="numTel" />
-                        <ul class="list-group">
-                            <li class="list-group-item list-group-item-danger" *ngIf="clientForm.controls.numTel.errors?.numTelValidation && clientForm.controls.numTel.dirty">Le tel doit être composé de chiffre, '-' ou '.'</li>
-                            <li class="list-group-item list-group-item-danger" *ngIf="clientForm.controls.numTel.errors?.minlength && clientForm.controls.numTel.dirty
-      && !clientForm.controls.numTel.errors?.numTelValidation">
-                                Le tel doit être composé de 10 chiffres
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="form-group">
-                        <md-spinner *ngIf="processing" style="float: left;width: 24px;height: 24px;"></md-spinner>
-                        <button [disabled]="!clientForm.valid || processing" type="submit" class="btn btn-success">Sauver</button>
-                        <button [disabled]="processing" (click)="onCancel()" class="btn btn-default">Annuler</button>
-                    </div>
-                </div>
+    <form [formGroup]="clientForm" (submit)="addClient()">
+
+        <div class="panel-info col-md-4 col-sm-4 col-lg-4">
+            <div class="panel-heading">Client</div>
+            <div class="panel-body addClientForm">
+                <mat-form-field>
+                    <mat-select matInput placeholder="Civilité" formControlName="civilite" name="civilite">
+                        <mat-option *ngFor="let key of keys" [value]="key">
+                            {{civilite[key]}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <input matInput placeholder="Nom" formControlName="nom" name="nom">
+                    <mat-error *ngIf="clientForm.controls.nom.errors">{{getErrorMessage('nom')}}</mat-error>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <input matInput placeholder="Prénom" formControlName="prenom" name="prenom">
+                    <mat-error *ngIf="clientForm.controls.prenom.errors">{{getErrorMessage('prenom')}}</mat-error>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <input matInput placeholder="Email" formControlName="email" name="email">
+                    <mat-error *ngIf="clientForm.controls.email.errors">{{getErrorMessage('email')}}</mat-error>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <input matInput placeholder="Tél" formControlName="numTel" name="numTel">
+                    <mat-error *ngIf="clientForm.controls.numTel.errors">{{getErrorMessage('numTel')}}</mat-error>
+                </mat-form-field>
             </div>
-            <div class="panel-info col-sm-4">
-                <div class="panel-heading">Adresse Facturation</div>
-                <div class="panel-body">
-                    <div class="form-group">
-                        <label for="adresseFact">Adresse :</label>
-                        <input type="text" class="form-control" name="adresseFact" value="{{client.adresseFact}}" id="adresseFact" formControlName="adresseFact"
-                        />
-                    </div>
-                    <div class="form-group">
-                        <label for="complAdresseFact">Complément adresse :</label>
-                        <input type="text" class="form-control" name="complAdresseFact" value="{{client.complAdresseFact}}" id="complAdresseFact"
-                            formControlName="complAdresseFact" />
-                    </div>
-                    <div class="form-group">
-                        <label for="cpFact">Code postal :</label>
-                        <input type="text" class="form-control" name="cpFact" value="{{client.cpFact}}" id="cpFact" formControlName="cpFact" />
-                    </div>
-                    <div class="form-group">
-                        <label for="villeFact">Ville :</label>
-                        <input type="text" class="form-control" name="villeFact" value="{{client.villeFact}}" id="villeFact" formControlName="villeFact"
-                        />
-                    </div>
-                </div>
+
+            <div class="button-row">
+                <md-spinner *ngIf="processing" class=" spinner"></md-spinner>
+                <button mat-raised-button color="primary" [disabled]="!clientForm.valid || processing" type="submit">Sauver</button>
+                <button mat-raised-button [disabled]="processing" (click)="onCancel()">Annuler</button>
             </div>
-            <div class="panel-info col-sm-4">
-                <div class="panel-heading">Adresse Chantier</div>
-                <div class="panel-body">
-                    <div class="form-group">
-                        <label for="adresseChantier">Adresse :</label>
-                        <input type="text" class="form-control" name="adresseChantier" value="{{client.adresseChantier}}" id="adresseChantier" formControlName="adresseChantier"
-                        />
-                    </div>
-                    <div class="form-group">
-                        <label for="complAdresseChantier">Complément adresse :</label>
-                        <input type="text" class="form-control" name="complAdresseChantier" value="{{client.complAdresseChantier}}" id="complAdresseChantier"
-                            formControlName="complAdresseChantier" />
-                    </div>
-                    <div class="form-group">
-                        <label for="cpChantier">Code postal :</label>
-                        <input type="text" class="form-control" name="cpChantier" value="{{client.cpChantier}}" id="cpChantier" formControlName="cpChantier"
-                        />
-                    </div>
-                    <div class="form-group">
-                        <label for="villeChantier">Ville :</label>
-                        <input type="text" class="form-control" name="villeChantier" value="{{client.villeChantier}}" id="villeChantier" formControlName="villeChantier"
-                        />
-                    </div>
-                </div>
+        </div>
+
+        <div class="panel-info col-md-4 col-sm-4 col-lg-4">
+            <div class="panel-heading">Adresse Facturation</div>
+            <div class="panel-body addClientForm">
+                <mat-form-field>
+                    <input matInput placeholder="num, rue, avenue ..." formControlName="adresseFact" name="adresseFact">
+                </mat-form-field>
+
+                <mat-form-field>
+                    <input matInput placeholder="Complément adresse" formControlName="complAdresseFact" name="complAdresseFact">
+                </mat-form-field>
+
+                <mat-form-field>
+                    <input matInput placeholder="Code postal" formControlName="cpFact" name="cpFact">
+                </mat-form-field>
+
+                <mat-form-field>
+                    <input matInput placeholder="Ville" formControlName="villeFact" name="villeFact">
+                </mat-form-field>
             </div>
-        </form>
-    </div>
+        </div>
+
+        <div class="panel-info col-md-4 col-sm-4 col-lg-4">
+            <div class="panel-heading">Adresse Chantier</div>
+            <div class="panel-body addClientForm">
+                <mat-form-field>
+                    <input matInput placeholder="num, rue, avenue ..." formControlName="adresseChantier" name="adresseChantier">
+                </mat-form-field>
+
+                <mat-form-field>
+                    <input matInput placeholder="Complément adresse" formControlName="complAdresseChantier" name="complAdresseChantier">
+                </mat-form-field>
+
+                <mat-form-field>
+                    <input matInput placeholder="Code postal" formControlName="cpChantier" name="cpChantier">
+                </mat-form-field>
+
+                <mat-form-field>
+                    <input matInput placeholder="Ville" formControlName="villeChantier" name="villeChantier">
+                </mat-form-field>
+            </div>
+        </div>
+
+    </form>
 </div>
+<br/>
+<br/>
+<!--  <div class="panel-group">
+            <form class="form-horizontal" [formGroup]="clientForm" (submit)="addClient()">
+                <div class="panel-info col-sm-4">
+                    <div class="panel-heading">Client</div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label for="civilite">Civilité :</label>
+                            <select class="form-control" name="civilite" id="civilite" formControlName="civilite">
+                                <option>Civilité...</option>
+                                <option *ngFor="let key of keys" ([ngValue])="key">{{civilite[key]}}</option>
+                            </select>
+                        </div>
+                        <div class="form-group" [ngClass]="{'has-error': (clientForm.controls.nom.errors && clientForm.controls.nom.dirty),
+              'has-success': (!clientForm.controls.nom.errors)}">
+                            <label for="nom">Nom :</label>
+                            <input type="text" class="form-control" name="nom" value="{{client.nom}}" id="nom" formControlName="nom" autofocus required
+                            />
+                            <ul class="list-group">
+                                <li class="list-group-item list-group-item-danger" *ngIf="clientForm.controls.nom.errors?.required && clientForm.controls.nom.dirty">
+                                    Ce champ est requis
+                                </li>
+                                <li class="list-group-item list-group-item-danger" *ngIf="clientForm.controls.nom.errors?.nomPrenomValidation && clientForm.controls.nom.dirty
+                && !clientForm.controls.nom.errors?.required">
+                                    Le nom doit être composé uniquement de lettres
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="form-group" [ngClass]="{'has-error': (clientForm.controls.prenom.errors && clientForm.controls.prenom.dirty),
+          'has-success': (!clientForm.controls.prenom.errors)}">
+                            <label for="prenom">Prénom :</label>
+                            <input type="text" class="form-control" name="prenom" value="{{client.prenom}}" id="prenom" formControlName="prenom" required
+                            />
+                            <ul class="list-group">
+                                <li class="list-group-item list-group-item-danger" *ngIf="clientForm.controls.prenom.errors?.required && clientForm.controls.prenom.dirty">Ce champ est requis</li>
+                                <li class="list-group-item list-group-item-danger" *ngIf="clientForm.controls.prenom.errors?.nomPrenomValidation && clientForm.controls.prenom.dirty
+            && !clientForm.controls.prenom.errors?.required">
+                                    Le prénom doit être composé uniquement de lettres
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="form-group" [ngClass]="{'has-error': (clientForm.controls.email.errors && clientForm.controls.email.dirty),
+      'has-success': (!clientForm.controls.email.errors)}">
+                            <label for="email">Email :</label>
+                            <input type="text" class="form-control" name="email" value="{{client.email}}" id="email" formControlName="email" required
+                            />
+                            <ul class="list-group">
+                                <li class="list-group-item list-group-item-danger" *ngIf="clientForm.controls.email.errors?.required && clientForm.controls.email.dirty">Ce champ est requis</li>
+                                <li class="list-group-item list-group-item-danger" *ngIf="clientForm.controls.email.errors?.emailValidation && clientForm.controls.email.dirty
+        && !clientForm.controls.email.errors?.required">
+                                    L'email n'est pas valide
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="form-group" [ngClass]="{'has-error': (clientForm.controls.numTel.errors && clientForm.controls.numTel.dirty), 'has-success': (!clientForm.controls.numTel.errors)}">
+                            <label for="numTel">Tél :</label>
+                            <input type="text" class="form-control" name="numTel" value="{{client.numTel}}" id="numTel" formControlName="numTel" />
+                            <ul class="list-group">
+                                <li class="list-group-item list-group-item-danger" *ngIf="clientForm.controls.numTel.errors?.numTelValidation && clientForm.controls.numTel.dirty">Le tel doit être composé de chiffre, '-' ou '.'</li>
+                                <li class="list-group-item list-group-item-danger" *ngIf="clientForm.controls.numTel.errors?.minlength && clientForm.controls.numTel.dirty
+      && !clientForm.controls.numTel.errors?.numTelValidation">
+                                    Le tel doit être composé de 10 chiffres
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="form-group">
+                            <md-spinner *ngIf="processing" style="float: left;width: 24px;height: 24px;"></md-spinner>
+                            <button [disabled]="!clientForm.valid || processing" type="submit" class="btn btn-success">Sauver</button>
+                            <button [disabled]="processing" (click)="onCancel()" class="btn btn-default">Annuler</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-info col-sm-4">
+                    <div class="panel-heading">Adresse Facturation</div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label for="adresseFact">Adresse :</label>
+                            <input type="text" class="form-control" name="adresseFact" value="{{client.adresseFact}}" id="adresseFact" formControlName="adresseFact"
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label for="complAdresseFact">Complément adresse :</label>
+                            <input type="text" class="form-control" name="complAdresseFact" value="{{client.complAdresseFact}}" id="complAdresseFact"
+                                formControlName="complAdresseFact" />
+                        </div>
+                        <div class="form-group">
+                            <label for="cpFact">Code postal :</label>
+                            <input type="text" class="form-control" name="cpFact" value="{{client.cpFact}}" id="cpFact" formControlName="cpFact" />
+                        </div>
+                        <div class="form-group">
+                            <label for="villeFact">Ville :</label>
+                            <input type="text" class="form-control" name="villeFact" value="{{client.villeFact}}" id="villeFact" formControlName="villeFact"
+                            />
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-info col-sm-4">
+                    <div class="panel-heading">Adresse Chantier</div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label for="adresseChantier">Adresse :</label>
+                            <input type="text" class="form-control" name="adresseChantier" value="{{client.adresseChantier}}" id="adresseChantier" formControlName="adresseChantier"
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label for="complAdresseChantier">Complément adresse :</label>
+                            <input type="text" class="form-control" name="complAdresseChantier" value="{{client.complAdresseChantier}}" id="complAdresseChantier"
+                                formControlName="complAdresseChantier" />
+                        </div>
+                        <div class="form-group">
+                            <label for="cpChantier">Code postal :</label>
+                            <input type="text" class="form-control" name="cpChantier" value="{{client.cpChantier}}" id="cpChantier" formControlName="cpChantier"
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label for="villeChantier">Ville :</label>
+                            <input type="text" class="form-control" name="villeChantier" value="{{client.villeChantier}}" id="villeChantier" formControlName="villeChantier"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div> -->

@@ -3,13 +3,15 @@ import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MdButtonModule, MdCheckboxModule, MdProgressSpinnerModule } from '@angular/material';
+
+// @material module
+import { MaterialModule } from './modules/material/material.module';
+
 // Angular Flash messages
 import { FlashMessagesModule } from 'ngx-flash-messages';
 
 // Routing Module
-import { AppRoutingModule } from './app-routing.module';
+import { AppRoutingModule } from './modules/app-routing.module';
 
 // import Components
 import { AppComponent } from './app.component';
@@ -47,13 +49,12 @@ import { BugsService } from './service/bugs.service';
   ],
   imports: [
     BrowserModule,
+    MaterialModule,
     AppRoutingModule,
     HttpModule,
     ReactiveFormsModule,
     FormsModule,
-    FlashMessagesModule,
-    BrowserAnimationsModule,
-    MdProgressSpinnerModule
+    FlashMessagesModule
   ],
   providers: [
     ClientService,

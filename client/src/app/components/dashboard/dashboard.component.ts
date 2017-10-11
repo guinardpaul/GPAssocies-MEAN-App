@@ -141,11 +141,7 @@ export class DashboardComponent implements OnInit {
    * @memberof DashboardComponent
    */
   getAllClients() {
-    this.clientService.getAllClients()
-      .subscribe(
-      data => this.listClient = data,
-      err => console.log('Erreur :' + err)
-      );
+    this.clientService.getAllClients();
   }
 
   /**
