@@ -8,7 +8,9 @@ import 'rxjs/add/operator/startWith';
 import 'rxjs/add/observable/merge';
 import 'rxjs/add/operator/map';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
+import { MatDialog } from '@angular/material';
 
+import { DialogDeleteComponent } from '../../shared/dialog-delete/dialog-delete.component';
 // Models
 import { Client } from '../../models/client';
 import { CIVILITE } from '../../models/civilite.enum';
@@ -125,7 +127,8 @@ export class ClientComponent implements OnInit {
     private clientService: ClientService,
     private devisService: DevisService,
     private formBuilder: FormBuilder,
-    private flashMessages: FlashMessagesService
+    private flashMessages: FlashMessagesService,
+    public dialog: MatDialog
   ) {
     this.generateForm();
     this.keys = Object.keys(this.civilite).filter(Number);
@@ -484,6 +487,18 @@ export class ClientComponent implements OnInit {
       default:
         return msg;
     }
+  }
+
+  openDialog(client): void {
+    let dialogRef = this.dialog.open(DialogDeleteComponent, {
+      width: '250px',
+      data: client
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+
+    });
   }
 
   /**

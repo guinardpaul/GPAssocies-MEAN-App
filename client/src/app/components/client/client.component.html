@@ -63,7 +63,8 @@
                 <div class="button-row">
                     <a mat-raised-button color="primary" [routerLink]="['/devis/client', client._id]">Consulter</a>
                     <button mat-raised-button color="accent" (click)="onUpdate(client)">Modifier</button>
-                    <button mat-raised-button color="warn" data-toggle="modal" data-target="#myModal" (click)="getClientToDelete(client)">Supprimer</button>
+                    <!-- <button mat-raised-button color="warn" data-toggle="modal" data-target="#myModal" (click)="getClientToDelete(client)">Supprimer</button> -->
+                    <button mat-raised-button color="warn" (click)="openDialog(client)">Supprimer</button>
                 </div>
             </mat-cell>
         </ng-container>

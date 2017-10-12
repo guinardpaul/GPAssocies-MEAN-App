@@ -33,6 +33,7 @@ import { FactureAccompteService } from './service/facture-accompte.service';
 import { DetailsDevisService } from './service/details-devis.service';
 import { ReglementService } from './service/reglement.service';
 import { BugsService } from './service/bugs.service';
+import { DialogDeleteComponent } from './shared/dialog-delete/dialog-delete.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { BugsService } from './service/bugs.service';
     ValiderDevisComponent,
     PageNotFoundComponent,
     FactureAccompteComponent,
-    BugsComponent
+    BugsComponent,
+    DialogDeleteComponent
   ],
   imports: [
     BrowserModule,
@@ -64,7 +66,8 @@ import { BugsService } from './service/bugs.service';
     DetailsDevisService,
     ReglementService,
     DatePipe,
-    BugsService
+    BugsService,
+    DialogDeleteComponent
   ],
   bootstrap: [ AppComponent ],
   exports: [ ClientComponent ]
