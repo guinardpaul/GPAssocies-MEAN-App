@@ -469,6 +469,7 @@ export class ClientComponent implements OnInit {
     let msg: string;
     switch (arg) {
       case 'nom':
+
         break;
       case 'prenom':
 
@@ -520,7 +521,7 @@ export class ExampleDataSource extends DataSource<any> {
   /** Returns a sorted copy of the database data. */
   getSortedData(): Client[] {
     const data = this._clientService.data.slice();
-    if (!this._sort.active || this._sort.direction == '') { return data; }
+    if (!this._sort.active || this._sort.direction === '') { return data; }
 
     return data.sort((a, b) => {
       let propertyA: boolean | number | string = '';
@@ -536,10 +537,10 @@ export class ExampleDataSource extends DataSource<any> {
         case 'numTel': [ propertyA, propertyB ] = [ a.numTel, b.numTel ]; break;
       }
 
-      let valueA = isNaN(+propertyA) ? propertyA : +propertyA;
-      let valueB = isNaN(+propertyB) ? propertyB : +propertyB;
+      const valueA = isNaN(+propertyA) ? propertyA : +propertyA;
+      const valueB = isNaN(+propertyB) ? propertyB : +propertyB;
 
-      return (valueA < valueB ? -1 : 1) * (this._sort.direction == 'asc' ? 1 : -1);
+      return (valueA < valueB ? -1 : 1) * (this._sort.direction === 'asc' ? 1 : -1);
     });
   }
 }

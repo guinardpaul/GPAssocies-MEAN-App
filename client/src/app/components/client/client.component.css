@@ -22,3 +22,12 @@
   width: 24px;
   height: 24px;
 }
+.orange {
+  color: orange;
+}
+
+.form-actions {
+  position: relative;
+  float: left;
+  margin-top: 70px; 
+}

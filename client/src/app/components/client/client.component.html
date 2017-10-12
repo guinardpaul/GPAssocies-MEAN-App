@@ -4,7 +4,7 @@
         <!--- Note that these columns can be defined in any order.
                           The actual rendered columns are set as a property on the row definition" -->
 
-        <!-- ID Column -->
+        <!-- Status Column -->
         <ng-container matColumnDef="statut">
             <mat-header-cell *matHeaderCellDef mat-sort-header> Statut </mat-header-cell>
             <mat-cell *matCellDef="let row">
@@ -12,45 +12,51 @@
             </mat-cell>
         </ng-container>
 
-        <!-- Progress Column -->
+        <!-- nom Column -->
         <ng-container matColumnDef="nom">
             <mat-header-cell *matHeaderCellDef mat-sort-header> Nom </mat-header-cell>
             <mat-cell *matCellDef="let row"> {{row.nom}} </mat-cell>
         </ng-container>
 
-        <!-- Name Column -->
+        <!-- prenom Column -->
         <ng-container matColumnDef="prenom">
             <mat-header-cell *matHeaderCellDef mat-sort-header> Prénom </mat-header-cell>
             <mat-cell *matCellDef="let row"> {{row.prenom}} </mat-cell>
         </ng-container>
 
-        <!-- Color Column -->
+        <!-- adresseFact Column -->
         <ng-container matColumnDef="adresseFact">
             <mat-header-cell *matHeaderCellDef mat-sort-header> Adresse Facturation </mat-header-cell>
             <mat-cell *matCellDef="let row">
-                {{row.adresseFact}} {{row.complAdresseFact}}
+                {{row.adresseFact}}
+                <br/> {{row.complAdresseFact}}
                 <br/> {{row.cpFact}} {{row.villeFact}}
             </mat-cell>
         </ng-container>
 
+        <!-- adresseChantier Column -->
         <ng-container matColumnDef="adresseChantier">
             <mat-header-cell *matHeaderCellDef mat-sort-header> Adresse Chantier </mat-header-cell>
             <mat-cell *matCellDef="let row">
-                {{row.adresseChantier}} {{row.complAdresseChantier}}
+                {{row.adresseChantier}}
+                <br/> {{row.complAdresseChantier}}
                 <br/> {{row.cpChantier}} {{row.villeChantier}}
             </mat-cell>
         </ng-container>
 
+        <!-- email Column -->
         <ng-container matColumnDef="email">
             <mat-header-cell *matHeaderCellDef mat-sort-header> Email </mat-header-cell>
             <mat-cell *matCellDef="let row"> {{row.email}} </mat-cell>
         </ng-container>
 
+        <!-- numTel Column -->
         <ng-container matColumnDef="numTel">
             <mat-header-cell *matHeaderCellDef mat-sort-header> Tél </mat-header-cell>
             <mat-cell *matCellDef="let row"> {{row.numTel}} </mat-cell>
         </ng-container>
 
+        <!-- actions Column -->
         <ng-container matColumnDef="actions">
             <mat-header-cell *matHeaderCellDef mat-sort-header> Actions </mat-header-cell>
             <mat-cell *matCellDef="let row">
@@ -62,10 +68,12 @@
             </mat-cell>
         </ng-container>
 
+        <!-- displayed Column -->
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
         <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
     </mat-table>
     <br/>
+    <!-- Add button -->
     <button mat-raised-button color="primary" (click)="onAdd()">Ajouter client</button>
 </div>
 <br/>
@@ -94,8 +102,102 @@
 <div class="container" *ngIf="mode">
     <form [formGroup]="clientForm" (submit)="addClient()">
 
-        <div class="panel-info col-md-4 col-sm-4 col-lg-4">
-            <div class="panel-heading">Client</div>
+        <mat-card style="height: 500px;">
+            <mat-card-header>
+                <mat-card-title class="orange">Client</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <mat-card class="col-md-4 col-sm-4 col-lg-4">
+                    <mat-card-header>
+                        <mat-card-title class="orange">Informations générales</mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content class="addClientForm">
+                        <mat-form-field>
+                            <mat-select matInput placeholder="Civilité" formControlName="civilite" name="civilite">
+                                <mat-option *ngFor="let key of keys" [value]="key">
+                                    {{civilite[key]}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                        <mat-form-field>
+                            <input matInput placeholder="Nom" formControlName="nom" name="nom">
+                            <mat-error *ngIf="clientForm.controls.nom.errors">{{getErrorMessage('nom')}}</mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field>
+                            <input matInput placeholder="Prénom" formControlName="prenom" name="prenom">
+                            <mat-error *ngIf="clientForm.controls.prenom.errors">{{getErrorMessage('prenom')}}</mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field>
+                            <input matInput placeholder="Email" formControlName="email" name="email">
+                            <mat-error *ngIf="clientForm.controls.email.errors">{{getErrorMessage('email')}}</mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field>
+                            <input matInput placeholder="Tél" formControlName="numTel" name="numTel">
+                            <mat-error *ngIf="clientForm.controls.numTel.errors">{{getErrorMessage('numTel')}}</mat-error>
+                        </mat-form-field>
+                    </mat-card-content>
+                </mat-card>
+
+                <mat-card class="col-md-4 col-sm-4 col-lg-4">
+                    <mat-card-header>
+                        <mat-card-title class="orange">Addresse Facturation</mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content class="addClientForm">
+                        <mat-form-field>
+                            <input matInput placeholder="num, rue, avenue ..." formControlName="adresseFact" name="adresseFact">
+                        </mat-form-field>
+
+                        <mat-form-field>
+                            <input matInput placeholder="Complément adresse" formControlName="complAdresseFact" name="complAdresseFact">
+                        </mat-form-field>
+
+                        <mat-form-field>
+                            <input matInput placeholder="Code postal" formControlName="cpFact" name="cpFact">
+                        </mat-form-field>
+
+                        <mat-form-field>
+                            <input matInput placeholder="Ville" formControlName="villeFact" name="villeFact">
+                        </mat-form-field>
+                    </mat-card-content>
+                </mat-card>
+
+                <mat-card class="col-md-4 col-sm-4 col-lg-4">
+                    <mat-card-header>
+                        <mat-card-title class="orange">Adresse Chantier</mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content class="addClientForm">
+                        <mat-form-field>
+                            <input matInput placeholder="num, rue, avenue ..." formControlName="adresseChantier" name="adresseChantier">
+                        </mat-form-field>
+
+                        <mat-form-field>
+                            <input matInput placeholder="Complément adresse" formControlName="complAdresseChantier" name="complAdresseChantier">
+                        </mat-form-field>
+
+                        <mat-form-field>
+                            <input matInput placeholder="Code postal" formControlName="cpChantier" name="cpChantier">
+                        </mat-form-field>
+
+                        <mat-form-field>
+                            <input matInput placeholder="Ville" formControlName="villeChantier" name="villeChantier">
+                        </mat-form-field>
+                    </mat-card-content>
+                </mat-card>
+            </mat-card-content>
+            <mat-card-actions class="form-actions">
+                <md-spinner *ngIf="processing" class=" spinner"></md-spinner>
+                <button mat-raised-button color="primary" [disabled]="!clientForm.valid || processing" type="submit">Sauver</button>
+                <button mat-raised-button [disabled]="processing" (click)="onCancel()">Annuler</button>
+            </mat-card-actions>
+        </mat-card>
+    </form>
+</div>
+<!-- <div class="panel-info col-md-4 col-sm-4 col-lg-4">
+            <div class="panel-heading">Informations générales</div>
             <div class="panel-body addClientForm">
                 <mat-form-field>
                     <mat-select matInput placeholder="Civilité" formControlName="civilite" name="civilite">
@@ -173,10 +275,10 @@
                     <input matInput placeholder="Ville" formControlName="villeChantier" name="villeChantier">
                 </mat-form-field>
             </div>
-        </div>
-
-    </form>
-</div>
+        </div> -->
+<!-- </div>
+</form>
+</div> -->
 <br/>
 <br/>
 <!--  <div class="panel-group">
