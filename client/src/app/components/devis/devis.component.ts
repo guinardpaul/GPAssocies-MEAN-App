@@ -7,6 +7,7 @@ import { FlashMessagesService } from 'ngx-flash-messages';
 import { Client } from '../../models/client';
 import { Devis } from '../../models/devis';
 import { CONST_TAUX } from '../../models/taux.const';
+import { DetailsDevis } from '../../models/detailsDevis';
 import { ClientService } from '../../service/client.service';
 import { DetailsDevisService } from '../../service/details-devis.service';
 import { DevisService } from '../../service/devis.service';
@@ -630,10 +631,36 @@ export class DevisComponent implements OnInit {
         this.detailsDevis2 = data[ 1 ];
         this.detailsDevis3 = data[ 2 ];
 
+        // Si detailsDevis undefined => set new DetailsDevis()
+        if (this.detailsDevis1 === undefined) {
+          this.detailsDevis1 = new DetailsDevis({
+            montantHt: 0,
+            tauxTva: CONST_TAUX[ 1 ],
+            montantTtc: 0
+          });
+        }
+        if (this.detailsDevis2 === undefined) {
+          this.detailsDevis2 = new DetailsDevis({
+            montantHt: 0,
+            tauxTva: CONST_TAUX[ 2 ],
+            montantTtc: 0
+          });
+        }
+        if (this.detailsDevis3 === undefined) {
+          this.detailsDevis3 = new DetailsDevis({
+            montantHt: 0,
+            tauxTva: CONST_TAUX[ 3 ],
+            montantTtc: 0
+          });
+        }
         // Set devisForm value
         this.devisForm.get('montantHt1').setValue(this.detailsDevis1.montantHt);
         this.devisForm.get('montantHt2').setValue(this.detailsDevis2.montantHt);
         this.devisForm.get('montantHt3').setValue(this.detailsDevis3.montantHt);
+        // force le calcul des (blur) montantTTC des Détails Devis
+        this.calculMontant1();
+        this.calculMontant2();
+        this.calculMontant3();
       }, (err) => {
         console.log('Erreur :' + err);
       }
@@ -885,7 +912,7 @@ export class DevisComponent implements OnInit {
       .subscribe(
       data => {
         if (data.success) {
-          // onUpdate : Vérif si ref dans l'input == ref initial du devis 
+          // onUpdate(devis) : Vérif si ref dans l'input !== ref initial du devis 
           if (this.devisForm.get('ref_devis').value !== this.devis.ref_devis) {
             return this.validationRef = true;
           }
