@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div class="container-fluid  container-factGlobal">
     <h4 style="text-align: center;">Factures</h4>
     <table class="table table-striped">
         <thead>
@@ -15,8 +15,12 @@
         </thead>
         <tbody>
             <tr *ngFor="let f of listFactureGlobals">
-                <td *ngIf="f.status_factureGlobal"><img src="{{status_true}}" alt="true"></td>
-                <td *ngIf="!f.status_factureGlobal"><img src="{{status_false}}" alt="false"></td>
+                <td *ngIf="f.status_factureGlobal">
+                    <img src="{{status_true}}" alt="true">
+                </td>
+                <td *ngIf="!f.status_factureGlobal">
+                    <img src="{{status_false}}" alt="false">
+                </td>
                 <td>{{f.ref_factureGlobal}}</td>
                 <td>{{f.date_creation | date: 'dd/MM/yyyy'}}</td>
                 <td>{{f.montantTtcTotal}}</td>
@@ -43,7 +47,8 @@
             </tr>
         </tbody>
     </table>
-    <br/><br/>
+    <br/>
+    <br/>
 
     <!-- Confirm delete Modal -->
     <div id="myModal1" class="modal fade" role="dialog">
