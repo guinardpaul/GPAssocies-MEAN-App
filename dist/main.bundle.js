@@ -2838,6 +2838,7 @@ var FactureGlobalComponent = (function () {
          */
         this.status_false = '../../assets/images/status_false.png';
         this.generateForm();
+        this.validationRef = false;
     }
     /**
      * Get all Facture Global.
@@ -2944,7 +2945,7 @@ var FactureGlobalComponent = (function () {
             .subscribe(function (data) {
             if (data.length === 0) {
                 _this.factureGlobalService.deleteFactureGlobal(id)
-                    .subscribe(function (data) {
+                    .subscribe(function (facture) {
                     console.log('Facture Global deleted');
                     _this.flashMessages.show('Facture supprimée', {
                         classes: ['alert', 'alert-warning'],
@@ -3148,11 +3149,12 @@ var FactureGlobalComponent = (function () {
      */
     FactureGlobalComponent.prototype.verifRef = function () {
         var _this = this;
+        this.validationRef = false;
         this.factureGlobalService.getOneFactureGlobalByRef(this.client._id, this.factureForm.get('ref_factureGlobal').value)
             .subscribe(function (data) {
             if (data.success) {
                 // onUpdate : Vérif si ref dans l'input == ref initial de la facture global 
-                if (_this.factureForm.get('ref_factureGlobal').value != _this.factureGlobal.ref_factureGlobal) {
+                if (_this.factureForm.get('ref_factureGlobal').value !== _this.factureGlobal.ref_factureGlobal) {
                     return _this.validationRef = true;
                 }
             }
