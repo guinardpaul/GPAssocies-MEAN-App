@@ -87,7 +87,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, "", ""]);
+exports.push([module.i, ".flash-msg {\r\n    margin-top: -20px;\r\n}\r\n\r\n.router-container {\r\n    margin-top: 40px;\r\n}", ""]);
 
 // exports
 
@@ -100,7 +100,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<app-navbar></app-navbar>\r\n<div class=\"container-fluid\">\r\n    <ngx-flash-messages></ngx-flash-messages>\r\n    <router-outlet></router-outlet>\r\n</div>"
+module.exports = "<app-navbar></app-navbar>\r\n<div class=\"container-fluid flash-msg\">\r\n    <ngx-flash-messages></ngx-flash-messages>\r\n</div>\r\n<div class=\"container-fluid router-container\">\r\n    <router-outlet></router-outlet>\r\n</div>"
 
 /***/ }),
 
