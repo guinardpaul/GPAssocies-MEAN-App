@@ -26,11 +26,11 @@ import { FactureGlobalService } from '../../service/facture-global.service';
 })
 export class DashboardComponent implements OnInit {
   /**
-   * Liste clients
-   * 
-   * @type {Client[]}
-   * @memberof DashboardComponent
-   */
+  * Liste clients
+  * 
+  * @type {Client[]}
+  * @memberof DashboardComponent
+  */
   listClient: Client[] = [];
 
   /**
@@ -63,7 +63,7 @@ export class DashboardComponent implements OnInit {
    * @type {Client}
    * @memberof DashboardComponent
    */
-  selectedClient: Client;
+  selectedClient = new Client();
 
   /**
    * client actif
@@ -229,7 +229,18 @@ export class DashboardComponent implements OnInit {
     this.listFactureGlobal = [];
     this.factureGlobalService.getAllFactureGlobal()
       .subscribe(
-      data => this.listFactureGlobal = data,
+      data => {
+        console.log(data);
+        this.listFactureGlobal = data;
+        for (const facture in data) {
+          if (data.hasOwnProperty(facture)) {
+            console.log(data[ facture ].montantTtcFacture);
+            this.montantTotalTTC += data[ facture ].montantTtcTotal;
+            this.montantFactureTTC += data[ facture ].montantTtcFacture;
+            this.montantRegleTTC += data[ facture ].montantTtcRegle;
+          }
+        }
+      },
       err => console.log('Erreur :' + err)
       );
   }
@@ -243,10 +254,14 @@ export class DashboardComponent implements OnInit {
     this.listFactureGlobal = [];
     this.factureGlobalService.getAllFactureGlobal()
       .subscribe(data => {
+        this.lineData(data);
         for (const f in data) {
           if (data.hasOwnProperty(f)) {
             if (data[ f ].valid) {
               this.listFactureGlobal.push(data[ f ]);
+              this.montantTotalTTC += data[ f ].montantTtcTotal;
+              this.montantFactureTTC += data[ f ].montantTtcFacture;
+              this.montantRegleTTC += data[ f ].montantTtcRegle;
             }
           }
         }
@@ -268,6 +283,15 @@ export class DashboardComponent implements OnInit {
       .subscribe(
       data => {
         this.listFactureGlobal = data;
+        // Set charts data
+        for (const f in data) {
+          if (data.hasOwnProperty(f)) {
+            this.montantTotalTTC += data[ f ].montantTtcTotal;
+            this.montantFactureTTC += data[ f ].montantTtcFacture;
+            this.montantRegleTTC += data[ f ].montantTtcRegle;
+          }
+        }
+
         if (this.listFactureGlobal.length > 0) {
           this.getAllFactureAccomptebyFactureGlobal(data[ 0 ]._id);
         } else {
@@ -293,6 +317,10 @@ export class DashboardComponent implements OnInit {
           if (data.hasOwnProperty(f)) {
             if (data[ f ].valid) {
               this.listFactureGlobal.push(data[ f ]);
+              // Set chart data
+              this.montantTotalTTC += data[ f ].montantTtcTotal;
+              this.montantFactureTTC += data[ f ].montantTtcFacture;
+              this.montantRegleTTC += data[ f ].montantTtcRegle;
             }
           }
         }
@@ -399,6 +427,10 @@ export class DashboardComponent implements OnInit {
    * @memberof DashboardComponent
    */
   loadData() {
+    // init charts data
+    this.montantFactureTTC = 0;
+    this.montantRegleTTC = 0;
+    this.montantTotalTTC = 0;
     // Load data en fonction des bool activeClient & historique
     if (this.historique) {
       if (this.activeClient) {
@@ -419,6 +451,12 @@ export class DashboardComponent implements OnInit {
         this.getAllValidFactureAccompte();
       }
     }
+
+    setTimeout(() => {
+      console.log(this.montantTotalTTC);
+      this.pieChartData = [ this.montantTotalTTC, this.montantFactureTTC, this.montantRegleTTC ];
+      console.log(this.pieChartData);
+    }, 1000);
   }
 
   /**
@@ -429,9 +467,83 @@ export class DashboardComponent implements OnInit {
    */
   ngOnInit() {
     this.getAllClients();
-    this.getAllDevis();
-    this.getAllFactureGlobal();
-    this.getAllFactureAccompte();
+    this.loadData();
   }
+
+  // ===================================
+  // TEST ng2-charts
+  public pieChartLabels: string[] = [ 'Montant Total TTC', 'Montant Facturé TTC', 'Montant Réglé TTC' ];
+  private montantTotalTTC = 0;
+  private montantFactureTTC = 0;
+  private montantRegleTTC = 0;
+  public pieChartData: number[] = [ this.montantTotalTTC, this.montantFactureTTC, this.montantRegleTTC ];
+  public pieChartType: string = 'pie';
+
+  // events
+  public chartClicked(e: any): void {
+    console.log(e);
+  }
+
+  public chartHovered(e: any): void {
+    console.log(e);
+  }
+  // ===================================
+  // lineChart
+  lineData(factures: FactureGlobal[]) {
+    let previousMonth = '0';
+    let i = 0;
+    for (const f in factures) {
+      if (factures.hasOwnProperty(f)) {
+        let month = String(factures[ f ].date_creation).split('-')[ 1 ];
+        if (month === previousMonth) {
+          // push data
+
+        } else {
+          previousMonth = month;
+          i++;
+        }
+        console.log(month);
+      }
+    }
+  }
+
+  public lineChartData: Array<any> = [
+    { data: [ 65, 59, 80, 81, 56, 55, 40, 51, 21, 51, 61 ], label: 'Montant Total TTC' },
+    { data: [ 28, 48, 40, 19, 86, 27, 90, 51, 21, 51, 61 ], label: 'Montant Facturé TTC' },
+    { data: [ 18, 48, 77, 9, 100, 27, 40, 51, 21, 51, 61 ], label: 'Montant Réglé TTC' }
+  ];
+  public lineChartLabels: Array<any> = [ 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'Aout', 'Septembre', 'Novembre', 'Décembre' ];
+  public lineChartOptions: any = {
+    responsive: true
+  };
+  public lineChartColors: Array<any> = [
+    { // grey
+      backgroundColor: 'rgba(148,159,177,0.2)',
+      borderColor: 'rgba(148,159,177,1)',
+      pointBackgroundColor: 'rgba(148,159,177,1)',
+      pointBorderColor: '#fff',
+      pointHoverBackgroundColor: '#fff',
+      pointHoverBorderColor: 'rgba(148,159,177,0.8)'
+    },
+    { // dark grey
+      backgroundColor: 'rgba(77,83,96,0.2)',
+      borderColor: 'rgba(77,83,96,1)',
+      pointBackgroundColor: 'rgba(77,83,96,1)',
+      pointBorderColor: '#fff',
+      pointHoverBackgroundColor: '#fff',
+      pointHoverBorderColor: 'rgba(77,83,96,1)'
+    },
+    { // grey
+      backgroundColor: 'rgba(148,159,177,0.2)',
+      borderColor: 'rgba(148,159,177,1)',
+      pointBackgroundColor: 'rgba(148,159,177,1)',
+      pointBorderColor: '#fff',
+      pointHoverBackgroundColor: '#fff',
+      pointHoverBorderColor: 'rgba(148,159,177,0.8)'
+    }
+  ];
+  public lineChartLegend: boolean = true;
+  public lineChartType: string = 'line';
+
 
 }

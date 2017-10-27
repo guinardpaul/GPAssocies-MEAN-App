@@ -20,7 +20,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let client of listClient" [ngClass]="{'rowColor' : activeClient}">
+      <tr *ngFor="let client of listClient" [ngClass]="{'rowColor' : selectedClient._id === client._id}">
         <td *ngIf="client.status_client">
           <img src="{{status_true}}" alt="true">
         </td>
@@ -132,4 +132,18 @@
       </tbody>
     </table>
   </div>
+</div>
+
+<!-- Charts -->
+<!-- PieChart -->
+<!-- TODO: Afficher que si data, message 'no data to display' sinon -->
+<div *ngIf="pieChartData !== [0,0,0]" style="display: block">
+  <canvas baseChart [data]="pieChartData" [labels]="pieChartLabels" [chartType]="pieChartType" (chartHover)="chartHovered($event)"
+    (chartClick)="chartClicked($event)"></canvas>
+</div>
+
+<!-- LineChart -->
+<div style="display: block;">
+  <canvas baseChart width="400" height="400" [datasets]="lineChartData" [labels]="lineChartLabels" [options]="lineChartOptions"
+    [colors]="lineChartColors" [legend]="lineChartLegend" [chartType]="lineChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"></canvas>
 </div>
