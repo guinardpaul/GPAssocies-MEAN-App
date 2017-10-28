@@ -45,9 +45,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
  */
 var routes = [
     // uncomment dashboard when implemented
-    //{ path: 'dashboard', component: DashboardComponent },
+    // { path: 'dashboard', component: DashboardComponent },
     { path: 'client', component: __WEBPACK_IMPORTED_MODULE_2__components_client_client_component__["a" /* ClientComponent */] },
-    //{ path: 'devis', component: DevisComponent },
+    // { path: 'devis', component: DevisComponent },
     // path Devis by client._id
     { path: 'devis/client/:id_client', component: __WEBPACK_IMPORTED_MODULE_3__components_devis_devis_component__["a" /* DevisComponent */] },
     // { path: 'facture', component: FactureComponent },
@@ -87,7 +87,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, ".flash-msg {\r\n    margin-top: -20px;\r\n}\r\n\r\n.router-container {\r\n    margin-top: 40px;\r\n}", ""]);
+exports.push([module.i, ".flash-msg {\r\n    margin-top: -68px;\r\n    position: fixed;\r\n    width: 100%;\r\n    z-index: 1;\r\n}\r\n\r\n.router-container {\r\n    margin-top: 120px;\r\n}", ""]);
 
 // exports
 
@@ -100,7 +100,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<app-navbar></app-navbar>\r\n<div class=\"container-fluid flash-msg\">\r\n    <ngx-flash-messages></ngx-flash-messages>\r\n</div>\r\n<div class=\"container-fluid router-container\">\r\n    <router-outlet></router-outlet>\r\n</div>"
+module.exports = "<app-navbar></app-navbar>\r\n<div class=\"flash-msg\">\r\n    <ngx-flash-messages></ngx-flash-messages>\r\n</div>\r\n<div class=\"container-fluid router-container\">\r\n    <router-outlet></router-outlet>\r\n</div>"
 
 /***/ }),
 
@@ -3206,7 +3206,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, "", ""]);
+exports.push([module.i, ".fixed {\r\n  position: fixed;\r\n  margin-top: -120px;\r\n  width: 100%;\r\n  z-index: 1;\r\n}", ""]);
 
 // exports
 
@@ -3219,7 +3219,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/components/navbar/navbar.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<nav class=\"navbar navbar-inverse\">\r\n    <div class=\"container-fluid\">\r\n        <div class=\"navbar-header\">\r\n            <a class=\"navbar-brand\" routerLink=\"client\"><img style=\"margin-top: -12px;\" src=\"../../../assets/images/GP.png\" alt=\"G & P\"></a>\r\n        </div>\r\n        <ul class=\"nav navbar-nav\">\r\n            <!-- <li routerLinkActive=\"active\"><a routerLink=\"dashboard\">Dashboard</a></li> -->\r\n            <li routerLinkActive=\"active\"><a routerLink=\"client\">Client</a></li>\r\n            <!-- <li routerLinkActive=\"active\"><a routerLink=\"devis\">Devis / Facture</a></li>\r\n            <li routerLinkActive=\"active\"><a [routerLink]=\"['facture/facture-accompte']\">Facture</a></li> -->\r\n            <li routerLinkActive=\"active\"><a routerLink=\"bug\">Bug</a></li>\r\n        </ul>\r\n    </div>\r\n</nav>"
+module.exports = "<nav class=\"navbar navbar-inverse fixed\">\r\n    <div class=\"container-fluid\">\r\n        <div class=\"navbar-header\">\r\n            <a class=\"navbar-brand\" routerLink=\"client\">\r\n                <img style=\"margin-top: -12px;\" src=\"../../../assets/images/GP.png\" alt=\"G & P\">\r\n            </a>\r\n        </div>\r\n        <ul class=\"nav navbar-nav\">\r\n            <!-- <li routerLinkActive=\"active\"><a routerLink=\"dashboard\">Dashboard</a></li> -->\r\n            <li routerLinkActive=\"active\">\r\n                <a routerLink=\"client\">Client</a>\r\n            </li>\r\n            <!-- <li routerLinkActive=\"active\"><a routerLink=\"devis\">Devis / Facture</a></li>\r\n            <li routerLinkActive=\"active\"><a [routerLink]=\"['facture/facture-accompte']\">Facture</a></li> -->\r\n            <li routerLinkActive=\"active\">\r\n                <a routerLink=\"bug\">Bug</a>\r\n            </li>\r\n        </ul>\r\n    </div>\r\n</nav>"
 
 /***/ }),
 
