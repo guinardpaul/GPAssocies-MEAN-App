@@ -1,4 +1,4 @@
-<nav class="navbar navbar-inverse fixed">
+<!-- <nav class="navbar navbar-inverse fixed">
     <div class="container-fluid">
         <div class="navbar-header">
             <a class="navbar-brand" routerLink="client">
@@ -12,10 +12,42 @@
             <li routerLinkActive="active">
                 <a routerLink="client">Client</a>
             </li>
-            <!-- <li routerLinkActive="active"><a routerLink="devis">Devis / Facture</a></li>
-            <li routerLinkActive="active"><a [routerLink]="['facture/facture-accompte']">Facture</a></li> -->
             <li routerLinkActive="active">
                 <a routerLink="bug">Bug</a>
+            </li>
+        </ul>
+    </div>
+</nav> -->
+
+<nav class="navbar navbar-inverse fixed">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" routerLink="client">
+                <img style="margin-top: -12px;" src="../../../assets/images/GP.png" alt="G & P">
+            </a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li *ngIf="_authService.loggedIn() && historique" routerLinkActive="active">
+                <a routerLink="dashboard">Dashboard</a>
+            </li>
+            <li *ngIf="_authService.loggedIn()" routerLinkActive="active">
+                <a routerLink="client">Client</a>
+            </li>
+            <!-- <li routerLinkActive="active"><a routerLink="devis">Devis / Facture</a></li>
+            <li routerLinkActive="active"><a [routerLink]="['facture/facture-accompte']">Facture</a></li> -->
+            <li *ngIf="_authService.loggedIn()" routerLinkActive="active">
+                <a routerLink="bug">Bug</a>
+            </li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <li *ngIf="!_authService.loggedIn()" routerLinkActive="active">
+                <a routerLink="login">Se connecter</a>
+            </li>
+            <li *ngIf="_authService.loggedIn()" routerLinkActive="active">
+                <a routerLink="register">Créer un compte</a>
+            </li>
+            <li *ngIf="_authService.loggedIn()">
+                <a class="cursor" (click)="onLogout()">Logout</a>
             </li>
         </ul>
     </div>

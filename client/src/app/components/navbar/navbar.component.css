@@ -1,6 +1,10 @@
 .fixed {
-  position: fixed;
-  margin-top: -120px;
-  width: 100%;
-  z-index: 1;
+    position: fixed;
+    margin-top: -120px;
+    width: 100%;
+    z-index: 1;
+}
+
+.cursor {
+    cursor: pointer;
 }

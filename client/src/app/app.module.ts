@@ -1,10 +1,21 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatProgressSpinnerModule } from '@angular/material';
+import {
+  MatCardModule,
+  MatCheckboxModule,
+  MatFormFieldModule,
+  MatSelectModule,
+  MatInputModule,
+  MatRadioModule,
+  MatButtonModule,
+  MatGridListModule,
+  MatProgressSpinnerModule
+} from '@angular/material';
 // Angular Flash messages
 import { FlashMessagesModule } from 'ngx-flash-messages';
 // ng2-Charts
@@ -22,6 +33,8 @@ import { ValiderDevisComponent } from './components/valider-devis/valider-devis.
 import { FactureAccompteComponent } from './components/facture-accompte/facture-accompte.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { BugsComponent } from './components/bugs/bugs.component';
+import { LoginComponent } from './authentication/components/login/login.component';
+import { RegisterComponent } from './authentication/components/register/register.component';
 // import Services
 import { ClientService } from './service/client.service';
 import { DevisService } from './service/devis.service';
@@ -30,6 +43,10 @@ import { FactureAccompteService } from './service/facture-accompte.service';
 import { DetailsDevisService } from './service/details-devis.service';
 import { ReglementService } from './service/reglement.service';
 import { BugsService } from './service/bugs.service';
+import { AuthService } from './authentication/services/auth.service';
+import { ValidationService } from './authentication/services/validation.service';
+import { AuthGuard } from './routing/auth.guard';
+import { NotAuthGuard } from './routing/not-auth.guard';
 
 @NgModule({
   declarations: [
@@ -42,18 +59,29 @@ import { BugsService } from './service/bugs.service';
     ValiderDevisComponent,
     PageNotFoundComponent,
     FactureAccompteComponent,
-    BugsComponent
+    BugsComponent,
+    LoginComponent,
+    RegisterComponent
   ],
   imports: [
-    BrowserModule,
+
+    BrowserAnimationsModule,
     AppRoutingModule,
     HttpModule,
+    HttpClientModule,
     ReactiveFormsModule,
     FormsModule,
     FlashMessagesModule,
-    BrowserAnimationsModule,
-    MatProgressSpinnerModule,
-    ChartsModule
+    ChartsModule,
+    MatCardModule,
+    MatCheckboxModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatInputModule,
+    MatRadioModule,
+    MatButtonModule,
+    MatGridListModule,
+    MatProgressSpinnerModule
   ],
   providers: [
     ClientService,
@@ -63,9 +91,12 @@ import { BugsService } from './service/bugs.service';
     DetailsDevisService,
     ReglementService,
     DatePipe,
-    BugsService
+    BugsService,
+    AuthGuard,
+    NotAuthGuard,
+    AuthService,
+    ValidationService
   ],
-  bootstrap: [ AppComponent ],
-  exports: [ ClientComponent ]
+  bootstrap: [AppComponent]
 })
 export class AppModule { }

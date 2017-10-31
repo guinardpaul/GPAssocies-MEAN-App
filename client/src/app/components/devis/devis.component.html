@@ -1,214 +1,198 @@
 <div class="container-fluid">
-  <h4>{{client.nom}} {{client.prenom}}</h4>
-  <a class="btn btn-default" [routerLink]="['/client']">Retour page client</a>
+    <h4>{{client.nom}} {{client.prenom}}</h4>
+    <a class="btn btn-default" [routerLink]="['/client']">Retour page client</a>
 </div>
 <div class="container-fluid col-sm-6 col-md-6">
-  <h4 style="text-align: center;">Devis</h4>
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Ref</th>
-        <th>Date</th>
-        <th>Montant HT</th>
-        <th>Taux TVA €</th>
-        <th>Montant TTC</th>
-        <th>Client</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let d of listDevis">
-        <td>{{d.ref_devis}}</td>
-        <td>{{d.date_creation | date: 'dd/MM/yyyy'}}</td>
-        <td>{{d.montantHt}}</td>
-        <td>{{d.tauxTva}}</td>
-        <td>{{d.montantTtc}}</td>
-        <td>{{client.nom}} {{client.prenom}}</td>
-        <td>
-          <div class="btn-group-vertical">
-            <a class="btn btn-success" [routerLink]="['/devis/client/valider-devis', d._id]">Valider</a>
-            <button class="btn btn-warning" (click)="onUpdate(d)">Modifier</button>
-            <button class="btn btn-danger" data-toggle="modal" data-target="#myModal" (click)="getDevisToDelete(d)">Supprimer</button>
-          </div>
-        </td>
-      </tr>
-      <tr class="color-sum" *ngIf="listDevis.length > 0">
-        <th>Total</th>
-        <th>:</th>
-        <th>{{getSumMontantHt()}}</th>
-        <th>{{getSumTauxTva()}}</th>
-        <th>{{getSumMontantTtc()}}</th>
-        <th></th>
-        <th></th>
-      </tr>
-    </tbody>
-  </table>
-  <button class="btn btn-primary" (click)="onAdd()">Ajouter devis</button>
+    <h4 style="text-align: center;">Devis</h4>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Ref</th>
+                <th>Date</th>
+                <th>Montant HT</th>
+                <th>Taux TVA €</th>
+                <th>Montant TTC</th>
+                <th>Client</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let d of listDevis">
+                <td>{{d.ref_devis}}</td>
+                <td>{{d.date_creation | date: 'dd/MM/yyyy'}}</td>
+                <td>{{d.montantHt}}</td>
+                <td>{{d.tauxTva}}</td>
+                <td>{{d.montantTtc}}</td>
+                <td>{{client.nom}} {{client.prenom}}</td>
+                <td>
+                    <div class="btn-group-vertical">
+                        <a class="btn btn-success" [routerLink]="['/devis/client/valider-devis', d._id]">Valider</a>
+                        <button class="btn btn-warning" (click)="onUpdate(d)">Modifier</button>
+                        <button class="btn btn-danger" data-toggle="modal" data-target="#myModal" (click)="getDevisToDelete(d)">Supprimer</button>
+                    </div>
+                </td>
+            </tr>
+            <tr class="color-sum" *ngIf="listDevis.length > 0">
+                <th>Total</th>
+                <th>:</th>
+                <th>{{getSumMontantHt()}}</th>
+                <th>{{getSumTauxTva()}}</th>
+                <th>{{getSumMontantTtc()}}</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tbody>
+    </table>
+    <button class="btn btn-primary" (click)="onAdd()">Ajouter devis</button>
 
-  <br/>
-  <br/>
+    <br/>
+    <br/>
 
-  <!-- Confirm delete Modal -->
-  <div id="myModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-      <!-- Modal content-->
-      <form #modalForm="ngForm">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">Confirmer suppression</h4>
-          </div>
-          <div class="modal-body">
-            <p>Etes-vous sûr de vouloir supprimer {{devis.ref_devis}} ?</p>
-            <label for="descriptionModif">Description :</label>
-            <input type="text" name="descriptionModif" id="descriptionModif" class="form-control" placeholder="Expliquer la modification"
-              [(ngModel)]="descriptionModif" required />
-          </div>
-          <div class="modal-footer">
-            <button class="btn btn-danger" [disabled]="!modalForm.form.valid" (click)="onDelete(devis)" data-dismiss="modal">Supprimer</button>
-            <button class="btn btn-default" data-dismiss="modal" (click)="closeModal()">Annuler</button>
-          </div>
+    <!-- Confirm delete Modal -->
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <form #modalForm="ngForm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Confirmer suppression</h4>
+                    </div>
+                    <div *ngIf="historique" class="modal-body">
+                        <p>Etes-vous sûr de vouloir supprimer {{devis.ref_devis}} ?</p>
+                        <label for="descriptionModif">Description :</label>
+                        <input type="text" name="descriptionModif" id="descriptionModif" class="form-control" placeholder="Expliquer la modification" [(ngModel)]="descriptionModif" required />
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-danger" [disabled]="!modalForm.form.valid" (click)="onDelete(devis)" data-dismiss="modal">Supprimer</button>
+                        <button class="btn btn-default" data-dismiss="modal" (click)="closeModal()">Annuler</button>
+                    </div>
+                </div>
+            </form>
         </div>
-      </form>
     </div>
-  </div>
 
-  <!-- Add/Update Devis-DetailsDevis form -->
-  <div class="container-fluid" *ngIf="mode">
-    <div class="panel panel-info">
-      <div class="panel-heading">
-        <h4>Devis</h4>
-      </div>
-      <div class="panel-body">
-        <form class="form-horizontal" [formGroup]="devisForm" (submit)="addDevis()">
-          <div class="form-group" [ngClass]="{'has-error': (devisForm.controls.ref_devis.errors && devisForm.controls.ref_devis.dirty) 
+    <!-- Add/Update Devis-DetailsDevis form -->
+    <div class="container-fluid" *ngIf="mode">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h4>Devis</h4>
+            </div>
+            <div class="panel-body">
+                <form class="form-horizontal" [formGroup]="devisForm" (submit)="addDevis()">
+                    <div class="form-group" [ngClass]="{'has-error': (devisForm.controls.ref_devis.errors && devisForm.controls.ref_devis.dirty) 
           || (validationRef && devisForm.controls.ref_devis.dirty),
           'has-success': (!devisForm.controls.ref_devis.errors && !validationRef)}">
-            <label class="control-label" for="ref_devis">Ref :</label>
-            <input type="text" class="form-control" name="ref_devis" id="ref_devis" formControlName="ref_devis" value="{{devis.ref_devis}}"
-              (blur)="verifRef()" autofocus required />
-            <ul class="list-group">
-              <li class="list-group-item list-group-item-danger" *ngIf="devisForm.controls.ref_devis.errors?.required && devisForm.controls.ref_devis.dirty">
-                Ce champ est requis
-              </li>
-              <li class="list-group-item list-group-item-danger" *ngIf="validationRef">
-                Ref déjà utilisée
-              </li>
-            </ul>
-          </div>
-          <div class="form-group">
-            <label class="control-label" for="date_creation">Date création :</label>
-            <input type="date" class="form-control" name="date_creation" id="date_creation" formControlName="date_creation" value="{{devis.date_creation}}"
-            />
-          </div>
-          <!-- =========================================================== -->
-          <!-- Details Devis -->
-          <div class="form-inline" [ngClass]="{'has-error': (devisForm.controls.montantHt1.errors && devisForm.controls.montantHt1.dirty),
+                        <label class="control-label" for="ref_devis">Ref :</label>
+                        <input type="text" class="form-control" name="ref_devis" id="ref_devis" formControlName="ref_devis" value="{{devis.ref_devis}}" (blur)="verifRef()" autofocus required />
+                        <ul class="list-group">
+                            <li class="list-group-item list-group-item-danger" *ngIf="devisForm.controls.ref_devis.errors?.required && devisForm.controls.ref_devis.dirty">
+                                Ce champ est requis
+                            </li>
+                            <li class="list-group-item list-group-item-danger" *ngIf="validationRef">
+                                Ref déjà utilisée
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="date_creation">Date création :</label>
+                        <input type="date" class="form-control" name="date_creation" id="date_creation" formControlName="date_creation" value="{{devis.date_creation}}" />
+                    </div>
+                    <!-- =========================================================== -->
+                    <!-- Details Devis -->
+                    <div class="form-inline" [ngClass]="{'has-error': (devisForm.controls.montantHt1.errors && devisForm.controls.montantHt1.dirty),
           'has-success': (!devisForm.controls.montantHt1.errors)}">
-            <span>
+                        <span>
               <h4>Détails devis</h4>
             </span>
-            <br/>
-            <label class="control-label" for="montantHt1">Montant HT :</label>
-            <input type="text" class="form-control" name="montantHt1" id="montantHt1" formControlName="montantHt1" value="{{detailsDevis1.montantHt}}"
-              (blur)="calculMontant1()" (blur)="calculMontantHt()" (blur)="calculTauxTva()" (blur)="calculMontantTtc()" size="8"
-              required />
-            <label class="control-label" for="tauxTva1">Taux TVA (%) :</label>
-            <input type="text" class="form-control" name="tauxTva1" id="tauxTva1" formControlName="tauxTva1" value="{{detailsDevis1.tauxTva}}"
-              size="8" required />
-            <label class="control-label" for="montantTtc1">Montant TTC :</label>
-            <input type="text" class="form-control" name="montantTtc1" id="montantTtc1" formControlName="montantTtc1" value="{{detailsDevis1.montantTtc}}"
-              size="8" />
-            <ul class="list-group">
-              <li class="list-group-item list-group-item-danger" *ngIf="devisForm.controls.montantHt1.errors?.required && devisForm.controls.montantHt1.dirty">
-                Ce champ est requis
-              </li>
-              <li class="list-group-item list-group-item-danger" *ngIf="devisForm.controls.montantHt1.errors?.isNumber && devisForm.controls.montantHt1.dirty && !devisForm.controls.montantHt1.errors?.required">
-                Le montant doit être positif et doit posséder au maximum 4 chiffres après la virgule
-              </li>
-            </ul>
-          </div>
-          <br/>
-          <div class="form-inline" [ngClass]="{'has-error': (devisForm.controls.montantHt2.errors && devisForm.controls.montantHt2.dirty),
+                        <br/>
+                        <label class="control-label" for="montantHt1">Montant HT :</label>
+                        <input type="text" class="form-control" name="montantHt1" id="montantHt1" formControlName="montantHt1" value="{{detailsDevis1.montantHt}}" (blur)="calculMontant1()" (blur)="calculMontantHt()" (blur)="calculTauxTva()" (blur)="calculMontantTtc()" size="8"
+                            required />
+                        <label class="control-label" for="tauxTva1">Taux TVA (%) :</label>
+                        <input type="text" class="form-control" name="tauxTva1" id="tauxTva1" formControlName="tauxTva1" value="{{detailsDevis1.tauxTva}}" size="8" required />
+                        <label class="control-label" for="montantTtc1">Montant TTC :</label>
+                        <input type="text" class="form-control" name="montantTtc1" id="montantTtc1" formControlName="montantTtc1" value="{{detailsDevis1.montantTtc}}" size="8" />
+                        <ul class="list-group">
+                            <li class="list-group-item list-group-item-danger" *ngIf="devisForm.controls.montantHt1.errors?.required && devisForm.controls.montantHt1.dirty">
+                                Ce champ est requis
+                            </li>
+                            <li class="list-group-item list-group-item-danger" *ngIf="devisForm.controls.montantHt1.errors?.isNumber && devisForm.controls.montantHt1.dirty && !devisForm.controls.montantHt1.errors?.required">
+                                Le montant doit être positif et doit posséder au maximum 4 chiffres après la virgule
+                            </li>
+                        </ul>
+                    </div>
+                    <br/>
+                    <div class="form-inline" [ngClass]="{'has-error': (devisForm.controls.montantHt2.errors && devisForm.controls.montantHt2.dirty),
           'has-success': (!devisForm.controls.montantHt2.errors)}">
-            <label class="control-label" for="montantHt2">Montant HT :</label>
-            <input type="text" class="form-control" name="montantHt2" id="montantHt2" formControlName="montantHt2" value="{{detailsDevis2.montantHt}}"
-              (blur)="calculMontant2()" (blur)="calculMontantHt()" (blur)="calculTauxTva()" (blur)="calculMontantTtc()" size="8"
-              required />
-            <label class="control-label" for="tauxTva2">Taux TVA (%) :</label>
-            <input type="text" class="form-control" name="tauxTva2" id="tauxTva2" formControlName="tauxTva2" value="{{detailsDevis2.tauxTva}}"
-              size="8" required />
-            <label class="control-label" for="montantTtc2">Montant TTC :</label>
-            <input type="text" class="form-control" name="montantTtc2" id="montantTtc2" formControlName="montantTtc2" value="{{detailsDevis2.montantTtc}}"
-              size="8" />
-            <ul class="list-group">
-              <li class="list-group-item list-group-item-danger" *ngIf="devisForm.controls.montantHt2.errors?.required && devisForm.controls.montantHt2.dirty">
-                Ce champ est requis
-              </li>
-              <li class="list-group-item list-group-item-danger" *ngIf="devisForm.controls.montantHt2.errors?.isNumber && devisForm.controls.montantHt2.dirty && !devisForm.controls.montantHt2.errors?.required">
-                Ce n'est pas un nombre
-              </li>
-            </ul>
-          </div>
-          <br/>
-          <div class="form-inline" [ngClass]="{'has-error': (devisForm.controls.montantHt3.errors && devisForm.controls.montantHt3.dirty),
+                        <label class="control-label" for="montantHt2">Montant HT :</label>
+                        <input type="text" class="form-control" name="montantHt2" id="montantHt2" formControlName="montantHt2" value="{{detailsDevis2.montantHt}}" (blur)="calculMontant2()" (blur)="calculMontantHt()" (blur)="calculTauxTva()" (blur)="calculMontantTtc()" size="8"
+                            required />
+                        <label class="control-label" for="tauxTva2">Taux TVA (%) :</label>
+                        <input type="text" class="form-control" name="tauxTva2" id="tauxTva2" formControlName="tauxTva2" value="{{detailsDevis2.tauxTva}}" size="8" required />
+                        <label class="control-label" for="montantTtc2">Montant TTC :</label>
+                        <input type="text" class="form-control" name="montantTtc2" id="montantTtc2" formControlName="montantTtc2" value="{{detailsDevis2.montantTtc}}" size="8" />
+                        <ul class="list-group">
+                            <li class="list-group-item list-group-item-danger" *ngIf="devisForm.controls.montantHt2.errors?.required && devisForm.controls.montantHt2.dirty">
+                                Ce champ est requis
+                            </li>
+                            <li class="list-group-item list-group-item-danger" *ngIf="devisForm.controls.montantHt2.errors?.isNumber && devisForm.controls.montantHt2.dirty && !devisForm.controls.montantHt2.errors?.required">
+                                Ce n'est pas un nombre
+                            </li>
+                        </ul>
+                    </div>
+                    <br/>
+                    <div class="form-inline" [ngClass]="{'has-error': (devisForm.controls.montantHt3.errors && devisForm.controls.montantHt3.dirty),
           'has-success': (!devisForm.controls.montantHt3.errors)}">
-            <label class="control-label" for="montantHt3">Montant HT :</label>
-            <input type="text" class="form-control" name="montantHt3" id="montantHt3" formControlName="montantHt3" value="{{detailsDevis3.montantHt}}"
-              (blur)="calculMontant3()" (blur)="calculMontantHt()" (blur)="calculTauxTva()" (blur)="calculMontantTtc()" size="8"
-              required />
-            <label class="control-label" for="tauxTva3">Taux TVA (%) :</label>
-            <input type="text" class="form-control" name="tauxTva3" id="tauxTva3" formControlName="tauxTva3" value="{{detailsDevis3.tauxTva}}"
-              size="8" required />
-            <label class="control-label" for="montantTtc3">Montant TTC :</label>
-            <input type="text" class="form-control" name="montantTtc3" id="montantTtc3" formControlName="montantTtc3" value="{{detailsDevis3.montantTtc}}"
-              size="8" />
-            <ul class="list-group">
-              <li class="list-group-item list-group-item-danger" *ngIf="devisForm.controls.montantHt3.errors?.required && devisForm.controls.montantHt3.dirty">
-                Ce champ est requis
-              </li>
-              <li class="list-group-item list-group-item-danger" *ngIf="devisForm.controls.montantHt3.errors?.isNumber && devisForm.controls.montantHt3.dirty && !devisForm.controls.montantHt3.errors?.required">
-                Ce n'est pas un nombre
-              </li>
-            </ul>
-          </div>
-          <!-- =========================================================== -->
-          <!-- Devis input set by blur fonction -->
-          <div class="form-group">
-            <label class="control-label" for="montantHt">Montant HT :</label>
-            <input type="text" class="form-control" name="montantHt" id="montantHt" formControlName="montantHt" value="{{devis.montantHt}}"
-              required />
-          </div>
-          <div class="form-group">
-            <label class="control-label" for="tauxTva">Taux TVA (€) :</label>
-            <input type="text" class="form-control" name="tauxTva" id="tauxTva" formControlName="tauxTva" value="{{devis.tauxTva}}" (blur)="calculMontant()"
-              required />
-          </div>
-          <div class="form-group">
-            <label class="control-label" for="montantTtc">Montant TTC :</label>
-            <input type="text" class="form-control" name="montantTtc" id="montantTtc" formControlName="montantTtc" value="{{devis.montantTtc}}"
-            />
-          </div>
-          <div class="form-group">
-            <label class="control-label" for="client">Client :</label>
-            <input type="text" name="client" id="client" formControlName="client" value="{{client.nom}} {{client.prenom}}" />
-          </div>
-          <div class="form-group" *ngIf="updateMode">
-            <label class="control-label" for="descriptionModif">Description :</label>
-            <input type="text" class="form-control" name="descriptionModif" id="descriptionModif" placeholder="Expliquer la modification"
-              formControlName="descriptionModif" value="{{descriptionModif}}" />
-          </div>
-          <div class="form-group">
-            <md-spinner *ngIf="processing" style="float: left;width: 24px;height: 24px;"></md-spinner>
-            <button [disabled]="!devisForm.valid || processing" type="submit" class="btn btn-success">Sauver</button>
-            <button [disabled]="processing" class="btn btn-default" (click)="onCancel()">Annuler</button>
-          </div>
-        </form>
-      </div>
+                        <label class="control-label" for="montantHt3">Montant HT :</label>
+                        <input type="text" class="form-control" name="montantHt3" id="montantHt3" formControlName="montantHt3" value="{{detailsDevis3.montantHt}}" (blur)="calculMontant3()" (blur)="calculMontantHt()" (blur)="calculTauxTva()" (blur)="calculMontantTtc()" size="8"
+                            required />
+                        <label class="control-label" for="tauxTva3">Taux TVA (%) :</label>
+                        <input type="text" class="form-control" name="tauxTva3" id="tauxTva3" formControlName="tauxTva3" value="{{detailsDevis3.tauxTva}}" size="8" required />
+                        <label class="control-label" for="montantTtc3">Montant TTC :</label>
+                        <input type="text" class="form-control" name="montantTtc3" id="montantTtc3" formControlName="montantTtc3" value="{{detailsDevis3.montantTtc}}" size="8" />
+                        <ul class="list-group">
+                            <li class="list-group-item list-group-item-danger" *ngIf="devisForm.controls.montantHt3.errors?.required && devisForm.controls.montantHt3.dirty">
+                                Ce champ est requis
+                            </li>
+                            <li class="list-group-item list-group-item-danger" *ngIf="devisForm.controls.montantHt3.errors?.isNumber && devisForm.controls.montantHt3.dirty && !devisForm.controls.montantHt3.errors?.required">
+                                Ce n'est pas un nombre
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- =========================================================== -->
+                    <!-- Devis input set by blur fonction -->
+                    <div class="form-group">
+                        <label class="control-label" for="montantHt">Montant HT :</label>
+                        <input type="text" class="form-control" name="montantHt" id="montantHt" formControlName="montantHt" value="{{devis.montantHt}}" required />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="tauxTva">Taux TVA (€) :</label>
+                        <input type="text" class="form-control" name="tauxTva" id="tauxTva" formControlName="tauxTva" value="{{devis.tauxTva}}" (blur)="calculMontant()" required />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="montantTtc">Montant TTC :</label>
+                        <input type="text" class="form-control" name="montantTtc" id="montantTtc" formControlName="montantTtc" value="{{devis.montantTtc}}" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="client">Client :</label>
+                        <input type="text" name="client" id="client" formControlName="client" value="{{client.nom}} {{client.prenom}}" />
+                    </div>
+                    <div class="form-group" *ngIf="updateMode">
+                        <label class="control-label" for="descriptionModif">Description :</label>
+                        <input type="text" class="form-control" name="descriptionModif" id="descriptionModif" placeholder="Expliquer la modification" formControlName="descriptionModif" value="{{descriptionModif}}" />
+                    </div>
+                    <div class="form-group">
+                        <md-spinner *ngIf="processing" style="float: left;width: 24px;height: 24px;"></md-spinner>
+                        <button [disabled]="!devisForm.valid || processing" type="submit" class="btn btn-success">Sauver</button>
+                        <button [disabled]="processing" class="btn btn-default" (click)="onCancel()">Annuler</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 <div class="container-fluid col-sm-6 col-md-6">
-  <!-- Facture global component -->
-  <app-facture-global></app-facture-global>
+    <!-- Facture global component -->
+    <app-facture-global></app-facture-global>
 </div>

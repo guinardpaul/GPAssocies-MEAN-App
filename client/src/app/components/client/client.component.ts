@@ -21,7 +21,7 @@ import { FlashMessagesService } from 'ngx-flash-messages';
 @Component({
   selector: 'app-client',
   templateUrl: './client.component.html',
-  styleUrls: [ './client.component.css' ]
+  styleUrls: ['./client.component.css']
 })
 export class ClientComponent implements OnInit {
   /**
@@ -171,14 +171,14 @@ export class ClientComponent implements OnInit {
         data => {
           if (!data.success) {
             this.flashMessages.show(data.message, {
-              classes: [ 'alert', 'alert-danger' ],
+              classes: ['alert', 'alert-danger'],
               timeout: 3000
             });
             this.processing = false;
             this.enableForm();
           } else {
             this.flashMessages.show(data.message, {
-              classes: [ 'alert', 'alert-success' ],
+              classes: ['alert', 'alert-success'],
               timeout: 3000
             });
             console.log('Client saved' + data);
@@ -192,14 +192,14 @@ export class ClientComponent implements OnInit {
         data => {
           if (data.success) {
             this.flashMessages.show('Client mis à jour', {
-              classes: [ 'alert', 'alert-success' ],
+              classes: ['alert', 'alert-success'],
               timeout: 3000
             });
             console.log('Client updated' + data);
             this.onSuccess();
           } else {
             this.flashMessages.show('Erreur : Client non modifié', {
-              classes: [ 'alert', 'alert-danger' ],
+              classes: ['alert', 'alert-danger'],
               timeout: 3000
             });
             console.log('Erreur update client :' + data);
@@ -228,7 +228,7 @@ export class ClientComponent implements OnInit {
             () => {
               console.log('Client deleted');
               this.flashMessages.show('Client supprimé', {
-                classes: [ 'alert', 'alert-warning' ],
+                classes: ['alert', 'alert-warning'],
                 timeout: 3000
               });
               this.client = {};
@@ -238,7 +238,7 @@ export class ClientComponent implements OnInit {
               this.client = {};
               console.log(error);
               this.flashMessages.show('Erreur: Client non supprimé', {
-                classes: [ 'alert', 'alert-danger' ],
+                classes: ['alert', 'alert-danger'],
                 timeout: 3000
               });
             }
@@ -247,7 +247,7 @@ export class ClientComponent implements OnInit {
           this.client = {};
           console.log('Client non supprimé');
           this.flashMessages.show('Suppression impossible ! le client est associé à des devis', {
-            classes: [ 'alert', 'alert-danger' ],
+            classes: ['alert', 'alert-danger'],
             timeout: 3000
           });
         }
@@ -353,22 +353,22 @@ export class ClientComponent implements OnInit {
   generateForm() {
     this.clientForm = this.formBuilder.group({
       civilite: '',
-      nom: [ '', Validators.compose([
+      nom: ['', Validators.compose([
         Validators.required,
         this.nomPrenomValidation
-      ]) ],
-      prenom: [ '', Validators.compose([
+      ])],
+      prenom: ['', Validators.compose([
         Validators.required,
         this.nomPrenomValidation
-      ]) ],
-      email: [ '', Validators.compose([
+      ])],
+      email: ['', Validators.compose([
         Validators.required,
         this.emailValidation
-      ]) ],
-      numTel: [ '', Validators.compose([
+      ])],
+      numTel: ['', Validators.compose([
         this.numTelValidation,
         Validators.minLength(10)
-      ]) ],
+      ])],
       adresseFact: '',
       complAdresseFact: '',
       cpFact: '',

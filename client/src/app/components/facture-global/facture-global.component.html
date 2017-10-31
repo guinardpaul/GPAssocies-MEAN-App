@@ -60,11 +60,10 @@
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                         <h4 class="modal-title">Confirmer suppression</h4>
                     </div>
-                    <div class="modal-body">
+                    <div *ngIf="historique" class="modal-body">
                         <p>Etes-vous sûr de vouloir supprimer {{factureGlobal.ref_factureGlobal}} ?</p>
                         <label for="descriptionModif">Description :</label>
-                        <input type="text" name="descriptionModif" id="descriptionModif" class="form-control" placeholder="Expliquer la modification"
-                            [(ngModel)]="descriptionModif" required />
+                        <input type="text" name="descriptionModif" id="descriptionModif" class="form-control" placeholder="Expliquer la modification" [(ngModel)]="descriptionModif" required />
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-danger" [disabled]="!modalForm.form.valid" (click)="onDelete(factureGlobal)" data-dismiss="modal">Supprimer</button>
@@ -86,8 +85,7 @@
                     <div class="form-group" [ngClass]="{'has-error': (factureForm.controls.ref_factureGlobal.errors && factureForm.controls.ref_factureGlobal.dirty) || (validationRef && factureForm.controls.ref_factureGlobal.dirty),
                     'has-success': (!factureForm.controls.ref_factureGlobal.errors && !validationRef)}">
                         <label class="control-label" for="ref_factureGlobal">Ref :</label>
-                        <input type="text" class="form-control" name="ref_factureGlobal" id="ref_factureGlobal" formControlName="ref_factureGlobal"
-                            value="{{factureGlobal.ref_factureGlobal}}" (blur)="verifRef()" autofocus required />
+                        <input type="text" class="form-control" name="ref_factureGlobal" id="ref_factureGlobal" formControlName="ref_factureGlobal" value="{{factureGlobal.ref_factureGlobal}}" (blur)="verifRef()" autofocus required />
                         <ul class="list-group">
                             <li class="list-group-item list-group-item-danger" *ngIf="factureForm.controls.ref_factureGlobal.errors?.required && factureForm.controls.ref_factureGlobal.dirty">
                                 Ce champ est requis
@@ -99,23 +97,19 @@
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="date_creation">Date création :</label>
-                        <input type="date" class="form-control" name="date_creation" id="date_creation" formControlName="date_creation" value="{{factureGlobal.date_creation}}"
-                        />
+                        <input type="date" class="form-control" name="date_creation" id="date_creation" formControlName="date_creation" value="{{factureGlobal.date_creation}}" />
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="montantTtcTotal">Montant TTC :</label>
-                        <input type="text" class="form-control" name="montantTtcTotal" id="montantTtcTotal" formControlName="montantTtcTotal" value="{{factureGlobal.montantTtcTotal}}"
-                        />
+                        <input type="text" class="form-control" name="montantTtcTotal" id="montantTtcTotal" formControlName="montantTtcTotal" value="{{factureGlobal.montantTtcTotal}}" />
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="client">Client :</label>
-                        <input type="text" class="form-control" name="client" id="client" formControlName="client" value="{{client.nom}} {{client.prenom}}"
-                            required />
+                        <input type="text" class="form-control" name="client" id="client" formControlName="client" value="{{client.nom}} {{client.prenom}}" required />
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="descriptionModif">Description :</label>
-                        <input type="text" class="form-control" name="descriptionModif" id="descriptionModif" placeholder="Expliquer la modification"
-                            formControlName="descriptionModif" value="{{descriptionModif}}" required />
+                        <input type="text" class="form-control" name="descriptionModif" id="descriptionModif" placeholder="Expliquer la modification" formControlName="descriptionModif" value="{{descriptionModif}}" required />
                     </div>
                     <div class="form-group">
                         <md-spinner *ngIf="processing" style="float: left;width: 24px;height: 24px;"></md-spinner>

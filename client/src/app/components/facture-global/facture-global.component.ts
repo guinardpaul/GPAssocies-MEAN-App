@@ -12,7 +12,7 @@ import { FactureGlobal } from '../../models/factureGlobal';
 import { ClientService } from '../../service/client.service';
 import { FactureAccompteService } from '../../service/facture-accompte.service';
 import { FactureGlobalService } from '../../service/facture-global.service';
-
+import { historique } from '../../../environments/config';
 /**
  *
  * @author Paul GUINARD
@@ -167,7 +167,6 @@ export class FactureGlobalComponent implements OnInit {
         }
       }, err => console.log('Could not load valid factures')
       );
-    console.log(this.listFactureGlobals);
   }
 
   /**
@@ -238,43 +237,64 @@ export class FactureGlobalComponent implements OnInit {
       devis: this.factureGlobal.devis
     };
 
-    this.factureGlobalService.addFactureGlobal(newFacture)
-      .subscribe(data => {
-        console.log('Facture Modifiée');
-        this.flashMessages.show('Facture modifiée', {
-          classes: ['alert', 'alert-success'],
-          timeout: 3000
+    if (historique) {
+      this.factureGlobalService.addFactureGlobal(newFacture)
+        .subscribe(data => {
+          console.log('Facture Modifiée');
+          this.flashMessages.show('Facture modifiée', {
+            classes: ['alert', 'alert-success'],
+            timeout: 3000
+          });
+        },
+        error => {
+          console.log('Erreur ' + error);
+          this.flashMessages.show('Erreur : Facture non modifiée', {
+            classes: ['alert', 'alert-danger'],
+            timeout: 3000
+          });
+          this.processing = false;
+          this.enableForm();
         });
-      },
-      error => {
-        console.log('Erreur ' + error);
-        this.flashMessages.show('Erreur : Facture non modifiée', {
-          classes: ['alert', 'alert-danger'],
-          timeout: 3000
-        });
-        this.processing = false;
-        this.enableForm();
-      });
 
-    // Set old facture global data
-    this.factureGlobal.description = this.factureForm.get('descriptionModif').value;
-    this.factureGlobal.valid = false;
+      // Set old facture global data
+      this.factureGlobal.description = this.factureForm.get('descriptionModif').value;
+      this.factureGlobal.valid = false;
 
-    this.factureGlobalService.updateFactureGlobal(this.factureGlobal)
-      .subscribe(
-      data => {
-        this.onSuccess();
-      },
-      error => {
-        console.log('Erreur ' + error);
-        this.flashMessages.show('Erreur : Facture non modifiée', {
-          classes: ['alert', 'alert-danger'],
-          timeout: 3000
+      this.factureGlobalService.updateFactureGlobal(this.factureGlobal)
+        .subscribe(
+        data => {
+          this.onSuccess();
+        },
+        error => {
+          console.log('Erreur ' + error);
+          this.flashMessages.show('Erreur : Facture non modifiée', {
+            classes: ['alert', 'alert-danger'],
+            timeout: 3000
+          });
+          this.processing = false;
+          this.enableForm();
+        }
+        );
+    } else {
+      this.factureGlobalService.updateFactureGlobal(newFacture)
+        .subscribe(data => {
+          console.log('Facture Modifiée');
+          this.flashMessages.show('Facture modifiée', {
+            classes: ['alert', 'alert-success'],
+            timeout: 3000
+          });
+          this.onSuccess();
+        }, err => {
+          console.log('Erreur ' + err);
+          this.flashMessages.show('Erreur : Facture non modifiée', {
+            classes: ['alert', 'alert-danger'],
+            timeout: 3000
+          });
+          this.processing = false;
+          this.enableForm();
         });
-        this.processing = false;
-        this.enableForm();
-      }
-      );
+    }
+
   }
 
   /**
@@ -284,56 +304,93 @@ export class FactureGlobalComponent implements OnInit {
    * @memberof FactureGlobalComponent
    */
   onDelete(factureGlobal: FactureGlobal) {
-    let factValid = false;
-    this.factureAccompteService.getAllFactureAccompteByFactureGlobal(factureGlobal._id)
-      .subscribe(
-      data => {
-        console.log(data);
-        if (data.length > 0) {
-          for (const f in data) {
-            if (data.hasOwnProperty(f)) {
-              if (data[f].valid) {
-                factValid = true;
+    if (historique) {
+      let factValid = false;
+      this.factureAccompteService.getAllFactureAccompteByFactureGlobal(factureGlobal._id)
+        .subscribe(
+        data => {
+          console.log(data);
+          if (data.length > 0) {
+            for (const f in data) {
+              if (data.hasOwnProperty(f)) {
+                if (data[f].valid) {
+                  factValid = true;
+                }
               }
             }
           }
-        }
 
-        if (data.length === 0 || factValid === false) {
-          factureGlobal.valid = false;
-          factureGlobal.updated_at = new Date();
-          factureGlobal.description = this.descriptionModif;
-          this.factureGlobalService.updateFactureGlobal(factureGlobal)
-            .subscribe(
-            factureData => {
-              console.log('Facture Global deleted');
-              this.flashMessages.show('Facture supprimée', {
-                classes: ['alert', 'alert-warning'],
-                timeout: 3000
-              });
-              this.onSuccess();
-              this.descriptionModif = '';
-            },
-            error => {
-              console.log(error);
-              this.flashMessages.show('Erreur: Facture non supprimée', {
-                classes: ['alert', 'alert-danger'],
-                timeout: 3000
-              });
-              this.factureGlobal = {};
-            }
-            );
-        } else {
-          console.log('Suppression impossible');
-          this.flashMessages.show('Suppression impossible ! La facture est associée à des factures d\'accomptes', {
-            classes: ['alert', 'alert-danger'],
-            timeout: 3000
-          });
-          this.factureGlobal = {};
-          this.descriptionModif = '';
-        }
-      }, err => console.log('Erreur :' + err)
-      );
+          if (data.length === 0 || factValid === false) {
+            factureGlobal.valid = false;
+            factureGlobal.updated_at = new Date();
+            factureGlobal.description = this.descriptionModif;
+            this.factureGlobalService.updateFactureGlobal(factureGlobal)
+              .subscribe(
+              factureData => {
+                console.log('Facture Global deleted');
+                this.flashMessages.show('Facture supprimée', {
+                  classes: ['alert', 'alert-warning'],
+                  timeout: 3000
+                });
+                this.onSuccess();
+                this.descriptionModif = '';
+              },
+              error => {
+                console.log(error);
+                this.flashMessages.show('Erreur: Facture non supprimée', {
+                  classes: ['alert', 'alert-danger'],
+                  timeout: 3000
+                });
+                this.factureGlobal = {};
+              }
+              );
+          } else {
+            console.log('Suppression impossible');
+            this.flashMessages.show('Suppression impossible ! La facture est associée à des factures d\'accomptes', {
+              classes: ['alert', 'alert-danger'],
+              timeout: 3000
+            });
+            this.factureGlobal = {};
+            this.descriptionModif = '';
+          }
+        }, err => console.log('Erreur :' + err)
+        );
+    } else {
+      this.factureAccompteService.getAllFactureAccompteByFactureGlobal(factureGlobal._id)
+        .subscribe(
+        data => {
+          console.log(data);
+          if (data.length === 0) {
+            this.factureGlobalService.deleteFactureGlobal(factureGlobal._id)
+              .subscribe(
+              msg => {
+                console.log('Facture Global deleted');
+                this.flashMessages.show('Facture supprimée', {
+                  classes: ['alert', 'alert-warning'],
+                  timeout: 3000
+                });
+                this.onSuccess();
+              },
+              error => {
+                console.log(error);
+                this.flashMessages.show('Erreur: Facture non supprimée', {
+                  classes: ['alert', 'alert-danger'],
+                  timeout: 3000
+                });
+                this.factureGlobal = {};
+              }
+              );
+          } else {
+            console.log('Suppression impossible');
+            this.flashMessages.show('Suppression impossible ! La facture est associée à des factures d\'accomptes', {
+              classes: ['alert', 'alert-danger'],
+              timeout: 3000
+            });
+            this.factureGlobal = {};
+          }
+        }, err => console.log('Erreur :' + err)
+        );
+    }
   }
 
   /**
@@ -345,7 +402,6 @@ export class FactureGlobalComponent implements OnInit {
    */
   getFactureGlobalToDelete(factureGlobal: FactureGlobal) {
     this.factureGlobal = factureGlobal;
-    console.log(this.factureGlobal);
   }
 
   /**
@@ -410,7 +466,11 @@ export class FactureGlobalComponent implements OnInit {
     this.mode = false;
     this.factureGlobal = {};
     this.processing = false;
-    this.getAllValidFactureGlobalByClient(this.id_client);
+    if (historique) {
+      this.getAllValidFactureGlobalByClient(this.id_client);
+    } else {
+      this.getAllFactureGlobalByClient(this.id_client);
+    }
   }
 
   /**
@@ -561,7 +621,11 @@ export class FactureGlobalComponent implements OnInit {
     // différentes routes à implémenter pour le dashboard
     if (this.activatedRoute.snapshot.params['id_client'] !== undefined) {
       this.id_client = this.activatedRoute.snapshot.params['id_client'];
-      this.getAllValidFactureGlobalByClient(this.id_client);
+      if (historique) {
+        this.getAllValidFactureGlobalByClient(this.id_client);
+      } else {
+        this.getAllFactureGlobalByClient(this.id_client);
+      }
       this.getClient(this.id_client);
     } else {
       this.getAllFactureGlobal();

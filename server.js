@@ -8,17 +8,19 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 const cors = require('cors');
-const port = process.env.PORT || 3001;
+const passport = require('passport');
+require('./app/config/passport')(passport);
+const port = process.env.PORT || 3000;
 
-const database = 'mongodb://localhost:27017/GPSuivieFact';
+const config = require('./app/config/database');
 
 // mongoDB connection
-const promise = mongoose.connect(database, {
+const promise = mongoose.connect(config.uri, {
     useMongoClient: true,
 });
 promise.then((db, err) => {
     if (err) return console.log(err);
-    console.log('Successfully connected to mongoDb:' + database);
+    console.log('Successfully connected to mongoDb:' + config.db);
 });
 
 // Set app
@@ -32,6 +34,7 @@ const factureAccompte = require('./app/routes/factureAccompte')(router);
 const detailsDevis = require('./app/routes/detailsDevis')(router);
 const reglement = require('./app/routes/reglement')(router);
 const bug = require('./app/routes/bug')(router);
+const auth = require('./app/routes/authentication')(router, passport);
 
 // MIDDLEWARE
 // log into console (dev)
@@ -43,13 +46,15 @@ app.use(logger('dev'));
 
 // Favicon
 app.use(favicon(path.join(__dirname, 'client/src', 'favicon.ico')))
-//app.use(favicon(path.join(__dirname, 'dist', 'favicon.ico')))
+    //app.use(favicon(path.join(__dirname, 'dist', 'favicon.ico')))
 
 // Allows cross origin in development only
 app.use(cors({ origin: 'http://localhost:4200' }));
 // body-parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+// Passport authenticate
+app.use(passport.initialize());
 // Set Static Folder
 app.use(express.static(path.join(__dirname, 'dist')));
 
@@ -61,6 +66,7 @@ app.use('/api', factureAccompte);
 app.use('/api', detailsDevis);
 app.use('/api', reglement);
 app.use('/api', bug);
+app.use('/auth', auth);
 
 // allow to refresh page
 // send back to dist/index.html
