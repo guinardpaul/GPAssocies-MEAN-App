@@ -230,6 +230,7 @@ export class DashboardComponent implements OnInit {
     this.factureGlobalService.getAllFactureGlobal()
       .subscribe(
       data => {
+        this.lineData(data);
         console.log(data);
         this.listFactureGlobal = data;
         for (const facture in data) {
@@ -282,6 +283,7 @@ export class DashboardComponent implements OnInit {
     this.factureGlobalService.getAllFactureGlobalByClient(id)
       .subscribe(
       data => {
+        this.lineData(data);
         this.listFactureGlobal = data;
         // Set charts data
         for (const f in data) {
@@ -326,6 +328,7 @@ export class DashboardComponent implements OnInit {
         }
         if (this.listFactureGlobal.length > 0) {
           this.getAllValidFactureAccomptebyFactureGlobal(this.listFactureGlobal[ 0 ]._id);
+          this.lineData(data);
         } else {
           this.listFactureAccompte = [];
         }
@@ -494,23 +497,21 @@ export class DashboardComponent implements OnInit {
     let i = 0;
     for (const f in factures) {
       if (factures.hasOwnProperty(f)) {
-        let month = String(factures[ f ].date_creation).split('-')[ 1 ];
-        if (month === previousMonth) {
-          // push data
-
-        } else {
-          previousMonth = month;
-          i++;
-        }
+        const month = String(factures[ f ].date_creation).split('-')[ 1 ];
+        i = Number(month);
+        // push data
+        this.lineChartData[ 0 ].data[ i ] += factures[ f ].montantTtcTotal;
+        this.lineChartData[ 1 ].data[ i ] += factures[ f ].montantTtcFacture;
+        this.lineChartData[ 2 ].data[ i ] += factures[ f ].montantTtcRegle;
         console.log(month);
       }
     }
   }
 
   public lineChartData: Array<any> = [
-    { data: [ 65, 59, 80, 81, 56, 55, 40, 51, 21, 51, 61 ], label: 'Montant Total TTC' },
-    { data: [ 28, 48, 40, 19, 86, 27, 90, 51, 21, 51, 61 ], label: 'Montant Facturé TTC' },
-    { data: [ 18, 48, 77, 9, 100, 27, 40, 51, 21, 51, 61 ], label: 'Montant Réglé TTC' }
+    { data: [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ], label: 'Montant Total TTC' },
+    { data: [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ], label: 'Montant Facturé TTC' },
+    { data: [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ], label: 'Montant Réglé TTC' }
   ];
   public lineChartLabels: Array<any> = [ 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'Aout', 'Septembre', 'Novembre', 'Décembre' ];
   public lineChartOptions: any = {

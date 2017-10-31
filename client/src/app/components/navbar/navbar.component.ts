@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthService } from '../../authentication/services/auth.service';
 
 /**
  * 
@@ -10,13 +12,27 @@ import { Component, OnInit } from '@angular/core';
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.css']
+  styleUrls: [ './navbar.component.css' ]
 })
 export class NavbarComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private _authService: AuthService,
+    private _router: Router
+  ) { }
 
-  ngOnInit() {
+  /**
+   * On Logout :
+   * - clear token and user on localStorage
+   * - navigate HomePage
+   * @memberof NavbarComponent
+   */
+  onLogout() {
+    this._authService.clearLocalStorage();
+    this._router.navigate([ '/' ]);
   }
 
+  ngOnInit() {
+
+  }
 }

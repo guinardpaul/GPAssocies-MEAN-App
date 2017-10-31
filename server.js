@@ -9,16 +9,18 @@ const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 const cors = require('cors');
 const port = process.env.PORT || 3001;
-
+const config = require('./app/config/database');
 const database = 'mongodb://localhost:27017/GPSuivieFact';
+const passport = require('passport');
+require('./app/config/passport')(passport);
 
 // mongoDB connection
-const promise = mongoose.connect(database, {
+const promise = mongoose.connect(config.uri, {
     useMongoClient: true,
 });
 promise.then((db, err) => {
     if (err) return console.log(err);
-    console.log('Successfully connected to mongoDb:' + database);
+    console.log('Successfully connected to mongoDb: ' + config.db);
 });
 
 // Set app
@@ -32,6 +34,7 @@ const factureAccompte = require('./app/routes/factureAccompte')(router);
 const detailsDevis = require('./app/routes/detailsDevis')(router);
 const reglement = require('./app/routes/reglement')(router);
 const bug = require('./app/routes/bug')(router);
+const auth = require('./app/routes/authentication')(router, passport);
 
 // MIDDLEWARE
 // log into console (dev)
@@ -61,6 +64,7 @@ app.use('/api', factureAccompte);
 app.use('/api', detailsDevis);
 app.use('/api', reglement);
 app.use('/api', bug);
+app.use('/auth', auth);
 
 // allow to refresh page
 // send back to dist/index.html
