@@ -47,12 +47,12 @@ app.use(logger('dev'));
 //app.use(logger('common', { stream: accessLogStream }))
 
 // Favicon
-// app.use(favicon(path.join(__dirname, 'client/src', 'favicon.ico')));
-app.use(favicon(path.join(__dirname, 'dist', 'favicon.ico')))
+app.use(favicon(path.join(__dirname, 'client/src', 'favicon.ico')));
+// app.use(favicon(path.join(__dirname, 'dist', 'favicon.ico')))
 
 // Allows cross origin in development only
-// app.use(cors({ origin: 'http://localhost:4200' }));
-app.use(cors({ origin: 'http://gp-suivifact.herokuapp.com/' }));
+app.use(cors({ origin: 'http://localhost:4200' }));
+// app.use(cors({ origin: 'http://gp-suivifact.herokuapp.com/' }));
 // body-parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
