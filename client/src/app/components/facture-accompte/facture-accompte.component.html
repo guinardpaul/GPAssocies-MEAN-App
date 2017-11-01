@@ -61,10 +61,13 @@
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                         <h4 class="modal-title">Confirmer suppression</h4>
                     </div>
-                    <div *ngIf="historique" class="modal-body">
+                    <div class="modal-body">
                         <p>Etes-vous sûr de vouloir supprimer {{factureAccompte.ref_factureAccompte}} ?</p>
-                        <label for="descriptionModif">Description :</label>
-                        <input type="text" class="form-control" id="descriptionModif" name="descriptionModif" [(ngModel)]="descriptionModif" placeholder="description de la suppression ..." required />
+                        <div *ngIf="historique">
+                            <label for="descriptionModif">Description :</label>
+                            <input type="text" class="form-control" id="descriptionModif" name="descriptionModif" [(ngModel)]="descriptionModif" placeholder="description de la suppression ..."
+                                required />
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-danger" (click)="deleteFactureAccompte(factureAccompte)" [disabled]="!modalForm.form.valid" data-dismiss="modal">Supprimer</button>
@@ -87,7 +90,8 @@
           || (validationRef && factureForm.controls.ref_factureAccompte.dirty),
           'has-success': (!factureForm.controls.ref_factureAccompte.errors && !validationRef)}">
                         <label class="control-label" for="ref_factureAccompte">Ref :</label>
-                        <input type="text" class="form-control" name="ref_factureAccompte" id="ref_factureAccompte" formControlName="ref_factureAccompte" (blur)="verifRef()" autofocus required />
+                        <input type="text" class="form-control" name="ref_factureAccompte" id="ref_factureAccompte" formControlName="ref_factureAccompte"
+                            (blur)="verifRef()" autofocus required />
                         <ul class="list-group">
                             <li class="list-group-item list-group-item-danger" *ngIf="factureForm.controls.ref_factureAccompte.errors?.required && factureForm.controls.ref_factureAccompte.dirty">
                                 Ce champ est requis
@@ -99,13 +103,15 @@
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="date_creation">Date création :</label>
-                        <input type="date" class="form-control" name="date_creation" id="date_creation" formControlName="date_creation" value="{{factureGlobal.date_creation}}" />
+                        <input type="date" class="form-control" name="date_creation" id="date_creation" formControlName="date_creation" value="{{factureGlobal.date_creation}}"
+                        />
                     </div>
                     <div class="form-group" [ngClass]="{'has-error': (factureForm.controls.montantFacture.errors && factureForm.controls.montantFacture.dirty)
            || (validationMontantFacture && factureForm.controls.montantFacture.dirty),
           'has-success': (!factureForm.controls.montantFacture.errors && !validationMontantFacture)}">
                         <label class="control-label" for="montantFacture">Montant facturé :</label>
-                        <input type="text" class="form-control" name="montantFacture" id="montantFacture" formControlName="montantFacture" (blur)="verifMontantFacture()" required />
+                        <input type="text" class="form-control" name="montantFacture" id="montantFacture" formControlName="montantFacture" (blur)="verifMontantFacture()"
+                            required />
                         <ul class="list-group">
                             <li class="list-group-item list-group-item-danger" *ngIf="factureForm.controls.montantFacture.errors?.required && factureForm.controls.montantFacture.dirty">
                                 Ce champ est requis
@@ -120,7 +126,8 @@
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="factureGlobal">factureGlobal :</label>
-                        <input type="text" class="form-control" name="factureGlobal" id="factureGlobal" formControlName="factureGlobal" value="{{factureGlobal.ref_factureGlobal}}" required />
+                        <input type="text" class="form-control" name="factureGlobal" id="factureGlobal" formControlName="factureGlobal" value="{{factureGlobal.ref_factureGlobal}}"
+                            required />
                     </div>
                     <div class="form-group">
                         <md-spinner *ngIf="processing" style="float: left;width: 24px;height: 24px;"></md-spinner>
@@ -142,21 +149,25 @@
                 <form class="form-horizontal" [formGroup]="reglementForm">
                     <div class="form-group">
                         <label class="control-label" for="ref_factureAccompte">Ref Facture d'accompte :</label>
-                        <input type="text" class="form-control" name="ref_factureAccompte" id="ref_factureAccompte" formControlName="ref_factureAccompte" value="{{factureAccompte.ref_factureAccompte}}" required />
+                        <input type="text" class="form-control" name="ref_factureAccompte" id="ref_factureAccompte" formControlName="ref_factureAccompte"
+                            value="{{factureAccompte.ref_factureAccompte}}" required />
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="date_creation">Date création :</label>
-                        <input type="date" class="form-control" name="date_creation" id="date_creation" formControlName="date_creation" value="{{factureAccompte.date_creation}}" />
+                        <input type="date" class="form-control" name="date_creation" id="date_creation" formControlName="date_creation" value="{{factureAccompte.date_creation}}"
+                        />
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="montantFacture">Montant facturé :</label>
-                        <input type="text" class="form-control" name="montantFacture" id="montantFacture" formControlName="montantFacture" value="{{factureAccompte.montantFacture}}" />
+                        <input type="text" class="form-control" name="montantFacture" id="montantFacture" formControlName="montantFacture" value="{{factureAccompte.montantFacture}}"
+                        />
                     </div>
                     <div class="form-group" [ngClass]="{'has-error': (reglementForm.controls.reglementTtc.errors && reglementForm.controls.reglementTtc.dirty)
           || (validationReglement && reglementForm.controls.reglementTtc.dirty),
          'has-success': (!reglementForm.controls.reglementTtc.errors && !validationReglement)}">
                         <label class="control-label" for="reglementTtc">Règlement client :</label>
-                        <input type="text" class="form-control" name="reglementTtc" id="reglementTtc" formControlName="reglementTtc" (blur)="verifReglement()" autofocus required />
+                        <input type="text" class="form-control" name="reglementTtc" id="reglementTtc" formControlName="reglementTtc" (blur)="verifReglement()"
+                            autofocus required />
                         <ul class="list-group">
                             <li class="list-group-item list-group-item-danger" *ngIf="reglementForm.controls.reglementTtc.errors?.required && reglementForm.controls.reglementTtc.dirty">
                                 Ce champ est requis

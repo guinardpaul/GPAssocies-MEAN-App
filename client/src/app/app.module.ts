@@ -35,6 +35,8 @@ import { PageNotFoundComponent } from './components/page-not-found/page-not-foun
 import { BugsComponent } from './components/bugs/bugs.component';
 import { LoginComponent } from './authentication/components/login/login.component';
 import { RegisterComponent } from './authentication/components/register/register.component';
+import { ForgotPasswordComponent } from './authentication/components/forgot-password/forgot-password.component';
+import { InitPasswordComponent } from './authentication/components/init-password/init-password.component';
 // import Services
 import { ClientService } from './service/client.service';
 import { DevisService } from './service/devis.service';
@@ -45,6 +47,7 @@ import { ReglementService } from './service/reglement.service';
 import { BugsService } from './service/bugs.service';
 import { AuthService } from './authentication/services/auth.service';
 import { ValidationService } from './authentication/services/validation.service';
+import { EmailService } from './authentication/services/email.service';
 import { AuthGuard } from './routing/auth.guard';
 import { NotAuthGuard } from './routing/not-auth.guard';
 
@@ -61,10 +64,11 @@ import { NotAuthGuard } from './routing/not-auth.guard';
     FactureAccompteComponent,
     BugsComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    ForgotPasswordComponent,
+    InitPasswordComponent
   ],
   imports: [
-
     BrowserAnimationsModule,
     AppRoutingModule,
     HttpModule,
@@ -95,8 +99,9 @@ import { NotAuthGuard } from './routing/not-auth.guard';
     AuthGuard,
     NotAuthGuard,
     AuthService,
-    ValidationService
+    ValidationService,
+    EmailService
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [ AppComponent ]
 })
 export class AppModule { }

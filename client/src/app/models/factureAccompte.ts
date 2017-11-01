@@ -5,14 +5,14 @@
  * @class FactureAccompte
  */
 export class FactureAccompte {
-    _id: number;
-    status_factureAccompte: boolean;
+    _id?: number;
+    status_factureAccompte?: boolean;
     ref_factureAccompte: string;
-    date_creation: Date;
+    date_creation?: Date;
     montantFacture: number;
-    reglementClient: number;
+    reglementClient?: number;
     factureGlobal: number;
-    valid: boolean;
+    valid?: boolean;
     description?: string;
     updated_at?: Date;
 

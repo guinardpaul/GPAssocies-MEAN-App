@@ -18,7 +18,7 @@ import { User } from '../../../models/User';
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css']
+  styleUrls: [ './register.component.css' ]
 })
 export class RegisterComponent implements OnInit {
   private registerForm: FormGroup;
@@ -29,7 +29,7 @@ export class RegisterComponent implements OnInit {
   private get nom() { return this.registerForm.get('nom').value as string; }
   private get prenom() { return this.registerForm.get('prenom').value as string; }
   private get email() { return this.registerForm.get('email').value as string; }
-  private get passwords() { return this.registerForm.controls['passwords'] as FormControl; }
+  private get passwords() { return this.registerForm.controls[ 'passwords' ] as FormControl; }
   private get password() { return this.passwords.get('password').value as string; }
   private get confirmPassword() { return this.passwords.get('confirmPassword').value as string; }
 
@@ -65,33 +65,33 @@ export class RegisterComponent implements OnInit {
    */
   createForm() {
     this.registerForm = this._fb.group({
-      nom: ['', Validators.compose([
+      nom: [ '', Validators.compose([
         Validators.required,
         Validators.minLength(1),
         Validators.maxLength(100)
-      ])],
-      prenom: ['', Validators.compose([
+      ]) ],
+      prenom: [ '', Validators.compose([
         Validators.required,
         Validators.minLength(1),
         Validators.maxLength(100)
-      ])],
-      email: ['', Validators.compose([
+      ]) ],
+      email: [ '', Validators.compose([
         Validators.required,
         Validators.minLength(6),
         Validators.maxLength(100),
         this._validationService.emailValidation
-      ])],
+      ]) ],
       passwords: this._fb.group({
-        password: ['', Validators.compose([
+        password: [ '', Validators.compose([
           Validators.required,
           Validators.minLength(6),
           Validators.maxLength(150)
-        ])],
-        confirmPassword: ['', Validators.compose([
+        ]) ],
+        confirmPassword: [ '', Validators.compose([
           Validators.required,
           Validators.minLength(6),
           Validators.maxLength(150)
-        ])],
+        ]) ],
       }, {
           validator: this._validationService.comparePasswords
         })
@@ -108,16 +108,16 @@ export class RegisterComponent implements OnInit {
   getErrorMessage(arg: string): string {
     switch (arg) {
       case 'nom':
-        return this.registerForm.controls['nom'].hasError('required') ? 'Ce champ est requis' :
+        return this.registerForm.controls[ 'nom' ].hasError('required') ? 'Ce champ est requis' :
           '';
 
       case 'prenom':
-        return this.registerForm.controls['prenom'].hasError('required') ? 'Ce champ est requis' :
+        return this.registerForm.controls[ 'prenom' ].hasError('required') ? 'Ce champ est requis' :
           '';
 
       case 'email':
-        return this.registerForm.controls['email'].hasError('required') ? 'Ce champ est requis' :
-          this.registerForm.controls['email'].hasError('emailValidation') ? 'Email invalide' :
+        return this.registerForm.controls[ 'email' ].hasError('required') ? 'Ce champ est requis' :
+          this.registerForm.controls[ 'email' ].hasError('emailValidation') ? 'Email invalide' :
             '';
 
       case 'password':
@@ -158,17 +158,23 @@ export class RegisterComponent implements OnInit {
     // Appel function register()
     this._authService.register(this.user)
       .subscribe(data => {
-        console.log('register...');
-        this._flashMsg.show('Création de compte réussie', {
-          classes: ['alert', 'alert-success'],
-          timeout: 3000
-        });
-        // Redirection vers login page
-        this._router.navigate(['/login']);
+        if (data.success) {
+          this._flashMsg.show('Création de compte réussie', {
+            classes: [ 'alert', 'alert-success' ],
+            timeout: 3000
+          });
+          // Redirection vers login page
+          this._router.navigate([ '/login' ]);
+        } else {
+          this._flashMsg.show(data.message, {
+            classes: [ 'alert', 'alert-success' ],
+            timeout: 3000
+          });
+        }
       }, err => {
         this.processing = false;
         this._flashMsg.show('Erreur durant la création de compte. Réessayez plus tard.', {
-          classes: ['alert', 'alert-danger'],
+          classes: [ 'alert', 'alert-danger' ],
           timeout: 4000
         });
         console.log(err);

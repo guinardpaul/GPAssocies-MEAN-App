@@ -5,11 +5,11 @@
  * @class Reglement
  */
 export class Reglement {
-    _id: number;
-    date_reglement: Date;
+    _id?: number;
+    date_reglement?: Date;
     reglementTtc: number;
     factureAccompte: number;
-    valid: boolean;
+    valid?: boolean;
     description?: string;
     updated_at?: Date;
 

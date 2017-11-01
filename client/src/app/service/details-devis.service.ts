@@ -4,7 +4,6 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
-
 // Models
 import { DetailsDevis } from '../models/detailsDevis';
 
@@ -50,7 +49,7 @@ export class DetailsDevisService {
    * @returns 
    * @memberof DetailsDevisService
    */
-  addDetailsDevis(detailsDevis: any) {
+  addDetailsDevis(detailsDevis: DetailsDevis) {
     return this.http.post(devUrl, detailsDevis)
       .map(res => res.json());
   }

@@ -195,7 +195,6 @@ export class ValiderDevisComponent implements OnInit {
     this.factureGlobalService.addFactureGlobal(newFacture)
       .subscribe(
       data => {
-        console.log('Devis Validé' + data);
         this.flashMessages.show(data.message, {
           classes: [ 'alert', 'alert-success' ],
           timeout: 3000
@@ -243,8 +242,8 @@ export class ValiderDevisComponent implements OnInit {
           if ((status_facture && this.client.status_client !== true) || (!status_facture && this.client.status_client === true)) {
             this.clientService.updateStatus(client, status_facture)
               .subscribe(
-              data => console.log('Status client mis à jour :' + data.obj.status_client),
-              err => console.log('Erreur mis à jour status client :' + err)
+              data => console.log('Status client mis à jour'),
+              err => console.log('Erreur mis à jour status client')
               );
           }
         }

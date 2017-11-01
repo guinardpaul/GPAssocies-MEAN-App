@@ -4,7 +4,6 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
-
 // Models
 import { Reglement } from '../models/reglement';
 
@@ -36,7 +35,7 @@ export class ReglementService {
    * @returns 
    * @memberof ReglementService
    */
-  getReglementByFactureAccompte(id: number) {
+  getReglementByFactureAccompte(id: number): Observable<any> {
     return this.http.get(devUrl + id)
       .map(res => res.json());
   }

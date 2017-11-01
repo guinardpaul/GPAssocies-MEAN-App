@@ -8,7 +8,7 @@ module.exports = (router) => {
     router.get('/devis', (req, res, next) => {
         Devis.find((err, data) => {
             if (err) return next(err);
-            return res.json(data);
+            return res.status(200).json(data);
         });
     });
 
@@ -17,7 +17,7 @@ module.exports = (router) => {
      */
     router.get('/devis/client/:client', (req, res, next) => {
         if (!req.params.client) {
-            return res.json({
+            return res.status(400).json({
                 success: false,
                 message: 'client._id not provided'
             });
@@ -26,9 +26,9 @@ module.exports = (router) => {
             // {} display all Devis informations
             Devis.find({ 'client': req.params.client }, {}, (err, data) => {
                 if (data) {
-                    return res.json(data);
+                    return res.status(200).json(data);
                 } else {
-                    return res.json({
+                    return res.status(500).json({
                         success: false,
                         message: 'Devis not found',
                         err: err
@@ -43,16 +43,16 @@ module.exports = (router) => {
      */
     router.get('/devis/:id', (req, res, next) => {
         if (!req.params.id) {
-            return res.json({
+            return res.status(400).json({
                 success: false,
                 message: 'id not provided'
             });
         } else {
             Devis.findById(req.params.id, (err, data) => {
                 if (data) {
-                    return res.json(data);
+                    return res.status(200).json(data);
                 } else {
-                    return res.json({
+                    return res.status(500).json({
                         success: false,
                         message: 'Devis not found',
                         err: err
@@ -69,12 +69,12 @@ module.exports = (router) => {
      */
     router.get('/devis/client/:client/ref/:ref_devis', (req, res, next) => {
         if (!req.params.ref_devis) {
-            return res.json({
+            return res.status(400).json({
                 success: false,
                 message: 'Ref not provided'
             });
         } else if (!req.params.client) {
-            return res.json({
+            return res.status(400).json({
                 success: false,
                 message: 'id client not provided'
             });
@@ -83,7 +83,7 @@ module.exports = (router) => {
             // {} display all Devis informations
             Devis.find({ 'ref_devis': req.params.ref_devis }, {}, (err, devis) => {
                 if (err) {
-                    return res.json({
+                    return res.status(500).json({
                         success: false,
                         message: 'Devis global not found',
                         err: err
@@ -99,12 +99,12 @@ module.exports = (router) => {
                         }
                     }
                     if (statusVerifRef) {
-                        return res.json({
+                        return res.status(200).json({
                             success: true,
                             message: 'Devis with ref "' + req.params.ref_devis + '" already exists'
                         });
                     } else {
-                        return res.json({
+                        return res.status(200).json({
                             success: false,
                             message: 'Devis Global not found'
                         });
@@ -120,12 +120,12 @@ module.exports = (router) => {
     router.post('/devis', (req, res, next) => {
         if (!req.body) {
             if (req.body.ref_devis === '') {
-                return res.json({
+                return res.status(400).json({
                     success: false,
                     message: 'Ref Devis not provided'
                 });
             } else {
-                return res.json({
+                return res.status(400).json({
                     success: false,
                     message: 'data not provided'
                 });
@@ -133,13 +133,13 @@ module.exports = (router) => {
         } else {
             Devis.create(req.body, (err, data) => {
                 if (err) {
-                    return res.json({
+                    return res.status(500).json({
                         success: false,
                         message: 'Erreur création devis',
                         err: err
                     });
                 } else {
-                    return res.json({
+                    return res.status(200).json({
                         success: true,
                         obj: data,
                         message: 'Devis créé'
@@ -154,26 +154,23 @@ module.exports = (router) => {
      */
     router.put('/devis/:id', (req, res, next) => {
         if (!req.params.id) {
-            return res.json({
+            return res.status(400).json({
                 success: false,
                 message: 'id not provided'
             });
         } else {
-            Devis.findByIdAndUpdate(req.params.id, req.body, (err, data) => {
+            Devis.findByIdAndUpdate(req.params.id, req.body, { new: true }, (err, data) => {
                 if (err) {
-                    return res.json({
+                    return res.status(500).json({
                         success: false,
                         message: 'Erreur modification devis',
                         err: err
                     });
                 } else {
-                    // Récupère Devis Updated
-                    Devis.findById(req.params.id, (err, data) => {
-                        return res.json({
-                            success: true,
-                            obj: data,
-                            message: 'Devis modifié'
-                        });
+                    return res.status(200).json({
+                        success: true,
+                        obj: data,
+                        message: 'Devis modifié'
                     });
                 }
             });
@@ -185,19 +182,19 @@ module.exports = (router) => {
      */
     router.delete('/devis/:id', (req, res, next) => {
         if (!req.params.id) {
-            return res.json({
+            return res.status(400).json({
                 success: false,
                 message: 'id not provided'
             });
         } else {
             Devis.findByIdAndRemove(req.params.id, req.body, (err, data) => {
                 if (data) {
-                    return res.json({
+                    return res.status(200).json({
                         success: true,
                         message: 'Devis supprimé'
                     });
                 } else {
-                    return res.json({
+                    return res.status(500).json({
                         success: false,
                         message: 'Erreur suppression devis',
                         err: err

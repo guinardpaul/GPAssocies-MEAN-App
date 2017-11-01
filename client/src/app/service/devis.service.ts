@@ -3,11 +3,12 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/mergeMap';
-
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
+import { Observable } from 'rxjs/Observable';
 
 // Models
+import { Devis } from '../models/devis';
 /**
  * Set dev url accessing app/routes/ url
  */
@@ -35,7 +36,7 @@ export class DevisService {
    * @returns devis
    * @memberof DevisService
    */
-  getAllDevis() {
+  getAllDevis(): Observable<Devis[]> {
     return this.http.get(devUrl)
       .map(res => res.json());
   }
@@ -54,7 +55,7 @@ export class DevisService {
    * @returns
    * @memberof DevisService
    */
-  getAllDevisByClient(client_id: number) {
+  getAllDevisByClient(client_id: number): Observable<Devis[]> {
     return this.http.get(devUrl + 'client/' + client_id)
       .map(res => res.json());
   };
@@ -66,7 +67,7 @@ export class DevisService {
    * @returns
    * @memberof DevisService
    */
-  getOneDevis(id: number) {
+  getOneDevis(id: number): Observable<Devis> {
     return this.http.get(devUrl + id)
       .map(res => res.json());
   }
@@ -80,7 +81,7 @@ export class DevisService {
    * @returns 
    * @memberof DevisService
    */
-  getOneDevisByRef(id_client: number, ref_devis: number) {
+  getOneDevisByRef(id_client: number, ref_devis: number): Observable<any> {
     return this.http.get(devUrl + 'client/' + id_client + '/ref/' + ref_devis)
       .map(res => res.json());
   }
@@ -92,7 +93,7 @@ export class DevisService {
    * @returns
    * @memberof DevisService
    */
-  addDevis(devis: any) {
+  addDevis(devis: Devis) {
     return this.http.post(devUrl, devis)
       .map(res => res.json());
   }
@@ -105,7 +106,7 @@ export class DevisService {
    * @returns
    * @memberof DevisService
    */
-  updateDevis(devis: any) {
+  updateDevis(devis: Devis) {
     return this.http.put(devUrl + devis._id, devis)
       .map(res => res.json());
   }

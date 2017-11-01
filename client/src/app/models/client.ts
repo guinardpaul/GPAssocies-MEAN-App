@@ -8,19 +8,19 @@ import { CIVILITE } from './civilite.enum';
  * @class Client
  */
 export class Client {
-    _id: number;
-    status_client: boolean;
-    civilite: CIVILITE;
+    _id?: number;
+    status_client?: boolean;
+    civilite?: CIVILITE;
     nom: string;
     prenom: string;
-    adresseFact: string;
-    complAdresseFact: string;
-    cpFact: string;
-    villeFact: string;
-    adresseChantier: string;
-    complAdresseChantier: string;
-    cpChantier: string;
-    villeChantier: string;
+    adresseFact?: string;
+    complAdresseFact?: string;
+    cpFact?: string;
+    villeFact?: string;
+    adresseChantier?: string;
+    complAdresseChantier?: string;
+    cpChantier?: string;
+    villeChantier?: string;
     email: string;
     numTel: string;
 

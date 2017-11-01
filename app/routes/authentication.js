@@ -54,7 +54,7 @@ module.exports = (router, passport) => {
                 message: 'Password not provided'
             });
         } else {
-            passport.authenticate('local-register', function(err, user, info) {
+            passport.authenticate('local-register', function (err, user, info) {
                 if (err) {
                     return next(err); // will generate a 500 error
                 }
@@ -65,6 +65,104 @@ module.exports = (router, passport) => {
 
                 return res.status(200).json(info);
             })(req, res, next);
+        }
+    });
+
+    /**
+     * Get User by Email
+     * Forgot password component
+     */
+    router.get('/users/email/:email', (req, res, next) => {
+        if (!req.params.email) {
+            res.status(400).json({
+                success: false,
+                message: 'email not provided'
+            });
+        } else {
+            User.findOne({ email: req.params.email }).select('nom prenom email').exec((err, user) => {
+                if (err) return next(err);
+                if (!user) {
+                    res.status(409).json({
+                        success: false,
+                        message: 'User not find'
+                    });
+                }
+                return res.status(200).json({
+                    success: true,
+                    obj: user
+                });
+            });
+        }
+    });
+
+    /**
+     * Get User by Id
+     * Forgot password component
+     */
+    router.get('/users/:id', (req, res, next) => {
+        if (!req.params.id) {
+            res.status(400).json({
+                success: false,
+                message: 'email not provided'
+            });
+        } else {
+            User.findById(req.params.id).select('nom prenom email').exec((err, user) => {
+                if (err) return next(err);
+                if (!user) {
+                    res.status(409).json({
+                        success: false,
+                        message: 'User not find'
+                    });
+                }
+                return res.status(200).json({
+                    success: true,
+                    obj: user
+                });
+            });
+        }
+    });
+
+    /**
+     * Réinitialise password
+     */
+    router.put('/init-password/:_id', (req, res, next) => {
+        if (!req.body.password) {
+            res.status(400).json({
+                success: false,
+                message: 'password not provided'
+            });
+        } else if (!req.params._id) {
+            res.status(400).json({
+                success: false,
+                message: 'id not provided'
+            });
+        } else {
+            User.findById(req.params._id, (err, user) => {
+                if (err) return next(err);
+                if (!user) {
+                    res.status(409).json({
+                        success: false,
+                        message: 'user not find'
+                    });
+                } else {
+                    console.log(req.body.password);
+                    User.update({ _id: req.params._id }, { password: req.body.password }, (err, raw) => {
+                        if (err) return next(err);
+                        if (!raw) {
+                            res.status(409).json({
+                                success: false,
+                                message: 'user not find'
+                            });
+                        } else {
+                            res.status(200).json({
+                                success: true,
+                                message: 'Mot de passe réinitialisé',
+                                obj: raw
+                            });
+                        }
+                    });
+                }
+            });
         }
     });
 

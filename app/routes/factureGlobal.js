@@ -8,7 +8,7 @@ module.exports = (router) => {
     router.get('/facture-global', (req, res, next) => {
         FactureGlobal.find((err, data) => {
             if (err) return next(err);
-            return res.json(data);
+            return res.status(200).json(data);
         });
     });
 
@@ -17,7 +17,7 @@ module.exports = (router) => {
      */
     router.get('/facture-global/client/:client', (req, res, next) => {
         if (!req.params.client) {
-            return res.json({
+            return res.status(400).json({
                 success: false,
                 message: 'client_id not provided'
             });
@@ -26,9 +26,9 @@ module.exports = (router) => {
             // {} display all FactureGlobal informations
             FactureGlobal.find({ 'client': req.params.client }, {}, (err, data) => {
                 if (data) {
-                    return res.json(data);
+                    return res.status(200).json(data);
                 } else {
-                    return res.json({
+                    return res.status(500).json({
                         success: false,
                         message: 'Facture Global not found',
                         err: err
@@ -43,16 +43,16 @@ module.exports = (router) => {
      */
     router.get('/facture-global/devis/:devis', (req, res, next) => {
         if (!req.params.devis) {
-            return res.json({
+            return res.status(400).json({
                 success: false,
                 message: 'devis not provided'
             });
         } else {
             FactureGlobal.find({ 'devis': req.params.devis }, {}, (err, data) => {
                 if (data) {
-                    return res.json(data);
+                    return res.status(200).json(data);
                 } else {
-                    return res.json({
+                    return res.status(500).json({
                         success: false,
                         message: 'Facture Global not found',
                         err: err
@@ -69,12 +69,12 @@ module.exports = (router) => {
      */
     router.get('/facture-global/client/:client/ref/:ref_factureGlobal', (req, res, next) => {
         if (!req.params.ref_factureGlobal) {
-            return res.json({
+            return res.status(400).json({
                 success: false,
                 message: 'Ref not provided'
             });
         } else if (!req.params.client) {
-            return res.json({
+            return res.status(400).json({
                 success: false,
                 message: 'id client not provided'
             });
@@ -83,7 +83,7 @@ module.exports = (router) => {
             // {} display all FactureGlobal informations
             FactureGlobal.find({ 'ref_factureGlobal': req.params.ref_factureGlobal }, {}, (err, facture) => {
                 if (err) {
-                    return res.json({
+                    return res.status(500).json({
                         success: false,
                         message: 'Facture global not found',
                         err: err
@@ -99,12 +99,12 @@ module.exports = (router) => {
                         }
                     }
                     if (statusVerifRef) {
-                        return res.json({
+                        return res.status(200).json({
                             success: true,
                             message: 'Facture global with ref "' + req.params.ref_factureGlobal + '" already exists'
                         });
                     } else {
-                        return res.json({
+                        return res.status(200).json({
                             success: false,
                             message: 'Facture Global not found'
                         });
@@ -119,20 +119,20 @@ module.exports = (router) => {
      */
     router.get('/facture-global/:id', (req, res, next) => {
         if (!req.params.id) {
-            return res.json({
+            return res.status(400).json({
                 success: false,
                 message: 'id_fact not provided'
             });
         } else {
             FactureGlobal.findById(req.params.id, (err, data) => {
                 if (err) {
-                    return res.json({
+                    return res.status(500).json({
                         success: false,
                         message: 'Facture global not found',
                         err: err
                     });
                 } else {
-                    return res.json(data);
+                    return res.status(200).json(data);
                 }
             });
         }
@@ -143,20 +143,20 @@ module.exports = (router) => {
      */
     router.post('/facture-global', (req, res, next) => {
         if (!req.body) {
-            return res.json({
+            return res.status(400).json({
                 success: false,
                 message: 'Data not provided'
             });
         } else {
             FactureGlobal.create(req.body, (err, data) => {
                 if (err) {
-                    return res.json({
+                    return res.status(500).json({
                         success: false,
                         message: 'Facture global not found',
                         err: err
                     });
                 } else {
-                    return res.json({
+                    return res.status(200).json({
                         success: true,
                         obj: data,
                         message: 'Facture créée'
@@ -171,25 +171,23 @@ module.exports = (router) => {
      */
     router.put('/facture-global/:id', (req, res, next) => {
         if (!req.params.id) {
-            return res.json({
+            return res.status(400).json({
                 success: false,
                 message: 'id_fact not provided'
             });
         } else {
-            FactureGlobal.findByIdAndUpdate(req.params.id, req.body, (err, data) => {
+            FactureGlobal.findByIdAndUpdate(req.params.id, req.body, { new: true }, (err, data) => {
                 if (err) {
-                    return res.json({
+                    return res.status(500).json({
                         success: false,
                         message: 'Facture global not found',
                         err: err
                     });
                 } else {
-                    FactureGlobal.findById(req.params.id, (err, data) => {
-                        return res.json({
-                            success: true,
-                            obj: data,
-                            message: 'Facture modifiée'
-                        });
+                    return res.status(200).json({
+                        success: true,
+                        obj: data,
+                        message: 'Facture modifiée'
                     });
                 }
             });
@@ -201,20 +199,20 @@ module.exports = (router) => {
      */
     router.delete('/facture-global/:id', (req, res, next) => {
         if (!req.params.id) {
-            return res.json({
+            return res.status(400).json({
                 success: false,
                 message: 'id_fact not provided'
             });
         } else {
             FactureGlobal.findByIdAndRemove(req.params.id, req.body, (err, data) => {
                 if (err) {
-                    return res.json({
+                    return res.status(500).json({
                         success: false,
                         message: 'Facture global not found',
                         err: err
                     });
                 } else {
-                    return res.json({
+                    return res.status(200).json({
                         success: true,
                         message: 'Facture supprimée'
                     });

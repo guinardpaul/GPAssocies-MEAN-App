@@ -6,7 +6,7 @@
  */
 export class FactureGlobal {
     _id?: number;
-    status_factureGlobal: boolean;
+    status_factureGlobal?: boolean;
     ref_factureGlobal: string;
     date_creation: Date;
     montantHt: number;

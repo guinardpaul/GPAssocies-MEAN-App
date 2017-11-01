@@ -4,7 +4,6 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
-
 // Models
 import { Client } from '../models/client';
 
@@ -55,11 +54,11 @@ export class ClientService {
   /**
    * Save client.
    *
-   * @param {*} client client body
+   * @param {Client} client client body
    * @returns
    * @memberof ClientService
    */
-  addClient(client: any) {
+  addClient(client: Client) {
     return this.http.post(devUrl, client)
       .map(res => res.json());
   }

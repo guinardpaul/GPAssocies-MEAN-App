@@ -21,7 +21,7 @@ import { FlashMessagesService } from 'ngx-flash-messages';
 @Component({
   selector: 'app-client',
   templateUrl: './client.component.html',
-  styleUrls: ['./client.component.css']
+  styleUrls: [ './client.component.css' ]
 })
 export class ClientComponent implements OnInit {
   /**
@@ -101,7 +101,7 @@ export class ClientComponent implements OnInit {
    */
   status_false = '../../assets/images/status_false.png';
 
-	/**
+  /**
    * Creates an instance of ClientComponent.
    *
    * @param {ClientService} clientService client service
@@ -120,7 +120,7 @@ export class ClientComponent implements OnInit {
     this.keys = Object.keys(this.civilite).filter(Number);
   }
 
-	/**
+  /**
    * Get All Clients to display in table.
    *
    * @memberof ClientComponent
@@ -135,7 +135,7 @@ export class ClientComponent implements OnInit {
       );
   }
 
-	/**
+  /**
    * Get One Client.
 	 * Method not used.
    *
@@ -150,20 +150,20 @@ export class ClientComponent implements OnInit {
       );
   }
 
-	/**
-   * ADD/UPDATE Client.
-	 * - Si this.client._id exists : updateClient().
-	 * - Si this.client._id == null || 0 : addClient().
-   *
-   * @memberof ClientComponent
-   */
+  /**
+  * ADD/UPDATE Client.
+  * - Si this.client._id exists : updateClient().
+  * - Si this.client._id == null || 0 : addClient().
+  *
+  * @memberof ClientComponent
+  */
   addClient() {
     this.processing = true;
     this.disableForm();
     this.client = this.clientForm.value;
     this.client._id = this.client_id;
     this.client.civilite = this.clientForm.get('civilite').value;
-    console.log(this.client);
+
     // Check method to use 
     if (this.client_id === null || this.client_id === 0) {
       this.clientService.addClient(this.client)
@@ -171,17 +171,16 @@ export class ClientComponent implements OnInit {
         data => {
           if (!data.success) {
             this.flashMessages.show(data.message, {
-              classes: ['alert', 'alert-danger'],
+              classes: [ 'alert', 'alert-danger' ],
               timeout: 3000
             });
             this.processing = false;
             this.enableForm();
           } else {
             this.flashMessages.show(data.message, {
-              classes: ['alert', 'alert-success'],
+              classes: [ 'alert', 'alert-success' ],
               timeout: 3000
             });
-            console.log('Client saved' + data);
             this.onSuccess();
           }
         }
@@ -192,14 +191,13 @@ export class ClientComponent implements OnInit {
         data => {
           if (data.success) {
             this.flashMessages.show('Client mis à jour', {
-              classes: ['alert', 'alert-success'],
+              classes: [ 'alert', 'alert-success' ],
               timeout: 3000
             });
-            console.log('Client updated' + data);
             this.onSuccess();
           } else {
             this.flashMessages.show('Erreur : Client non modifié', {
-              classes: ['alert', 'alert-danger'],
+              classes: [ 'alert', 'alert-danger' ],
               timeout: 3000
             });
             console.log('Erreur update client :' + data);
@@ -211,7 +209,7 @@ export class ClientComponent implements OnInit {
     }
   }
 
-	/**
+  /**
    * Delete client si Ne possède pas de Devis
    *
    * @param {number} id client._id
@@ -221,14 +219,12 @@ export class ClientComponent implements OnInit {
     this.devisService.getAllDevisByClient(id)
       .subscribe(
       data => {
-        console.log(data.length);
         if (data.length === 0) {
           this.clientService.deleteClient(id)
             .subscribe(
             () => {
-              console.log('Client deleted');
               this.flashMessages.show('Client supprimé', {
-                classes: ['alert', 'alert-warning'],
+                classes: [ 'alert', 'alert-warning' ],
                 timeout: 3000
               });
               this.client = {};
@@ -238,16 +234,15 @@ export class ClientComponent implements OnInit {
               this.client = {};
               console.log(error);
               this.flashMessages.show('Erreur: Client non supprimé', {
-                classes: ['alert', 'alert-danger'],
+                classes: [ 'alert', 'alert-danger' ],
                 timeout: 3000
               });
             }
             );
         } else {
           this.client = {};
-          console.log('Client non supprimé');
           this.flashMessages.show('Suppression impossible ! le client est associé à des devis', {
-            classes: ['alert', 'alert-danger'],
+            classes: [ 'alert', 'alert-danger' ],
             timeout: 3000
           });
         }
@@ -276,7 +271,7 @@ export class ClientComponent implements OnInit {
     this.client_id = null;
   }
 
-	/**
+  /**
    * Success function called when request to api successfull.
 	 * Fetch data from database to update table.
    *
@@ -292,7 +287,7 @@ export class ClientComponent implements OnInit {
     this.getAllClients();
   }
 
-	/**
+  /**
    * Display clientForm
    *
    * @memberof ClientComponent
@@ -303,7 +298,7 @@ export class ClientComponent implements OnInit {
     this.client = {};
   }
 
-	/**
+  /**
    * Display clientForm and set values to be updated
    *
    * @param {Client} client client body
@@ -333,7 +328,7 @@ export class ClientComponent implements OnInit {
     this.mode = true;
   }
 
-	/**
+  /**
    * Cancel button
    *
    * @memberof ClientComponent
@@ -345,7 +340,7 @@ export class ClientComponent implements OnInit {
     this.generateForm();
   }
 
-	/**
+  /**
    * Form Generator
    *
    * @memberof ClientComponent
@@ -353,22 +348,22 @@ export class ClientComponent implements OnInit {
   generateForm() {
     this.clientForm = this.formBuilder.group({
       civilite: '',
-      nom: ['', Validators.compose([
+      nom: [ '', Validators.compose([
         Validators.required,
         this.nomPrenomValidation
-      ])],
-      prenom: ['', Validators.compose([
+      ]) ],
+      prenom: [ '', Validators.compose([
         Validators.required,
         this.nomPrenomValidation
-      ])],
-      email: ['', Validators.compose([
+      ]) ],
+      email: [ '', Validators.compose([
         Validators.required,
         this.emailValidation
-      ])],
-      numTel: ['', Validators.compose([
+      ]) ],
+      numTel: [ '', Validators.compose([
         this.numTelValidation,
         Validators.minLength(10)
-      ])],
+      ]) ],
       adresseFact: '',
       complAdresseFact: '',
       cpFact: '',

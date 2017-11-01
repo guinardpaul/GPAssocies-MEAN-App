@@ -25,7 +25,7 @@ export class AuthService {
   constructor(
     private _http: HttpClient
   ) {
-    this.url = 'http://localhost:3000/auth';
+    this.url = 'http://localhost:3001/auth';
   }
 
   /**
@@ -35,9 +35,8 @@ export class AuthService {
    * @param {User} user User Object
    * @memberof AuthService
    */
-  storeUserData(token: string, user: User) {
+  storeUserData(token: string) {
     localStorage.setItem('token', token);
-    localStorage.setItem('user', JSON.stringify(user));
   }
 
   /**
@@ -67,6 +66,35 @@ export class AuthService {
    */
   clearLocalStorage() {
     localStorage.clear();
+  }
+  /**
+   * Get User object by Email
+   * 
+   * @param {string} email user email
+   * @memberof AuthService
+   */
+  getUserByEmail(email: string): Observable<any> {
+    return this._http.get(`${this.url}/users/email/${email}`);
+  }
+
+  /**
+   * Get User Object by Id
+   * 
+   * @param {number} id User id
+   * @memberof AuthService
+   */
+  getUserById(id: number): Observable<any> {
+    return this._http.get(`${this.url}/users/${id}`);
+  }
+
+  /**
+   * Init User password
+   * 
+   * @param {User} user User object
+   * @memberof AuthService
+   */
+  initUserPassword(user: User): Observable<any> {
+    return this._http.put(`${this.url}/init-password/${user._id}`, user);
   }
 
   /**

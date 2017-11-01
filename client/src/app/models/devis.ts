@@ -5,14 +5,14 @@
  * @class Devis
  */
 export class Devis {
-	_id: number;
+	_id?: number;
 	ref_devis: string;
-	date_creation: Date;
+	date_creation?: Date;
 	montantHt: number;
 	tauxTva: number;
 	montantTtc: number;
 	client: number;
-	valid: boolean;
+	valid?: boolean;
 	description?: string;
 	updated_at?: Date;
 

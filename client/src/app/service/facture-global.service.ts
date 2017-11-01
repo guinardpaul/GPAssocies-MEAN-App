@@ -4,7 +4,6 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
-
 // Models
 import { FactureGlobal } from '../models/factureGlobal';
 
@@ -35,7 +34,7 @@ export class FactureGlobalService {
    * @returns
    * @memberof FactureGlobalService
    */
-  getAllFactureGlobal() {
+  getAllFactureGlobal(): Observable<FactureGlobal[]> {
     return this.http.get(devUrl)
       .map(res => res.json());
   }
@@ -47,7 +46,7 @@ export class FactureGlobalService {
    * @returns
    * @memberof FactureGlobalService
    */
-  getOneFactureGlobalById(id: number) {
+  getOneFactureGlobalById(id: number): Observable<FactureGlobal> {
     return this.http.get(devUrl + id)
       .map(res => res.json());
   }
@@ -59,7 +58,7 @@ export class FactureGlobalService {
    * @returns
    * @memberof FactureGlobalService
    */
-  getAllFactureGlobalByClient(id_client: number) {
+  getAllFactureGlobalByClient(id_client: number): Observable<FactureGlobal[]> {
     return this.http.get(devUrl + 'client/' + id_client)
       .map(res => res.json());
   }
@@ -71,7 +70,7 @@ export class FactureGlobalService {
    * @returns 
    * @memberof FactureGlobalService
    */
-  getAllFactureGlobalByDevis(id: number) {
+  getAllFactureGlobalByDevis(id: number): Observable<FactureGlobal[]> {
     return this.http.get(devUrl + 'devis/' + id)
       .map(res => res.json());
   }
@@ -85,7 +84,7 @@ export class FactureGlobalService {
    * @returns 
    * @memberof FactureGlobalService
    */
-  getOneFactureGlobalByRef(id_client: number, ref: string) {
+  getOneFactureGlobalByRef(id_client: number, ref: string): Observable<any> {
     return this.http.get(devUrl + 'client/' + id_client + '/ref/' + ref)
       .map(res => res.json());
   }
