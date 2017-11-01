@@ -10,7 +10,7 @@ import { Client } from '../models/client';
 /**
  * Set dev url accessing app/routes/ url
  */
-const devUrl = 'http://localhost:3001/api/clients/';
+const devUrl = '/api/clients/';
 
 /**
  *

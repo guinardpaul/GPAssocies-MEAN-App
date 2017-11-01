@@ -10,7 +10,7 @@ import { FactureGlobal } from '../models/factureGlobal';
 /**
 * Set dev url accessing app/routes/ url
 */
-const devUrl = 'http://localhost:3001/api/facture-global/';
+const devUrl = '/api/facture-global/';
 
 /**
  *
@@ -89,7 +89,7 @@ export class FactureGlobalService {
       .map(res => res.json());
   }
 
-	/**
+  /**
    * Add Facture Global.
    *
    * @param {FactureGlobal} factureGlobal factureGlobal body
@@ -101,7 +101,7 @@ export class FactureGlobalService {
       .map(res => res.json());
   }
 
-	/**
+  /**
    * Update Facture Global.
    *
    * @param {FactureGlobal} factureGlobal factureGlobal body

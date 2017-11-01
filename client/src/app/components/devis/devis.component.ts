@@ -792,9 +792,7 @@ export class DevisComponent implements OnInit {
       client: [ { value: this.id_client, disabled: true }, Validators.compose([
         Validators.required
       ]) ],
-      descriptionModif: [ { value: this.descriptionModif }, Validators.compose([
-        Validators.required
-      ]) ],
+      descriptionModif: [ { value: this.descriptionModif }],
     });
   }
 

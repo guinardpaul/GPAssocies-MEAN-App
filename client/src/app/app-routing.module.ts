@@ -42,7 +42,7 @@ const routes: Routes = [
   { path: 'bug', component: BugsComponent, canActivate: [ AuthGuard ] },
   { path: 'pageNotFound', component: PageNotFoundComponent },
   // default path redirect to 'client'
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: '', redirectTo: 'client', pathMatch: 'full' },
   // Undefined page path
   { path: '**', component: PageNotFoundComponent }
 ];

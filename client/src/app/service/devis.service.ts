@@ -12,7 +12,7 @@ import { Devis } from '../models/devis';
 /**
  * Set dev url accessing app/routes/ url
  */
-const devUrl = 'http://localhost:3001/api/devis/'
+const devUrl = '/api/devis/'
 
 /**
  *

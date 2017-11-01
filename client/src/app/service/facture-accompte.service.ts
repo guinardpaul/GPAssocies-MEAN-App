@@ -10,7 +10,7 @@ import { FactureAccompte } from '../models/factureAccompte';
 /**
  * Set dev url accessing app/routes/ url
  */
-const devUrl = 'http://localhost:3001/api/facture-accompte/';
+const devUrl = '/api/facture-accompte/';
 
 /**
  *

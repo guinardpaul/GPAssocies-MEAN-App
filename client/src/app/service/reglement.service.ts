@@ -10,7 +10,7 @@ import { Reglement } from '../models/reglement';
 /**
  * Set dev url accessing app/routes/ url
  */
-const devUrl = 'http://localhost:3001/api/reglements/'
+const devUrl = '/api/reglements/'
 
 /**
  * 

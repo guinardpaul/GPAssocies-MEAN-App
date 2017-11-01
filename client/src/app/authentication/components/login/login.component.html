@@ -25,16 +25,10 @@
             </mat-card-content>
             <!-- Button -->
             <mat-card-actions>
-                <span class="col-lg-2 col-md-2 col-sm-2 col-xs-2"></span>
-                <span class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
-
+                <div style="text-align: center;">
                     <button mat-raised-button [disabled]="!loginForm.valid || processing" type="submit" color="primary">Se connecter</button>
                     <a routerLink="/forgot-password" class="forgot-password-link">Mot de passe oublié ?</a>
-                    <br/>
-                    <br/>
-                </span>
-
-                <span class="col-lg-2 col-md-2 col-sm-2 col-xs-2"></span>
+                </div>
             </mat-card-actions>
             <!-- /Button -->
         </form>

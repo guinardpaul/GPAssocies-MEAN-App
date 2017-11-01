@@ -213,6 +213,8 @@ export class FactureGlobalComponent implements OnInit {
     this.factureGlobal.date_creation = latest_date;
     this.factureForm.get('ref_factureGlobal').setValue(this.factureGlobal.ref_factureGlobal);
     this.factureForm.get('date_creation').setValue(latest_date);
+    this.factureForm.get('montantTtcTotal').setValue(this.factureGlobal.montantTtcTotal);
+    this.factureForm.get('client').setValue(this.factureGlobal.client);
   }
 
   /**
@@ -224,20 +226,20 @@ export class FactureGlobalComponent implements OnInit {
     this.disableForm();
     this.processing = true;
 
-    const newFacture = {
-      status_factureGlobal: this.factureGlobal.status_factureGlobal,
-      ref_factureGlobal: this.factureForm.get('ref_factureGlobal').value,
-      date_creation: this.factureForm.get('date_creation').value,
-      montantHt: this.factureGlobal.montantHt,
-      tauxTva: this.factureGlobal.tauxTva,
-      montantTtcTotal: this.factureGlobal.montantTtcTotal,
-      montantTtcFacture: this.factureGlobal.montantTtcFacture,
-      montantTtcRegle: this.factureGlobal.montantTtcRegle,
-      client: this.factureGlobal.client,
-      devis: this.factureGlobal.devis
-    };
-
     if (historique) {
+      const newFacture = {
+        status_factureGlobal: this.factureGlobal.status_factureGlobal,
+        ref_factureGlobal: this.factureForm.get('ref_factureGlobal').value,
+        date_creation: this.factureForm.get('date_creation').value,
+        montantHt: this.factureGlobal.montantHt,
+        tauxTva: this.factureGlobal.tauxTva,
+        montantTtcTotal: this.factureGlobal.montantTtcTotal,
+        montantTtcFacture: this.factureGlobal.montantTtcFacture,
+        montantTtcRegle: this.factureGlobal.montantTtcRegle,
+        client: this.factureGlobal.client,
+        devis: this.factureGlobal.devis
+      };
+
       this.factureGlobalService.addFactureGlobal(newFacture)
         .subscribe(data => {
           this.flashMessages.show('Facture modifiée', {
@@ -275,6 +277,20 @@ export class FactureGlobalComponent implements OnInit {
         }
         );
     } else {
+      const newFacture = new FactureGlobal({
+        _id: this.factureGlobal._id,
+        status_factureGlobal: this.factureGlobal.status_factureGlobal,
+        ref_factureGlobal: this.factureForm.get('ref_factureGlobal').value,
+        date_creation: this.factureForm.get('date_creation').value,
+        montantHt: this.factureGlobal.montantHt,
+        tauxTva: this.factureGlobal.tauxTva,
+        montantTtcTotal: this.factureGlobal.montantTtcTotal,
+        montantTtcFacture: this.factureGlobal.montantTtcFacture,
+        montantTtcRegle: this.factureGlobal.montantTtcRegle,
+        client: this.factureGlobal.client,
+        devis: this.factureGlobal.devis
+      });
+
       this.factureGlobalService.updateFactureGlobal(newFacture)
         .subscribe(data => {
           this.flashMessages.show('Facture modifiée', {
@@ -488,7 +504,7 @@ export class FactureGlobalComponent implements OnInit {
       date_creation: [ this.factureGlobal.date_creation ],
       montantTtcTotal: [ { value: this.factureGlobal.montantTtc, disabled: true }],
       client: [ { value: this.factureGlobal.client, disabled: true }, Validators.required ],
-      descriptionModif: [ this.factureGlobal.description, Validators.required ]
+      descriptionModif: [ this.factureGlobal.description ]
     });
   }
 

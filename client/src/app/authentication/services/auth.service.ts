@@ -25,7 +25,7 @@ export class AuthService {
   constructor(
     private _http: HttpClient
   ) {
-    this.url = 'http://localhost:3001/auth';
+    this.url = '/auth';
   }
 
   /**
