@@ -6,13 +6,9 @@ import 'rxjs/add/operator/mergeMap';
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
-
 // Models
 import { Devis } from '../models/devis';
-/**
- * Set dev url accessing app/routes/ url
- */
-const devUrl = '/api/devis/'
+import { environment } from '../../environments/environment';
 
 /**
  *
@@ -22,22 +18,25 @@ const devUrl = '/api/devis/'
  */
 @Injectable()
 export class DevisService {
+  private url;
 
-	/**
+  /**
    * Creates an instance of DevisService.
    * @param {Http} http http module
    * @memberof DevisService devis service
    */
-  constructor(private http: Http) { }
+  constructor(private http: Http) {
+    this.url = environment.url;
+  }
 
-	/**
+  /**
    * Get All Devis.
    *
    * @returns devis
    * @memberof DevisService
    */
   getAllDevis(): Observable<Devis[]> {
-    return this.http.get(devUrl)
+    return this.http.get(`${this.url}/devis`)
       .map(res => res.json());
   }
 
@@ -48,7 +47,7 @@ export class DevisService {
       .map(dev => dev.json());
   } */
 
-	/**
+  /**
    * Get All Devis By Client.
    *
    * @param {number} client_id client._id
@@ -56,11 +55,11 @@ export class DevisService {
    * @memberof DevisService
    */
   getAllDevisByClient(client_id: number): Observable<Devis[]> {
-    return this.http.get(devUrl + 'client/' + client_id)
+    return this.http.get(`${this.url}/devis/client/${client_id}`)
       .map(res => res.json());
   };
 
-	/**
+  /**
    * Get one devis.
    *
    * @param {number} id devis._id
@@ -68,7 +67,7 @@ export class DevisService {
    * @memberof DevisService
    */
   getOneDevis(id: number): Observable<Devis> {
-    return this.http.get(devUrl + id)
+    return this.http.get(`${this.url}/devis/${id}`)
       .map(res => res.json());
   }
 
@@ -82,11 +81,11 @@ export class DevisService {
    * @memberof DevisService
    */
   getOneDevisByRef(id_client: number, ref_devis: number): Observable<any> {
-    return this.http.get(devUrl + 'client/' + id_client + '/ref/' + ref_devis)
+    return this.http.get(`${this.url}/devis/client/${id_client}/ref/${ref_devis}`)
       .map(res => res.json());
   }
 
-	/**
+  /**
    * Add Devis.
    *
    * @param {any} devis devis body
@@ -94,11 +93,11 @@ export class DevisService {
    * @memberof DevisService
    */
   addDevis(devis: Devis) {
-    return this.http.post(devUrl, devis)
+    return this.http.post(`${this.url}/devis`, devis)
       .map(res => res.json());
   }
 
-	/**
+  /**
    * Update Devis.
    *
    * @param {any} devis devis body
@@ -107,11 +106,11 @@ export class DevisService {
    * @memberof DevisService
    */
   updateDevis(devis: Devis) {
-    return this.http.put(devUrl + devis._id, devis)
+    return this.http.put(`${this.url}/devis/${devis._id}`, devis)
       .map(res => res.json());
   }
 
-	/**
+  /**
    * Delete devis.
    *
    * @param {number} id_dev devis._id
@@ -119,7 +118,7 @@ export class DevisService {
    * @memberof DevisService
    */
   deleteDevis(id_dev: number) {
-    return this.http.delete(devUrl + id_dev)
+    return this.http.delete(`${this.url}/devis/${id_dev}`)
       .map(res => res.json());
   }
 

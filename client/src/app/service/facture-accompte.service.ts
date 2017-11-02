@@ -6,11 +6,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
 // Models
 import { FactureAccompte } from '../models/factureAccompte';
-
-/**
- * Set dev url accessing app/routes/ url
- */
-const devUrl = '/api/facture-accompte/';
+import { environment } from '../../environments/environment';
 
 /**
  *
@@ -20,26 +16,29 @@ const devUrl = '/api/facture-accompte/';
  */
 @Injectable()
 export class FactureAccompteService {
+  private url;
 
-	/**
+  /**
    * Creates an instance of FactureAccompteService.
    * @param {Http} http http module
    * @memberof FactureAccompteService factureAccompte service
    */
-  constructor(private http: Http) { }
+  constructor(private http: Http) {
+    this.url = environment.url;
+  }
 
-	/**
+  /**
    * Get All Facture Accompte.
    *
    * @returns
    * @memberof FactureAccompteService
    */
   getAllFactureAccompte() {
-    return this.http.get(devUrl)
+    return this.http.get(`${this.url}/facture-accompte`)
       .map(res => res.json());
   }
 
-	/**
+  /**
    * Get All Facture Accompte by factureGlobal.
    *
    * @param {number} id_fact factureGlobal._id
@@ -47,11 +46,11 @@ export class FactureAccompteService {
    * @memberof FactureAccompteService
    */
   getAllFactureAccompteByFactureGlobal(id_fact: number) {
-    return this.http.get(devUrl + 'facture-global/' + id_fact)
+    return this.http.get(`${this.url}/facture-accompte/facture-global/${id_fact}`)
       .map(res => res.json());
   }
 
-	/**
+  /**
    * Get One Facture Accompte by Id.
    *
    * @param {number} id factureAccompte._id
@@ -59,7 +58,7 @@ export class FactureAccompteService {
    * @memberof FactureAccompteService
    */
   getOneFactureAccompte(id: number) {
-    return this.http.get(devUrl + id)
+    return this.http.get(`${this.url}/facture-accompte/${id}`)
       .map(res => res.json());
   }
 
@@ -73,11 +72,11 @@ export class FactureAccompteService {
    * @memberof FactureAccompteService
    */
   getOneFactureAccompteByRef(id_factureGlobal: number, ref_factureAccompte) {
-    return this.http.get(devUrl + 'facture-global/' + id_factureGlobal + '/ref/' + ref_factureAccompte)
+    return this.http.get(`${this.url}/facture-accompte/facture-global/${id_factureGlobal}/ref/${ref_factureAccompte}`)
       .map(res => res.json());
   }
 
-	/**
+  /**
    * Add Facture Accompte.
    *
    * @param {*} factureAccompte factureAccompte body
@@ -85,11 +84,11 @@ export class FactureAccompteService {
    * @memberof FactureAccompteService
    */
   addFactureAccompte(factureAccompte: any) {
-    return this.http.post(devUrl, factureAccompte)
+    return this.http.post(`${this.url}/facture-accompte`, factureAccompte)
       .map(res => res.json());
   }
 
-	/**
+  /**
    * Update Facture Accompte.
    *
    * @param {FactureAccompte} factureAccompte factureAccompte body
@@ -97,7 +96,7 @@ export class FactureAccompteService {
    * @memberof FactureAccompteService
    */
   updateFactureAccompte(factureAccompte: FactureAccompte) {
-    return this.http.put(devUrl + factureAccompte._id, factureAccompte)
+    return this.http.put(`${this.url}/facture-accompte/${factureAccompte._id}`, factureAccompte)
       .map(res => res.json());
   }
 
@@ -112,11 +111,11 @@ export class FactureAccompteService {
     // Set status facture accompte
     factureAccompte.status_factureAccompte = status_factureAccompte;
     // PUT request
-    return this.http.put(devUrl + factureAccompte._id, factureAccompte)
+    return this.http.put(`${this.url}/facture-accompte/${factureAccompte._id}`, factureAccompte)
       .map(res => res.json());
   }
 
-	/**
+  /**
    * Delete Facture Accompte.
    *
    * @param {number} id factureAccompte._id
@@ -124,7 +123,7 @@ export class FactureAccompteService {
    * @memberof FactureAccompteService
    */
   deleteFactureAccompte(id: number) {
-    return this.http.delete(devUrl + id)
+    return this.http.delete(`${this.url}/facture-accompte/${id}`)
       .map(res => res.json());
   }
 

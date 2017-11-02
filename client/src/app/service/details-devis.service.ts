@@ -6,11 +6,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
 // Models
 import { DetailsDevis } from '../models/detailsDevis';
-
-/**
- * Set dev url accessing app/routes/ url
- */
-const devUrl = '/api/details-devis/';
+import { environment } from '../../environments/environment';
 
 /**
  * 
@@ -20,7 +16,7 @@ const devUrl = '/api/details-devis/';
  */
 @Injectable()
 export class DetailsDevisService {
-
+  private url;
   /**
    * Creates an instance of DetailsDevisService.
    * @param {Http} http http module
@@ -28,7 +24,9 @@ export class DetailsDevisService {
    */
   constructor(
     private http: Http
-  ) { }
+  ) {
+    this.url = environment.url;
+  }
 
   /**
    * Get All DetailsDevis By Devis
@@ -38,7 +36,7 @@ export class DetailsDevisService {
    * @memberof DetailsDevisService
    */
   getDetailsDevisByDevis(id_dev: number) {
-    return this.http.get(devUrl + id_dev)
+    return this.http.get(`${this.url}/details-devis/${id_dev}`)
       .map(res => res.json());
   }
 
@@ -50,7 +48,7 @@ export class DetailsDevisService {
    * @memberof DetailsDevisService
    */
   addDetailsDevis(detailsDevis: DetailsDevis) {
-    return this.http.post(devUrl, detailsDevis)
+    return this.http.post(`${this.url}/details-devis`, detailsDevis)
       .map(res => res.json());
   }
 
@@ -62,7 +60,7 @@ export class DetailsDevisService {
    * @memberof DetailsDevisService
    */
   updateDetailsDevis(detailsDevis: DetailsDevis) {
-    return this.http.put(devUrl + detailsDevis._id, detailsDevis)
+    return this.http.put(`${this.url}/details-devis/${detailsDevis._id}`, detailsDevis)
       .map(res => res.json());
   }
 
@@ -74,7 +72,7 @@ export class DetailsDevisService {
    * @memberof DetailsDevisService
    */
   deleteDetailsDevis(id: number) {
-    return this.http.delete(devUrl + id)
+    return this.http.delete(`${this.url}/details-devis/${id}`)
       .map(res => res.json());
   }
 

@@ -624,7 +624,7 @@ export class FactureAccompteComponent implements OnInit {
     let status_factureGlobal = false;
 
     // Check montant facture
-    if ((factureGlobal.montantTtcFacture === factureGlobal.montantTtcTotal) && (factureGlobal.montantTtcFacture === factureGlobal.montantTtcRegle)) {
+    if (factureGlobal.montantTtcFacture === factureGlobal.montantTtcRegle) {
       status_factureGlobal = true;
     }
 

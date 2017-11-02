@@ -6,11 +6,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
 // Models
 import { FactureGlobal } from '../models/factureGlobal';
-
-/**
-* Set dev url accessing app/routes/ url
-*/
-const devUrl = '/api/facture-global/';
+import { environment } from '../../environments/environment';
 
 /**
  *
@@ -20,26 +16,29 @@ const devUrl = '/api/facture-global/';
  */
 @Injectable()
 export class FactureGlobalService {
+  private url;
 
-	/**
+  /**
    * Creates an instance of FactureGlobalService.
    * @param {Http} http http module
    * @memberof FactureGlobalService facture global service
    */
-  constructor(private http: Http) { }
+  constructor(private http: Http) {
+    this.url = environment.url;
+  }
 
-	/**
+  /**
    * GET ALL FACTURE GLOBAL.
    *
    * @returns
    * @memberof FactureGlobalService
    */
   getAllFactureGlobal(): Observable<FactureGlobal[]> {
-    return this.http.get(devUrl)
+    return this.http.get(`${this.url}/facture-global`)
       .map(res => res.json());
   }
 
-	/**
+  /**
    * Get One Facture Global by ID
    *
    * @param {number} id factureGlobal._id
@@ -47,11 +46,11 @@ export class FactureGlobalService {
    * @memberof FactureGlobalService
    */
   getOneFactureGlobalById(id: number): Observable<FactureGlobal> {
-    return this.http.get(devUrl + id)
+    return this.http.get(`${this.url}/facture-global/${id}`)
       .map(res => res.json());
   }
 
-	/**
+  /**
    * Get All Facture Global by Client.
    *
    * @param {number} id_client client._id
@@ -59,7 +58,7 @@ export class FactureGlobalService {
    * @memberof FactureGlobalService
    */
   getAllFactureGlobalByClient(id_client: number): Observable<FactureGlobal[]> {
-    return this.http.get(devUrl + 'client/' + id_client)
+    return this.http.get(`${this.url}/facture-global/client/${id_client}`)
       .map(res => res.json());
   }
 
@@ -71,7 +70,7 @@ export class FactureGlobalService {
    * @memberof FactureGlobalService
    */
   getAllFactureGlobalByDevis(id: number): Observable<FactureGlobal[]> {
-    return this.http.get(devUrl + 'devis/' + id)
+    return this.http.get(`${this.url}/facture-global/devis/${id}`)
       .map(res => res.json());
   }
 
@@ -85,7 +84,7 @@ export class FactureGlobalService {
    * @memberof FactureGlobalService
    */
   getOneFactureGlobalByRef(id_client: number, ref: string): Observable<any> {
-    return this.http.get(devUrl + 'client/' + id_client + '/ref/' + ref)
+    return this.http.get(`${this.url}/facture-global/client/${id_client}/ref/${ref}`)
       .map(res => res.json());
   }
 
@@ -97,7 +96,7 @@ export class FactureGlobalService {
    * @memberof FactureGlobalService
    */
   addFactureGlobal(factureGlobal: FactureGlobal) {
-    return this.http.post(devUrl, factureGlobal)
+    return this.http.post(`${this.url}/facture-global`, factureGlobal)
       .map(res => res.json());
   }
 
@@ -109,7 +108,7 @@ export class FactureGlobalService {
    * @memberof FactureGlobalService
    */
   updateFactureGlobal(factureGlobal: FactureGlobal) {
-    return this.http.put(devUrl + factureGlobal._id, factureGlobal)
+    return this.http.put(`${this.url}/facture-global/${factureGlobal._id}`, factureGlobal)
       .map(res => res.json());
   }
 
@@ -124,11 +123,11 @@ export class FactureGlobalService {
     // Set Status facture Global
     factureGlobal.status_factureGlobal = status_factureGlobal;
     // PUT Request
-    return this.http.put(devUrl + factureGlobal._id, factureGlobal)
+    return this.http.put(`${this.url}/facture-global/${factureGlobal._id}`, factureGlobal)
       .map(res => res.json());
   }
 
-	/**
+  /**
    * Delete Facture Global.
    *
    * @param {number} id_fact factureGlobal._id
@@ -136,7 +135,7 @@ export class FactureGlobalService {
    * @memberof FactureGlobalService
    */
   deleteFactureGlobal(id_fact: number) {
-    return this.http.delete(devUrl + id_fact)
+    return this.http.delete(`${this.url}/facture-global/${id_fact}`)
       .map(res => res.json());
   }
 

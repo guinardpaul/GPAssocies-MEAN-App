@@ -50,6 +50,7 @@ import { ValidationService } from './authentication/services/validation.service'
 import { EmailService } from './authentication/services/email.service';
 import { AuthGuard } from './routing/auth.guard';
 import { NotAuthGuard } from './routing/not-auth.guard';
+import { SortPipe } from './components/sort.pipe';
 
 @NgModule({
   declarations: [
@@ -66,7 +67,8 @@ import { NotAuthGuard } from './routing/not-auth.guard';
     LoginComponent,
     RegisterComponent,
     ForgotPasswordComponent,
-    InitPasswordComponent
+    InitPasswordComponent,
+    SortPipe
   ],
   imports: [
     BrowserAnimationsModule,

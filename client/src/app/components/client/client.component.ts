@@ -1,16 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
-
 // Models
 import { Client } from '../../models/client';
 import { CIVILITE } from '../../models/civilite.enum';
-
 // Services
 import { ClientService } from '../../service/client.service';
 import { DevisService } from '../../service/devis.service';
 import { FlashMessagesService } from 'ngx-flash-messages';
-
+// Pipes
+import { SortPipe } from '../sort.pipe';
 /**
  *
  * @author Paul GUINARD
@@ -61,7 +60,7 @@ export class ClientComponent implements OnInit {
    * 
    * @memberof ClientComponent
    */
-  civilite = CIVILITE;
+  civiliteEnum = CIVILITE;
 
   /**
    * mode form
@@ -85,8 +84,22 @@ export class ClientComponent implements OnInit {
    */
   clientForm: FormGroup;
 
-  // Status images
+  /**
+   * Validation unicité n° affaire
+   * 
+   * @type {boolean}
+   * @memberof ClientComponent
+   */
+  validNumAffaire: boolean;
 
+  /**
+   * Used for select client options
+   * 
+   * @memberof ClientComponent
+   */
+  selectedClient = 'Ajouter une affaire à un client existant' || new Client();
+
+  // Status images
   /**
    * image status true
    * 
@@ -117,7 +130,8 @@ export class ClientComponent implements OnInit {
     private flashMessages: FlashMessagesService
   ) {
     this.generateForm();
-    this.keys = Object.keys(this.civilite).filter(Number);
+    this.keys = Object.keys(this.civiliteEnum).filter(Number);
+    this.validNumAffaire = false;
   }
 
   /**
@@ -183,6 +197,14 @@ export class ClientComponent implements OnInit {
             });
             this.onSuccess();
           }
+        }, err => {
+          this.flashMessages.show('Erreur : Client non sauvé', {
+            classes: [ 'alert', 'alert-danger' ],
+            timeout: 3000
+          });
+          console.log(err);
+          this.enableForm();
+          this.processing = false;
         }
         );
     } else {
@@ -204,8 +226,16 @@ export class ClientComponent implements OnInit {
             this.processing = false;
             this.enableForm();
           }
-        },
-      );
+        }, err => {
+          this.flashMessages.show('Erreur : Client non modifié', {
+            classes: [ 'alert', 'alert-danger' ],
+            timeout: 3000
+          });
+          console.log(err);
+          this.processing = false;
+          this.enableForm();
+        }
+        );
     }
   }
 
@@ -310,6 +340,7 @@ export class ClientComponent implements OnInit {
     this.client_id = client._id;
 
     // Set clientForm values
+    this.clientForm.get('affaire').setValue(client.affaire);
     this.clientForm.get('civilite').setValue(client.civilite);
     this.clientForm.get('nom').setValue(client.nom);
     this.clientForm.get('prenom').setValue(client.prenom);
@@ -347,6 +378,9 @@ export class ClientComponent implements OnInit {
    */
   generateForm() {
     this.clientForm = this.formBuilder.group({
+      affaire: [ '', Validators.compose([
+        Validators.required
+      ]) ],
       civilite: '',
       nom: [ '', Validators.compose([
         Validators.required,
@@ -374,6 +408,21 @@ export class ClientComponent implements OnInit {
       villeChantier: '',
     });
   }
+
+  get affaire(): string { return this.clientForm.get('affaire').value as string; }
+  get civilite(): string { return this.clientForm.get('civilite').value as string; }
+  get nom(): string { return this.clientForm.get('nom').value as string; }
+  get prenom(): string { return this.clientForm.get('prenom').value as string; }
+  get email(): string { return this.clientForm.get('email').value as string; }
+  get numTel(): string { return this.clientForm.get('numTel').value as string; }
+  get adresseFact(): string { return this.clientForm.get('adresseFact').value as string; }
+  get complAdresseFact(): string { return this.clientForm.get('complAdresseFact').value as string; }
+  get cpFact(): string { return this.clientForm.get('cpFact').value as string; }
+  get villeFact(): string { return this.clientForm.get('villeFact').value as string; }
+  get adresseChantier(): string { return this.clientForm.get('adresseChantier').value as string; }
+  get complAdresseChantier(): string { return this.clientForm.get('complAdresseChantier').value as string; }
+  get cpChantier(): string { return this.clientForm.get('cpChantier').value as string; }
+  get villeChantier(): string { return this.clientForm.get('villeChantier').value as string; }
 
   /**
    * enable form
@@ -443,6 +492,33 @@ export class ClientComponent implements OnInit {
     return {
       numTelValidation: true
     };
+  }
+
+  verifNumAffaire() {
+    this.validNumAffaire = false;
+    this.clientService.verifUniciteNumAffaire(this.clientForm.get('affaire').value)
+      .subscribe(data => {
+        if (!data.success) {
+          this.validNumAffaire = true;
+        }
+      }, err => console.log(err)
+      );
+  }
+
+  loadClient(client: Client) {
+    this.clientForm.get('civilite').setValue(client.civilite);
+    this.clientForm.get('nom').setValue(client.nom);
+    this.clientForm.get('prenom').setValue(client.prenom);
+    this.clientForm.get('email').setValue(client.email);
+    this.clientForm.get('numTel').setValue(client.numTel);
+    this.clientForm.get('adresseFact').setValue(client.adresseFact);
+    this.clientForm.get('complAdresseFact').setValue(client.complAdresseFact);
+    this.clientForm.get('cpFact').setValue(client.cpFact);
+    this.clientForm.get('villeFact').setValue(client.villeFact);
+    this.clientForm.get('adresseChantier').setValue(client.adresseChantier);
+    this.clientForm.get('complAdresseChantier').setValue(client.complAdresseChantier);
+    this.clientForm.get('cpChantier').setValue(client.cpChantier);
+    this.clientForm.get('villeChantier').setValue(client.villeChantier);
   }
 
   /**

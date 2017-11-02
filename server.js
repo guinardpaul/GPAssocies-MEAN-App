@@ -47,8 +47,8 @@ app.use(logger('dev'));
 //app.use(logger('common', { stream: accessLogStream }))
 
 // Favicon
-app.use(favicon(path.join(__dirname, 'client/src', 'favicon.ico')));
-// app.use(favicon(path.join(__dirname, 'dist', 'favicon.ico')))
+// app.use(favicon(path.join(__dirname, 'client/src', 'favicon.ico')));
+app.use(favicon(path.join(__dirname, 'dist', 'favicon.ico')))
 
 // Allows cross origin in development only
 app.use(cors({ origin: 'http://localhost:4200' }));
@@ -69,8 +69,8 @@ app.use('/api', factureAccompte);
 app.use('/api', detailsDevis);
 app.use('/api', reglement);
 app.use('/api', bug);
-app.use('/auth', auth);
-app.use('/mail', mailHandler);
+app.use('/api/auth', auth);
+app.use('/api/mail', mailHandler);
 
 // allow to refresh page
 // send back to dist/index.html

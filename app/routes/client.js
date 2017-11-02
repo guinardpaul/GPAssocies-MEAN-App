@@ -37,6 +37,36 @@ module.exports = (router) => {
     });
 
     /**
+     * Vérif unicité numéro affaire
+     */
+    router.get('/clients/numAffaire/:affaire', (req, res, next) => {
+        if (!req.params.affaire) {
+            res.status(409).json({
+                success: false,
+                message: 'N° affaire not provided'
+            });
+        } else {
+            Client.findOne({ affaire: req.params.affaire }, (err, client) => {
+                if (err) return next(err);
+                // Si client non trouvé => N° valide
+                if (!client) {
+                    res.status(200).json({
+                        success: true,
+                        message: 'N° affaire disponible'
+                    });
+                }
+                // Si client trouvé => N° non valide
+                if (client) {
+                    res.status(200).json({
+                        success: false,
+                        message: 'N° affaire déjà utilisé'
+                    });
+                }
+            });
+        }
+    });
+
+    /**
      * SAVE CLIENT
      */
     router.post('/clients', (req, res, next) => {
@@ -51,7 +81,7 @@ module.exports = (router) => {
                     if (err.code === 11000) {
                         return res.status(409).json({
                             success: false,
-                            message: 'Email déjà utilisé'
+                            message: 'N° d\'affaire déjà utilisé'
                         });
                     } else if (err.errors.email) {
                         return res.status(409).json({

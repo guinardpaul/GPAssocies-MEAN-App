@@ -1,8 +1,9 @@
 <div class="container-fluid">
-    <table class="table table-striped">
+    <table class="table table-responsive table-striped">
         <thead>
             <tr>
                 <th>Statut</th>
+                <th>N° affaire</th>
                 <th>Nom</th>
                 <th>Prénom</th>
                 <th>Adresse Facturation</th>
@@ -14,12 +15,19 @@
         </thead>
         <tbody>
             <tr *ngFor="let client of listClient">
-                <td *ngIf="client.status_client"><img src="{{status_true}}" alt="true"></td>
-                <td *ngIf="!client.status_client"><img src="{{status_false}}" alt="false"></td>
+                <td *ngIf="client.status_client">
+                    <img src="{{status_true}}" alt="true">
+                </td>
+                <td *ngIf="!client.status_client">
+                    <img src="{{status_false}}" alt="false">
+                </td>
+                <td>{{client.affaire}}</td>
                 <td>{{client.nom}}</td>
                 <td>{{client.prenom}}</td>
-                <td>{{client.adresseFact}} {{client.complAdresseFact}} <br/> {{client.cpFact}} {{client.villeFact}}</td>
-                <td>{{client.adresseChantier}} {{client.complAdresseChantier}} <br/> {{client.cpChantier}} {{client.villeChantier}}</td>
+                <td>{{client.adresseFact}} {{client.complAdresseFact}}
+                    <br/> {{client.cpFact}} {{client.villeFact}}</td>
+                <td>{{client.adresseChantier}} {{client.complAdresseChantier}}
+                    <br/> {{client.cpChantier}} {{client.villeChantier}}</td>
                 <td>{{client.email}}</td>
                 <td>{{client.numTel}}</td>
                 <td>
@@ -59,22 +67,42 @@
 <!-- Add/Update Client form -->
 <div class="container" *ngIf="mode">
     <div class="panel-group">
+
         <form class="form-horizontal" [formGroup]="clientForm" (submit)="addClient()">
             <div class="panel-info col-sm-4">
-                <div class="panel-heading">Client</div>
+                <div class="panel-heading">
+                    Client
+                    <select class="form-control" name="clients" id="clients" [ngModel]="selectedClient" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="loadClient($event)">
+                        <option>Ajouter une affaire à un client existant</option>
+                        <option *ngFor="let c of listClient" [ngValue]="c">{{c.nom}} {{c.prenom}}</option>
+                    </select>
+                </div>
                 <div class="panel-body">
+                    <div class="form-group">
+                        <label for="numAffaire">Numéro affaire :</label>
+                        <input type="text" class="form-control" name="numAffaire" id="numAffaire" formControlName="affaire" (blur)="verifNumAffaire()"
+                            autofocus required>
+                        <ul class="list-group">
+                            <li class="list-group-item list-group-item-danger" *ngIf="clientForm.controls.affaire.errors?.required && clientForm.controls.affaire.dirty">
+                                Ce champ est requis
+                            </li>
+                            <li class="list-group-item list-group-item-danger" *ngIf="validNumAffaire">
+                                Le N° d'affaire est déjà utilisé
+                            </li>
+                        </ul>
+                    </div>
                     <div class="form-group">
                         <label for="civilite">Civilité :</label>
                         <select class="form-control" name="civilite" id="civilite" formControlName="civilite">
                             <option>Civilité...</option>
-                            <option *ngFor="let key of keys" ([ngValue])="key">{{civilite[key]}}</option>
-                          </select>
+                            <option *ngFor="let key of keys" ([ngValue])="key">{{civiliteEnum[key]}}</option>
+                        </select>
                     </div>
                     <div class="form-group" [ngClass]="{'has-error': (clientForm.controls.nom.errors && clientForm.controls.nom.dirty),
               'has-success': (!clientForm.controls.nom.errors)}">
                         <label for="nom">Nom :</label>
-                        <input type="text" class="form-control" name="nom" value="{{client.nom}}" id="nom" formControlName="nom" autofocus required
-                        />
+                        <input type="text" class="form-control" name="nom" value="{{client.nom}}" id="nom" formControlName="nom" required />
                         <ul class="list-group">
                             <li class="list-group-item list-group-item-danger" *ngIf="clientForm.controls.nom.errors?.required && clientForm.controls.nom.dirty">
                                 Ce champ est requis
@@ -124,7 +152,7 @@
                     </div>
                     <div class="form-group">
                         <md-spinner *ngIf="processing" style="float: left;width: 24px;height: 24px;"></md-spinner>
-                        <button [disabled]="!clientForm.valid || processing" type="submit" class="btn btn-success">Sauver</button>
+                        <button [disabled]="!clientForm.valid || processing || validNumAffaire" type="submit" class="btn btn-success">Sauver</button>
                         <button [disabled]="processing" (click)="onCancel()" class="btn btn-default">Annuler</button>
                     </div>
                 </div>

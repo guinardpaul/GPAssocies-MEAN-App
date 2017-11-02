@@ -9,6 +9,7 @@ import { CIVILITE } from './civilite.enum';
  */
 export class Client {
     _id?: number;
+    affaire?: string;
     status_client?: boolean;
     civilite?: CIVILITE;
     nom: string;

@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 // Models
 import { Email } from '../../models/Email';
-
+import { environment } from '../../../environments/environment';
 /**
  * Service pour envoyer des Email
  * @author Paul GUINARD
@@ -22,7 +22,7 @@ export class EmailService {
   constructor(
     private _http: HttpClient
   ) {
-    this.url = '/mail';
+    this.url = environment.url;
   }
 
   /**
@@ -33,7 +33,7 @@ export class EmailService {
    * @memberof EmailService
    */
   sendMail(email: Email): Observable<any> {
-    return this._http.post(`${this.url}/sendMail`, email);
+    return this._http.post(`${this.url}/mail/sendMail`, email);
   }
 
 }

@@ -6,11 +6,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
 // Models
 import { Client } from '../models/client';
-
-/**
- * Set dev url accessing app/routes/ url
- */
-const devUrl = '/api/clients/';
+import { environment } from '../../environments/environment';
 
 /**
  *
@@ -20,13 +16,15 @@ const devUrl = '/api/clients/';
  */
 @Injectable()
 export class ClientService {
-
+  private url;
   /**
    * Creates an instance of ClientService.
    * @param {Http} http http module
    * @memberof ClientService client service
    */
-  constructor(private http: Http) { }
+  constructor(private http: Http) {
+    this.url = environment.url;
+  }
 
   /**
    * Get all clients.
@@ -35,7 +33,7 @@ export class ClientService {
    * @memberof ClientService
    */
   getAllClients(): Observable<Client[]> {
-    return this.http.get(devUrl)
+    return this.http.get(`${this.url}/clients`)
       .map(res => res.json());
   }
 
@@ -47,7 +45,18 @@ export class ClientService {
    * @memberof ClientService
    */
   getOneClient(id: number): Observable<Client> {
-    return this.http.get(devUrl + id)
+    return this.http.get(`${this.url}/clients/${id}`)
+      .map(res => res.json());
+  }
+
+  /**
+   * Vérification sur l'unicité du numéro d'affaire
+   * 
+   * @param {string} numAffaire N° affaire
+   * @memberof ClientService
+   */
+  verifUniciteNumAffaire(numAffaire: string): Observable<any> {
+    return this.http.get(`${this.url}/clients/numAffaire/${numAffaire}`)
       .map(res => res.json());
   }
 
@@ -59,7 +68,7 @@ export class ClientService {
    * @memberof ClientService
    */
   addClient(client: Client) {
-    return this.http.post(devUrl, client)
+    return this.http.post(`${this.url}/clients`, client)
       .map(res => res.json());
   }
 
@@ -71,7 +80,7 @@ export class ClientService {
    * @memberof ClientService
    */
   updateClient(client: Client) {
-    return this.http.put(devUrl + client._id, client)
+    return this.http.put(`${this.url}/clients/${client._id}`, client)
       .map(res => res.json());
   }
 
@@ -83,7 +92,7 @@ export class ClientService {
    * @memberof ClientService
    */
   deleteClient(id: number) {
-    return this.http.delete(devUrl + id)
+    return this.http.delete(`${this.url}/clients/${id}`)
       .map(res => res.json());
   }
 
@@ -99,7 +108,7 @@ export class ClientService {
     // Set status_client
     client.status_client = status;
     // PUT request
-    return this.http.put(devUrl + client._id, client)
+    return this.http.put(`${this.url}/clients/${client._id}`, client)
       .map(res => res.json());
   }
 

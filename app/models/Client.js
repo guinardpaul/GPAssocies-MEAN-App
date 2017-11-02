@@ -47,6 +47,11 @@ const emailValidator = [{
 }];
 
 const ClientSchema = new mongoose.Schema({
+    affaire: {
+        type: String,
+        required: true,
+        unique: true
+    },
     civilite: {
         type: String,
         enum: ['', 'Mr', 'Mme/Mlle']

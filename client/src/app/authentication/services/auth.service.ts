@@ -4,7 +4,8 @@ import { Observable } from 'rxjs/Observable';
 import { tokenNotExpired } from 'angular2-jwt';
 // Models
 import { User } from '../../models/User';
-
+// Environments
+import { environment } from '../../../environments/environment';
 /**
  * Authentication Service
  * @author Paul GUINARD
@@ -25,7 +26,7 @@ export class AuthService {
   constructor(
     private _http: HttpClient
   ) {
-    this.url = '/auth';
+    this.url = environment.url;
   }
 
   /**
@@ -46,7 +47,7 @@ export class AuthService {
    * @memberof AuthService
    */
   login(user: User): Observable<any> {
-    return this._http.post(`${this.url}/login`, user);
+    return this._http.post(`${this.url}/auth/login`, user);
   }
 
   /**
@@ -56,7 +57,7 @@ export class AuthService {
    * @memberof AuthService
    */
   register(user: User): Observable<any> {
-    return this._http.post(`${this.url}/register`, user);
+    return this._http.post(`${this.url}/auth/register`, user);
   }
 
   /**
@@ -74,7 +75,7 @@ export class AuthService {
    * @memberof AuthService
    */
   getUserByEmail(email: string): Observable<any> {
-    return this._http.get(`${this.url}/users/email/${email}`);
+    return this._http.get(`${this.url}/auth/users/email/${email}`);
   }
 
   /**
@@ -84,7 +85,7 @@ export class AuthService {
    * @memberof AuthService
    */
   getUserById(id: number): Observable<any> {
-    return this._http.get(`${this.url}/users/${id}`);
+    return this._http.get(`${this.url}/auth/users/${id}`);
   }
 
   /**
@@ -94,7 +95,7 @@ export class AuthService {
    * @memberof AuthService
    */
   initUserPassword(user: User): Observable<any> {
-    return this._http.put(`${this.url}/init-password/${user._id}`, user);
+    return this._http.put(`${this.url}/auth/init-password/${user._id}`, user);
   }
 
   /**
