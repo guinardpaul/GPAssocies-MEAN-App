@@ -667,8 +667,9 @@ export class DevisComponent implements OnInit {
     this.detailsDevis1 = { tauxTva: CONST_TAUX[ 1 ] };
     this.detailsDevis2 = { tauxTva: CONST_TAUX[ 2 ] };
     this.detailsDevis3 = { tauxTva: CONST_TAUX[ 3 ] };
-    // Set controls['client'] touched for Validators.required
-    // this.devisForm.controls[ 'client' ].markAsTouched;
+    const latest_date = this.datepipe.transform(Date.now(), 'yyyy-MM-dd');
+    this.devisForm.get('date_creation').setValue(latest_date);
+    this.devis.date_creation = latest_date;
   }
 
   /**

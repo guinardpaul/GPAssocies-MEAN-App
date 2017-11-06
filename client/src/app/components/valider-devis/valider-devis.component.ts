@@ -119,7 +119,7 @@ export class ValiderDevisComponent implements OnInit {
     private factureGlobalService: FactureGlobalService,
     private flashMessages: FlashMessagesService
   ) {
-    this.generateForm()
+    this.generateForm();
   }
 
   /**

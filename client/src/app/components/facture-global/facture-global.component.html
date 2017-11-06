@@ -23,9 +23,9 @@
                 </td>
                 <td>{{f.ref_factureGlobal}}</td>
                 <td>{{f.date_creation | date: 'dd/MM/yyyy'}}</td>
-                <td>{{f.montantTtcTotal}}</td>
-                <td>{{f.montantTtcFacture}}</td>
-                <td>{{f.montantTtcRegle}}</td>
+                <td>{{f.montantTtcTotal.toFixed(2)}}</td>
+                <td>{{f.montantTtcFacture.toFixed(2)}}</td>
+                <td>{{f.montantTtcRegle.toFixed(2)}}</td>
                 <td>{{client.nom}} {{client.prenom}}</td>
                 <td>
                     <div class="btn-group-vertical">
@@ -106,7 +106,7 @@
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="montantTtcTotal">Montant TTC :</label>
-                        <input type="text" class="form-control" name="montantTtcTotal" id="montantTtcTotal" formControlName="montantTtcTotal" value="{{factureGlobal.montantTtcTotal}}"
+                        <input type="text" class="form-control" name="montantTtcTotal" id="montantTtcTotal" formControlName="montantTtcTotal" value="{{factureGlobal.montantTtcTotal.toFixed(2)}}"
                         />
                     </div>
                     <div class="form-group">

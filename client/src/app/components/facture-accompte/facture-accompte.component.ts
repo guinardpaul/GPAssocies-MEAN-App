@@ -181,6 +181,14 @@ export class FactureAccompteComponent implements OnInit {
    */
   reglementForm: FormGroup;
 
+  /**
+   * Checkbox reglement complet
+   * 
+   * @type {boolean}
+   * @memberof FactureAccompteComponent
+   */
+  reglementComplet: boolean;
+
   // Status images
   /**
    * image status true
@@ -223,6 +231,7 @@ export class FactureAccompteComponent implements OnInit {
   ) {
     this.generateForm();
     this.generateReglementForm();
+    this.reglementComplet = false;
   }
 
   /**
@@ -810,6 +819,17 @@ export class FactureAccompteComponent implements OnInit {
     this.reglementForm.get('date_creation').setValue(latest_date);
     this.modeAddReglement = true;
     this.mode = false;
+  }
+
+  onReglementComplet() {
+    this.reglementComplet = !this.reglementComplet;
+    if (this.reglementComplet) {
+      const reglementRestant = this.factureAccompte.montantFacture - this.factureAccompte.reglementClient;
+      this.reglementForm.get('reglementTtc').setValue(reglementRestant);
+      this.validationReglement = false;
+    } else {
+      this.reglementForm.get('reglementTtc').setValue(0);
+    }
   }
 
   /**

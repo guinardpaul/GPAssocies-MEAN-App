@@ -20,9 +20,9 @@
             <tr *ngFor="let d of listDevis">
                 <td>{{d.ref_devis}}</td>
                 <td>{{d.date_creation | date: 'dd/MM/yyyy'}}</td>
-                <td>{{d.montantHt}}</td>
-                <td>{{d.tauxTva}}</td>
-                <td>{{d.montantTtc}}</td>
+                <td>{{d.montantHt.toFixed(2)}}</td>
+                <td>{{d.tauxTva.toFixed(2)}}</td>
+                <td>{{d.montantTtc.toFixed(2)}}</td>
                 <td>{{client.nom}} {{client.prenom}}</td>
                 <td>
                     <div class="btn-group-vertical">
