@@ -13,15 +13,14 @@ require('./app/config/passport')(passport);
 const nodemailer = require('nodemailer');
 const port = process.env.PORT || 3001;
 
-const config = require('./app/config/database');
+// Changer a database.prod quand déployer en production
+const config = require('./app/config/database.dev');
 
 // mongoDB connection
-const promise = mongoose.connect(config.uri, {
-    useMongoClient: true,
-});
+const promise = mongoose.connect(config.uri, config.options);
 promise.then((db, err) => {
     if (err) return console.log(err);
-    console.log('Successfully connected to mongoDb:' + config.db);
+    console.log('Successfully connected to ' + config.environment + ' mongoDb database:' + config.db);
 });
 
 // Set app
@@ -47,11 +46,11 @@ app.use(logger('dev'));
 //app.use(logger('common', { stream: accessLogStream }))
 
 // Favicon
-app.use(favicon(path.join(__dirname, 'client/src', 'favicon.ico')));
+app.use(favicon(path.join(__dirname, config.favicon_path, config.favicon)));
 // app.use(favicon(path.join(__dirname, 'dist', 'favicon.ico')))
 
 // Allows cross origin in development only
-app.use(cors({ origin: 'http://localhost:4200' }));
+app.use(cors(config.cors_origin));
 // app.use(cors({ origin: 'http://gp-suivifact.herokuapp.com/' }));
 // body-parser
 app.use(bodyParser.json());
@@ -59,7 +58,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // Passport authenticate
 app.use(passport.initialize());
 // Set Static Folder
-app.use(express.static(path.join(__dirname, 'dist')));
+app.use(express.static(path.join(__dirname, config.static_path)));
 
 // use routes
 app.use('/api', client);
@@ -75,10 +74,10 @@ app.use('/api/mail', mailHandler);
 // allow to refresh page
 // send back to dist/index.html
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, './dist', 'index.html'));
+    res.sendFile(path.join(__dirname, config.static_path, config.static_file));
 });
 
 // Start Server: Listen on port
 app.listen(port, () => {
-    console.log('Listening on port ' + port);
+    console.log('Listening on port ' + port + ' in ' + config.environment + ' mode.');
 });

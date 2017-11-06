@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 const Schema = mongoose.Schema;
 const bcrypt = require('bcrypt-nodejs');
-const config = require('../config/database');
+const config = require('../config/secret');
 const jwt = require('jsonwebtoken');
 
 const userSchema = new Schema({
