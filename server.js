@@ -15,6 +15,7 @@ const port = process.env.PORT || 3001;
 
 // Changer a database.prod quand déployer en production
 const config = require('./app/config/database.dev');
+process.env.NODE_ENV = config.environment;
 
 // mongoDB connection
 const promise = mongoose.connect(config.uri, config.options);
@@ -76,6 +77,7 @@ app.use('/api/mail', mailHandler);
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, config.static_path, config.static_file));
 });
+
 
 // Start Server: Listen on port
 app.listen(port, () => {
