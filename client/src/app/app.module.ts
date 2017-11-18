@@ -48,9 +48,13 @@ import { BugsService } from './service/bugs.service';
 import { AuthService } from './authentication/services/auth.service';
 import { ValidationService } from './authentication/services/validation.service';
 import { EmailService } from './authentication/services/email.service';
+// Guards
 import { AuthGuard } from './routing/auth.guard';
 import { NotAuthGuard } from './routing/not-auth.guard';
-import { SortPipe } from './components/sort.pipe';
+// Pipes
+import { SortNumberPipe } from './pipes/sort-number.pipe';
+import { SortStringPipe } from './pipes/sort-string.pipe';
+import { OrderByDatePipe } from './pipes/order-by-date.pipe';
 
 @NgModule({
   declarations: [
@@ -68,17 +72,13 @@ import { SortPipe } from './components/sort.pipe';
     RegisterComponent,
     ForgotPasswordComponent,
     InitPasswordComponent,
-    SortPipe
+    SortNumberPipe,
+    SortStringPipe,
+    OrderByDatePipe
   ],
   imports: [
     BrowserAnimationsModule,
     AppRoutingModule,
-    HttpModule,
-    HttpClientModule,
-    ReactiveFormsModule,
-    FormsModule,
-    FlashMessagesModule,
-    ChartsModule,
     MatCardModule,
     MatCheckboxModule,
     MatFormFieldModule,
@@ -87,7 +87,13 @@ import { SortPipe } from './components/sort.pipe';
     MatRadioModule,
     MatButtonModule,
     MatGridListModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    HttpModule,
+    HttpClientModule,
+    ReactiveFormsModule,
+    FormsModule,
+    FlashMessagesModule,
+    ChartsModule
   ],
   providers: [
     ClientService,

@@ -131,10 +131,13 @@ export class BugsComponent implements OnInit {
   updateBug() {
     this.processing = true;
     this.disableForm();
-    const newBug = this.bugForm.value;
-    newBug.date_creation = this.bugForm.get('date_creation').value;
-    newBug.criticite = this.criticite[ this.bugForm.get('criticite').value ];
-    newBug.status_correction = this.status_correction[ this.bugForm.get('status_correction').value ];
+    const newBug = new Bug({
+      _id: this.bug._id,
+      date_creation: this.bugFormUpdate.get('date_creation').value,
+      criticite: this.bugFormUpdate.get('criticite').value,
+      status_correction: this.bugFormUpdate.get('status_correction').value,
+      description: this.bugFormUpdate.get('description').value
+    });
     console.log(newBug);
     this.bugService.updateBug(newBug)
       .subscribe(
@@ -183,12 +186,15 @@ export class BugsComponent implements OnInit {
    */
   onAdd() {
     // Display ony one form
+    this.mode = true;
     this.modeUpdate = false;
+    this.generateForm();
     this.bug = {};
     this.id_bug = 0;
-    this.generateForm();
-    this.bugForm.get('date_creation').setValue(this.currentDate);
-    this.mode = true;
+    const latest_date = this.datePipe.transform(Date.now(), 'yyyy-MM-dd');
+    this.bugForm.get('date_creation').setValue(latest_date);
+    this.bugForm.get('criticite').setValue('');
+    this.bug.date_creation = latest_date;
   }
 
   /**
@@ -200,16 +206,18 @@ export class BugsComponent implements OnInit {
   onUpdateBug(bug: Bug) {
     // Display only one form
     this.mode = false;
+    this.modeUpdate = true;
     // Set bug value
     this.generateFormUpdate();
     this.id_bug = bug._id;
     this.bug = bug;
+    const latest_date = this.datePipe.transform(this.bug.date_creation, 'yyyy-MM-dd');
+    this.bug.date_creation = latest_date;
     // TODO: set valeur select option input
     this.bugFormUpdate.get('description').setValue(bug.description);
     this.bugFormUpdate.get('date_creation').setValue(bug.date_creation);
     this.bugFormUpdate.get('criticite').setValue(bug.criticite);
     this.bugFormUpdate.get('status_correction').setValue(bug.status_correction);
-    this.modeUpdate = true;
   }
 
   getBugToDelete(bug: Bug) {
@@ -300,7 +308,6 @@ export class BugsComponent implements OnInit {
    */
   ngOnInit() {
     this.getAllBugs();
-    this.currentDate = Date.now();
   }
 
 }

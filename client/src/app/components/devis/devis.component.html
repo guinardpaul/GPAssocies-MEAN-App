@@ -17,7 +17,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let d of listDevis">
+            <tr *ngFor="let d of listDevis | orderByDate: 'date_creation'">
                 <td>{{d.ref_devis}}</td>
                 <td>{{d.date_creation | date: 'dd/MM/yyyy'}}</td>
                 <td>{{d.montantHt.toFixed(2)}}</td>

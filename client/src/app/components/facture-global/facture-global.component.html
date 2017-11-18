@@ -14,7 +14,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let f of listFactureGlobals">
+            <tr *ngFor="let f of listFactureGlobals | orderByDate: 'date_creation'">
                 <td *ngIf="f.status_factureGlobal">
                     <img src="{{status_true}}" alt="true">
                 </td>

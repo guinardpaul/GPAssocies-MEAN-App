@@ -14,7 +14,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let client of listClient">
+            <tr *ngFor="let client of listClient | sortNumber: 'affaire'">
                 <td *ngIf="client.status_client">
                     <img src="{{status_true}}" alt="true">
                 </td>

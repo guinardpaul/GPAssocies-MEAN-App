@@ -17,7 +17,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let f of listFactureAccompte">
+            <tr *ngFor="let f of listFactureAccompte | orderByDate: 'date_creation'">
                 <td *ngIf="f.status_factureAccompte">
                     <img src="{{status_true}}" alt="true">
                 </td>
@@ -184,7 +184,7 @@
                         </ul>
                         <div class="checkbox">
                             <label>
-                                <input type="checkbox" (click)="onReglementComplet()"> Règlement complet
+                                <input type="checkbox" [ngModel]="reglementComplet" [ngModelOptions]="{standalone: true}" (click)="onReglementComplet()"> Règlement complet
                             </label>
                         </div>
                     </div>

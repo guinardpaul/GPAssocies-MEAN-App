@@ -409,29 +409,26 @@ export class FactureAccompteComponent implements OnInit {
     this.reglementService.addReglement(newReglement)
       .subscribe(
       data => {
-        if (data.success) {
-          this.flashMessages.show(data.message, {
-            classes: [ 'alert', 'alert-success' ],
-            timeout: 3000
-          });
-          // update Facture accompte with new reglementClient
-          this.updateReglementClientFactureAccompte(this.factureAccompte, newReglement.reglementTtc);
-          // update facture Accompte Status
-          this.updateStatusFactureAccompte(this.factureAccompte);
-          // update facture global reglement
-          this.updateReglementClientFactureGlobal(this.factureGlobal, newReglement.reglementTtc);
+        this.flashMessages.show(data.message, {
+          classes: [ 'alert', 'alert-success' ],
+          timeout: 3000
+        });
+        // update Facture accompte with new reglementClient
+        this.updateReglementClientFactureAccompte(this.factureAccompte, newReglement.reglementTtc);
+        // update facture Accompte Status
+        this.updateStatusFactureAccompte(this.factureAccompte);
+        // update facture global reglement
+        this.updateReglementClientFactureGlobal(this.factureGlobal, newReglement.reglementTtc);
 
-          this.onSuccess();
-        } else {
-          this.flashMessages.show('data.message', {
-            classes: [ 'alert', 'alert-danger' ],
-            timeout: 3000
-          });
-          this.processing = false;
-          this.enableReglementForm();
-        }
-      }
-      );
+        this.onSuccess();
+      }, err => {
+        this.flashMessages.show(JSON.parse(err._body).message, {
+          classes: [ 'alert', 'alert-danger' ],
+          timeout: 3000
+        });
+        this.processing = false;
+        this.enableReglementForm();
+      });
   }
 
   /**
@@ -759,6 +756,7 @@ export class FactureAccompteComponent implements OnInit {
     this.factureAccompte = {};
     this.reglement = {};
     this.descriptionModif = '';
+    this.reglementComplet = false;
     this.generateForm();
     this.generateReglementForm();
   }
@@ -810,9 +808,11 @@ export class FactureAccompteComponent implements OnInit {
    * @memberof FactureAccompteComponent
    */
   onAddReglement(factureAccompte: FactureAccompte) {
+    this.reglementComplet = false;
+    this.generateForm();
+    this.generateReglementForm();
     this.getAllReglementByFactureAccompte(factureAccompte._id);
     this.reglement = {};
-    this.generateReglementForm();
     this.factureAccompte = factureAccompte;
     const latest_date = this.datePipe.transform(this.factureAccompte.date_creation, 'yyyy-MM-dd');
     this.factureAccompte.date_creation = latest_date;
@@ -845,6 +845,7 @@ export class FactureAccompteComponent implements OnInit {
     this.validationMontantFacture = false;
     this.validationRef = false;
     this.validationReglement = false;
+    this.reglementComplet = false;
     this.factureAccompte = {};
     this.reglement = {};
   }

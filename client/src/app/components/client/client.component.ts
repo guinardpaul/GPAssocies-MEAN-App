@@ -8,8 +8,7 @@ import { CIVILITE } from '../../models/civilite.enum';
 import { ClientService } from '../../service/client.service';
 import { DevisService } from '../../service/devis.service';
 import { FlashMessagesService } from 'ngx-flash-messages';
-// Pipes
-import { SortPipe } from '../sort.pipe';
+
 /**
  *
  * @author Paul GUINARD
@@ -496,13 +495,15 @@ export class ClientComponent implements OnInit {
 
   verifNumAffaire() {
     this.validNumAffaire = false;
-    this.clientService.verifUniciteNumAffaire(this.clientForm.get('affaire').value)
-      .subscribe(data => {
-        if (!data.success) {
-          this.validNumAffaire = true;
-        }
-      }, err => console.log(err)
-      );
+    if (this.clientForm.get('affaire').value !== '') {
+      this.clientService.verifUniciteNumAffaire(this.clientForm.get('affaire').value)
+        .subscribe(data => {
+          if (!data.success) {
+            this.validNumAffaire = true;
+          }
+        }, err => console.log(err)
+        );
+    }
   }
 
   loadClient(client: Client) {
