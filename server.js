@@ -14,7 +14,7 @@ const nodemailer = require('nodemailer');
 const port = process.env.PORT || 3001;
 
 // Changer a database.prod quand déployer en production
-const config = require('./app/config/database.dev');
+const config = require('./app/config/database.prod');
 process.env.NODE_ENV = config.environment;
 
 // mongoDB connection
