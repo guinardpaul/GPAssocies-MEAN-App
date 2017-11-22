@@ -6363,6 +6363,7 @@ var _a, _b;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map__ = __webpack_require__("../../../../rxjs/_esm5/add/operator/map.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_catch__ = __webpack_require__("../../../../rxjs/_esm5/add/operator/catch.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_observable_throw__ = __webpack_require__("../../../../rxjs/_esm5/add/observable/throw.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__environments_environment__ = __webpack_require__("../../../../../src/environments/environment.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -6377,10 +6378,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-/**
- * Set dev url accessing app/routes/ url
- */
-var devUrl = 'http://localhost:3001/api/bugs/';
+
 /**
  *
  * @author Paul GUINARD
@@ -6395,6 +6393,7 @@ var BugsService = (function () {
      */
     function BugsService(http) {
         this.http = http;
+        this.url = __WEBPACK_IMPORTED_MODULE_5__environments_environment__["a" /* environment */].url;
     }
     /**
      * Get All Bugs
@@ -6403,7 +6402,7 @@ var BugsService = (function () {
      * @memberof BugsService
      */
     BugsService.prototype.getAllBugs = function () {
-        return this.http.get(devUrl)
+        return this.http.get(this.url + "/bugs")
             .map(function (res) { return res.json(); });
     };
     /**
@@ -6414,7 +6413,7 @@ var BugsService = (function () {
      * @memberof BugsService
      */
     BugsService.prototype.getOneBug = function (id) {
-        return this.http.get(devUrl + id)
+        return this.http.get(this.url + "/bugs/" + id)
             .map(function (res) { return res.json(); });
     };
     /**
@@ -6425,7 +6424,7 @@ var BugsService = (function () {
      * @memberof BugsService
      */
     BugsService.prototype.addBug = function (bug) {
-        return this.http.post(devUrl, bug)
+        return this.http.post(this.url + "/bugs", bug)
             .map(function (res) { return res.json(); });
     };
     /**
@@ -6436,7 +6435,7 @@ var BugsService = (function () {
      * @memberof BugsService
      */
     BugsService.prototype.updateBug = function (bug) {
-        return this.http.put(devUrl + bug._id, bug)
+        return this.http.put(this.url + "/bugs/" + bug._id, bug)
             .map(function (res) { return res.json(); });
     };
     /**
@@ -6447,7 +6446,7 @@ var BugsService = (function () {
      * @memberof BugsService
      */
     BugsService.prototype.deleteBug = function (id) {
-        return this.http.delete(devUrl + id)
+        return this.http.delete(this.url + "/bugs/" + id)
             .map(function (res) { return res.json(); });
     };
     return BugsService;
