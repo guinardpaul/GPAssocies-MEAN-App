@@ -7,6 +7,7 @@ import 'rxjs/add/observable/throw';
 
 // Models
 import { Bug } from '../models/bug';
+import { environment } from '../../environments/environment';
 
 /**
  * Set dev url accessing app/routes/ url
@@ -21,13 +22,16 @@ const devUrl = 'http://localhost:3001/api/bugs/';
  */
 @Injectable()
 export class BugsService {
+  url: string;
 
   /**
    * Creates an instance of BugsService.
    * @param {Http} http http module
    * @memberof BugsService
    */
-  constructor(private http: Http) { }
+  constructor(private http: Http) {
+    this.url = environment.url;
+  }
 
   /**
    * Get All Bugs
@@ -36,7 +40,7 @@ export class BugsService {
    * @memberof BugsService
    */
   getAllBugs() {
-    return this.http.get(devUrl)
+    return this.http.get(`${this.url}/bugs`)
       .map(res => res.json());
   }
 
@@ -48,7 +52,7 @@ export class BugsService {
    * @memberof BugsService
    */
   getOneBug(id: number) {
-    return this.http.get(devUrl + id)
+    return this.http.get(`${this.url}/bugs/${id}`)
       .map(res => res.json());
   }
 
@@ -60,7 +64,7 @@ export class BugsService {
    * @memberof BugsService
    */
   addBug(bug: any) {
-    return this.http.post(devUrl, bug)
+    return this.http.post(`${this.url}/bugs`, bug)
       .map(res => res.json());
   }
 
@@ -72,7 +76,7 @@ export class BugsService {
    * @memberof BugsService
    */
   updateBug(bug: Bug) {
-    return this.http.put(devUrl + bug._id, bug)
+    return this.http.put(`${this.url}/bugs/${bug._id}`, bug)
       .map(res => res.json());
   }
 
@@ -84,7 +88,7 @@ export class BugsService {
    * @memberof BugsService
    */
   deleteBug(id: number) {
-    return this.http.delete(devUrl + id)
+    return this.http.delete(`${this.url}/bugs/${id}`)
       .map(res => res.json());
   }
 
