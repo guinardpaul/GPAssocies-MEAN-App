@@ -15,7 +15,7 @@ const port = process.env.PORT || 3001;
 
 // Changer a database.prod quand déployer en production
 const config = require('./app/config/database.prod');
-process.env.NODE_ENV = config.environment;
+// process.env.NODE_ENV = config.environment;
 
 // mongoDB connection
 const promise = mongoose.connect(config.uri, config.options);

@@ -1,13 +1,14 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
 # Secret
-secret.js
+# Ajouter secret.js en production
+#secret.js
 
 # logs
 *.log
 
 # compiled output
-# ENLEVER /dist en déploiement
+# Ajouter /dist en production
 #/dist
 /tmp
 /out-tsc
