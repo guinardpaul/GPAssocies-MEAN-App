@@ -1,53 +1,47 @@
-const mongoose = require('mongoose');
-mongoose.Promise = global.Promise;
-const FactureAccompte = require('./FactureAccompte');
+'use strict';
+const FactureAccompte = require('./factureaccompte');
 
-// BackEnd Validators Definition
-// Validators Function
-isNumberChecker = (reglementTtc) => {
-    if (!reglementTtc) {
-        return false;
-    } else {
-        const regExp = new RegExp(/^[0-9]{0,20}(\.[0-9]{0,4})?$/);
-        return regExp.test(reglementTtc);
-    }
-};
-
-// Validators
-const montantValidator = [{
-    validator: isNumberChecker,
-    message: 'Le montant doit être positif et doit avoir au maximum 2 chiffres significatifs'
-}];
-
-const ReglementSchema = mongoose.Schema({
+module.exports = (sequelize, DataTypes) => {
+  var Reglement = sequelize.define('Reglement', {
+    id: {
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
+      type: DataTypes.INTEGER
+    },
     date_reglement: {
-        type: Date,
-        default: Date.now,
-        required: true
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: sequelize.now
     },
     reglementTtc: {
-        type: Number,
-        required: true,
-        validate: montantValidator
+      type: DataTypes.DOUBLE,
+      allowNull: false
     },
     factureAccompte: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'FactureAccompte',
-        required: true
+      type: DataTypes.INTEGER,
+      references: {
+        model: 'FactureAccomptes',
+        key: 'id'
+      }
     },
     valid: {
-        type: Boolean,
-        default: true,
-        required: true
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true
     },
-    description: {
-        type: String
-    },
-    updated_at: {
-        type: Date,
-        default: new Date(),
-        required: true
+    description: DataTypes.STRING,
+    updatedAt: {
+      allowNull: false,
+      type: DataTypes.DATE,
+      defaultValue: sequelize.NOW
     }
-});
-
-module.exports = mongoose.model('Reglement', ReglementSchema);
+  }, {
+      classMethods: {
+        associate: function (models) {
+          // associations can be defined here
+        }
+      }
+    });
+  return Reglement;
+};

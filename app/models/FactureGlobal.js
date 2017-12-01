@@ -1,65 +1,79 @@
-const mongoose = require('mongoose');
-mongoose.Promise = global.Promise;
-const Client = require('./Client');
-const Devis = require('./Devis');
+'use strict';
+const Client = require('./client');
+const devis = require('./devis');
 
-const FactureGlobalSchema = new mongoose.Schema({
+module.exports = (sequelize, DataTypes) => {
+  var FactureGlobal = sequelize.define('FactureGlobal', {
+    id: {
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
+      type: DataTypes.INTEGER
+    },
     status_factureGlobal: {
-        type: Boolean,
-        default: true
+      type: DataTypes.BOOLEAN,
+      defaultValue: true
     },
     ref_factureGlobal: {
-        type: String,
-        required: true
+      type: DataTypes.STRING,
+      allowNull: false
     },
     date_creation: {
-        type: Date,
-        default: Date.now,
-        required: true
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: sequelize.NOW
     },
     montantHt: {
-        type: Number,
-        required: true
+      type: DataTypes.DOUBLE,
+      allowNull: false
     },
     tauxTva: {
-        type: Number,
-        required: true
+      type: DataTypes.DOUBLE,
+      allowNull: false
     },
     montantTtcTotal: {
-        type: Number,
-        required: true
-    },
-    montantTtcFacture: {
-        type: Number,
-        default: 0
+      type: DataTypes.DOUBLE,
+      allowNull: false
     },
     montantTtcRegle: {
-        type: Number,
-        default: 0
+      type: DataTypes.DOUBLE,
+      defaultValue: 0
+    },
+    montantTtcFacture: {
+      type: DataTypes.DOUBLE,
+      defaultValue: 0
     },
     client: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Client',
-        required: true
+      type: DataTypes.INTEGER,
+      references: {
+        model: 'Clients',
+        key: 'id'
+      }
     },
     devis: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Devis',
-        required: true
+      type: DataTypes.INTEGER,
+      references: {
+        model: 'Devis',
+        key: 'id'
+      }
     },
     valid: {
-        type: Boolean,
-        default: true,
-        required: true
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true
     },
-    description: {
-        type: String
-    },
-    updated_at: {
-        type: Date,
-        default: new Date(),
-        required: true
+    description: DataTypes.STRING,
+    updatedAt: {
+      allowNull: false,
+      type: DataTypes.DATE,
+      defaultValue: sequelize.NOW
     }
-});
-
-module.exports = mongoose.model('FactureGlobal', FactureGlobalSchema);
+  }, {
+      classMethods: {
+        associate: function (models) {
+          // associations can be defined here
+        }
+      }
+    });
+  return FactureGlobal;
+};

@@ -1,4 +1,4 @@
-const Devis = require('../models/Devis');
+const model = require('../models');
 
 module.exports = (router) => {
 
@@ -6,10 +6,17 @@ module.exports = (router) => {
      * Get All Devis
      */
     router.get('/devis', (req, res, next) => {
-        Devis.find((err, data) => {
-            if (err) return next(err);
-            return res.status(200).json(data);
-        });
+        model.Devis.findAll()
+            .then(data => {
+                res.status(200).json(data);
+            })
+            .catch(err => {
+                res.status(500).json({
+                    success: false,
+                    message: 'devis not find',
+                    err: err
+                });
+            });
     });
 
     /**
@@ -24,17 +31,17 @@ module.exports = (router) => {
         } else {
             // associe client to params
             // {} display all Devis informations
-            Devis.find({ 'client': req.params.client }, {}, (err, data) => {
-                if (data) {
-                    return res.status(200).json(data);
-                } else {
-                    return res.status(500).json({
+            model.Devis.findAll({ where: { client: req.params.client } })
+                .then(data => {
+                    res.status(200).json(data);
+                })
+                .catch(err => {
+                    res.status(500).json({
                         success: false,
-                        message: 'Devis not found',
+                        message: 'devis not find',
                         err: err
                     });
-                }
-            });
+                });
         }
     });
 
@@ -48,17 +55,17 @@ module.exports = (router) => {
                 message: 'id not provided'
             });
         } else {
-            Devis.findById(req.params.id, (err, data) => {
-                if (data) {
-                    return res.status(200).json(data);
-                } else {
-                    return res.status(500).json({
+            model.Devis.findById(req.params.id)
+                .then(data => {
+                    res.status(200).json(data);
+                })
+                .catch(err => {
+                    res.status(500).json({
                         success: false,
-                        message: 'Devis not found',
+                        message: 'devis not find',
                         err: err
                     });
-                }
-            });
+                });
         }
     });
 
@@ -79,22 +86,15 @@ module.exports = (router) => {
                 message: 'id client not provided'
             });
         } else {
-            // associe ref to params
-            // {} display all Devis informations
-            Devis.find({ 'ref_devis': req.params.ref_devis }, {}, (err, devis) => {
-                if (err) {
-                    return res.status(500).json({
-                        success: false,
-                        message: 'Devis global not found',
-                        err: err
-                    });
-                }
-                if (devis) {
+            model.Devis.findOne({ where: { ref_devis: req.params.ref_devis, client: req.params.client } })
+                .then(devis => {
                     let statusVerifRef = false;
-                    for (var dev in devis) {
-                        if (devis.hasOwnProperty(dev)) {
-                            if (devis[dev].client == req.params.client) {
-                                statusVerifRef = true;
+                    if (devis !== null) {
+                        for (var dev in devis) {
+                            if (devis.hasOwnProperty(dev)) {
+                                if (devis[dev].client == req.params.client) {
+                                    statusVerifRef = true;
+                                }
                             }
                         }
                     }
@@ -109,8 +109,14 @@ module.exports = (router) => {
                             message: 'Devis Global not found'
                         });
                     }
-                }
-            });
+                })
+                .catch(err => {
+                    res.status(500).json({
+                        success: false,
+                        message: 'devis not find',
+                        err: err
+                    });
+                });
         }
     });
 
@@ -131,21 +137,21 @@ module.exports = (router) => {
                 });
             }
         } else {
-            Devis.create(req.body, (err, data) => {
-                if (err) {
-                    return res.status(500).json({
+            model.Devis.create(req.body)
+                .then(data => {
+                    res.status(200).json({
+                        success: true,
+                        message: 'devis sauvé',
+                        obj: data
+                    });
+                })
+                .catch(err => {
+                    res.status(500).json({
                         success: false,
-                        message: 'Erreur création devis',
+                        message: 'erreur création devis',
                         err: err
                     });
-                } else {
-                    return res.status(200).json({
-                        success: true,
-                        obj: data,
-                        message: 'Devis créé'
-                    });
-                }
-            });
+                });
         }
     });
 
@@ -159,21 +165,21 @@ module.exports = (router) => {
                 message: 'id not provided'
             });
         } else {
-            Devis.findByIdAndUpdate(req.params.id, req.body, { new: true }, (err, data) => {
-                if (err) {
-                    return res.status(500).json({
+            model.Devis.update(req.body, { where: { id: req.params.id } })
+                .then(data => {
+                    res.status(200).json({
+                        success: true,
+                        message: 'devis modifié',
+                        obj: data
+                    });
+                })
+                .catch(err => {
+                    res.status(500).json({
                         success: false,
-                        message: 'Erreur modification devis',
+                        message: 'erreur modification devis',
                         err: err
                     });
-                } else {
-                    return res.status(200).json({
-                        success: true,
-                        obj: data,
-                        message: 'Devis modifié'
-                    });
-                }
-            });
+                });
         }
     });
 
@@ -187,20 +193,20 @@ module.exports = (router) => {
                 message: 'id not provided'
             });
         } else {
-            Devis.findByIdAndRemove(req.params.id, req.body, (err, data) => {
-                if (data) {
-                    return res.status(200).json({
+            model.Devis.destroy({ where: { id: req.params.id } })
+                .then(resp => {
+                    res.status(200).json({
                         success: true,
-                        message: 'Devis supprimé'
+                        message: 'devis supprimé'
                     });
-                } else {
-                    return res.status(500).json({
+                })
+                .catch(err => {
+                    res.status(500).json({
                         success: false,
-                        message: 'Erreur suppression devis',
+                        message: 'erreur suppression devis',
                         err: err
                     });
-                }
-            });
+                });
         }
     });
 

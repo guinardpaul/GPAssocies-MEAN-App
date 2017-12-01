@@ -10,7 +10,7 @@ module.exports = (passport) => {
     passport.use('local-login', new LocalStrategy({
         usernameField: 'email'
     }, (email, password, done) => {
-        User.findOne({ email: email }, (err, user) => {
+        User.findOne({ where: { email: email } }, (err, user) => {
             if (err) return done(err);
 
             // le compte n'existe pas pour cet email
@@ -49,7 +49,7 @@ module.exports = (passport) => {
 
         process.nextTick(() => {
 
-            User.findOne({ email: email }, (err, user) => {
+            User.findOne({ where: { email: email } }, (err, user) => {
                 if (err) {
                     return done(err);
                 }
@@ -67,7 +67,7 @@ module.exports = (passport) => {
                         password: password
                     });
 
-                    newUser.save((err, data) => {
+                    newUser.create((err, data) => {
                         if (err) {
                             if (err.code === 11000) {
                                 return done(null, false, {

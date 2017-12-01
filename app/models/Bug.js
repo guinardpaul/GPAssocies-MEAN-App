@@ -1,26 +1,37 @@
-const mongoose = require('mongoose');
-mongoose.Promise = global.Promise;
-
-const bugSchema = new mongoose.Schema({
-  status_correction: {
-    type: String,
-    enum: ['Ouvert', 'Corrigé', 'Annulé'],
-    default: 'Ouvert',
-    required: true
-  },
-  date_creation: {
-    type: Date
-  },
-  description: {
-    type: String,
-    required: true
-  },
-  criticite: {
-    type: String,
-    enum: ['Bloquant', 'Amelioration', 'Mineur'],
-    default: 'Mineur',
-    required: true
-  }
-});
-
-module.exports = mongoose.model('Bug', bugSchema);
+'use strict';
+module.exports = (sequelize, DataTypes) => {
+  var Bug = sequelize.define('Bug', {
+    id: {
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
+      type: DataTypes.INTEGER
+    },
+    status_correction: {
+      type: DataTypes.ENUM,
+      values: ['Ouvert', 'Corrige', 'Annule'],
+      allowNull: false,
+      defaultValue: 'Ouvert'
+    },
+    date_creation: {
+      type: DataTypes.DATE,
+      defaultValue: sequelize.NOW
+    },
+    description: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    criticite: {
+      type: DataTypes.ENUM,
+      values: ['Mineur', 'Bloquant', 'Amelioration'],
+      allowNull: false
+    }
+  }, {
+      classMethods: {
+        associate: function (models) {
+          // associations can be defined here
+        }
+      }
+    });
+  return Bug;
+};

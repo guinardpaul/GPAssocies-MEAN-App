@@ -1,65 +1,59 @@
-const mongoose = require('mongoose');
-mongoose.Promise = global.Promise;
-const FactureGlobal = require('./FactureGlobal');
+'use strict';
+const FactureGlobal = require('./factureglobal');
 
-// BackEnd Validators Definition
-// Validators Function
-isNumberChecker = (montantFacture) => {
-    if (!montantFacture) {
-        return false;
-    } else {
-        const regExp = new RegExp(/^[0-9]{0,20}(\.[0-9]{0,4})?$/);
-        return regExp.test(montantFacture);
-    }
-};
-
-// Validators
-const montantValidator = [{
-    validator: isNumberChecker,
-    message: 'Le montant doit être positif et doit avoir au maximum 4 chiffres après la virgule'
-}];
-
-const FactureAccompteSchema = new mongoose.Schema({
+module.exports = (sequelize, DataTypes) => {
+  var FactureAccompte = sequelize.define('FactureAccompte', {
+    id: {
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
+      type: DataTypes.INTEGER
+    },
     status_factureAccompte: {
-        type: Boolean,
-        default: false
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
     },
     ref_factureAccompte: {
-        type: String,
-        required: true
+      type: DataTypes.STRING,
+      allowNull: false
     },
     date_creation: {
-        type: Date,
-        default: Date.now,
-        required: true
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: sequelize.NOW
     },
     montantFacture: {
-        type: Number,
-        required: true,
-        validate: montantValidator
+      type: DataTypes.DOUBLE,
+      allowNull: false
     },
     reglementClient: {
-        type: Number,
-        required: true
+      type: DataTypes.DOUBLE,
+      allowNull: false
     },
     factureGlobal: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'FactureGlobal',
-        required: true
+      type: DataTypes.INTEGER,
+      references: {
+        model: 'FactureGlobals',
+        key: 'id'
+      }
     },
     valid: {
-        type: Boolean,
-        default: true,
-        required: true
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true
     },
-    description: {
-        type: String
-    },
-    updated_at: {
-        type: Date,
-        default: new Date(),
-        required: true
+    description: DataTypes.STRING,
+    updatedAt: {
+      allowNull: false,
+      type: DataTypes.DATE,
+      defaultValue: sequelize.NOW
     }
-});
-
-module.exports = mongoose.model('FactureAccompte', FactureAccompteSchema);
+  }, {
+      classMethods: {
+        associate: function (models) {
+          // associations can be defined here
+        }
+      }
+    });
+  return FactureAccompte;
+};

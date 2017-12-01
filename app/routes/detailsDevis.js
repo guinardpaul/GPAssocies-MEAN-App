@@ -1,4 +1,4 @@
-const DetailsDevis = require('../models/DetailsDevis');
+const model = require('../models');
 
 module.exports = (router) => {
 
@@ -12,17 +12,17 @@ module.exports = (router) => {
         message: 'Devis._id not provided'
       });
     } else {
-      DetailsDevis.find({ 'devis': req.params.devis }, {}, (err, data) => {
-        if (data) {
-          return res.status(200).json(data);
-        } else {
-          return res.status(500).json({
+      model.DetailsDevis.findAll({ where: { devis: req.params.devis } })
+        .then(data => {
+          res.status(200).json(data);
+        })
+        .catch(err => {
+          res.status(500).json({
             success: false,
-            message: 'Details Devis not found',
+            message: 'detailsDevis not find',
             err: err
           });
-        }
-      });
+        });
     }
   });
 
@@ -36,17 +36,17 @@ module.exports = (router) => {
         message: 'detailsDevis._id not provided'
       });
     } else {
-      DetailsDevis.findById(req.params.id, (err, data) => {
-        if (err) {
-          return res.status(500).json({
+      model.DetailsDevis.findById(req.params.id)
+        .then(data => {
+          res.status(200).json(data);
+        })
+        .catch(err => {
+          res.status(500).json({
             success: false,
-            message: 'Details Devis not found',
+            message: 'detailsDevis not find',
             err: err
           });
-        } else {
-          return res.status(200).json(data);
-        }
-      });
+        });
     }
   });
 
@@ -60,28 +60,21 @@ module.exports = (router) => {
         message: 'data not provided'
       });
     } else {
-      DetailsDevis.create(req.body, (err, data) => {
-        if (err) {
-          if (err.errors.montantHt) {
-            return res.status(409).json({
-              success: false,
-              message: err.errors.montantHt.message
-            })
-          } else {
-            return res.status(500).json({
-              success: false,
-              message: 'Erreur création details devis',
-              err: err
-            });
-          }
-        } else {
-          return res.status(200).json({
+      model.DetailsDevis.create(req.body)
+        .then(data => {
+          res.status(200).json({
             success: true,
-            message: 'DetailsDevis créé',
+            message: 'DetailsDevis sauvé',
             obj: data
           });
-        }
-      });
+        })
+        .catch(err => {
+          res.status(500).json({
+            success: false,
+            message: 'Erreur création detailsDevis',
+            err: err
+          });
+        });
     }
   });
 
@@ -95,30 +88,24 @@ module.exports = (router) => {
         message: 'id not provided'
       });
     } else {
-      DetailsDevis.findByIdAndUpdate(req.params.id, req.body, (err, data) => {
-        if (err) {
-          if (err.errors.montantHt) {
-            return res.status(409).json({
-              success: false,
-              message: err.errors.montantHt.message
-            })
-          } else {
-            return res.status(500).json({
-              success: false,
-              message: 'Erreur modification Details devis',
-              err: err
-            });
-          }
-        } else {
-          return res.status(200).json({
+      model.DetailsDevis.update(req.body, { where: { id: req.params.id } })
+        .then(data => {
+          res.status(200).json({
             success: true,
-            message: 'Détails devis modifié',
+            message: 'DetailsDevis modifié',
             obj: data
           });
-        }
-      });
+        })
+        .catch(err => {
+          res.status(500).json({
+            success: false,
+            message: 'Erreur modification detailsDevis',
+            err: err
+          });
+        });
     }
   });
+
 
   /**
    * Delete detailsDevis
@@ -130,20 +117,20 @@ module.exports = (router) => {
         message: 'id not provided'
       });
     } else {
-      DetailsDevis.findByIdAndRemove(req.params.id, (err, data) => {
-        if (err) {
-          return res.status(500).json({
+      model.DetailsDevis.destroy({ where: { id: req.params.id } })
+        .then(resp => {
+          res.status(200).json({
+            success: true,
+            message: 'DetailsDevis supprimé'
+          });
+        })
+        .catch(err => {
+          res.status(500).json({
             success: false,
-            message: 'Details devis not found',
+            message: 'Erreur suppression detailsDevis',
             err: err
           });
-        } else {
-          return res.status(200).json({
-            success: true,
-            message: 'Details Devis supprimé'
-          });
-        }
-      });
+        });
     }
   });
 

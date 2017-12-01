@@ -1,4 +1,4 @@
-const FactureGlobal = require('../models/FactureGlobal');
+const model = require('../models');
 
 module.exports = (router) => {
 
@@ -6,10 +6,17 @@ module.exports = (router) => {
      * GET ALL FactureGlobal
      */
     router.get('/facture-global', (req, res, next) => {
-        FactureGlobal.find((err, data) => {
-            if (err) return next(err);
-            return res.status(200).json(data);
-        });
+        model.FactureGlobal.findAll()
+            .then(data => {
+                res.status(200).json(data);
+            })
+            .catch(err => {
+                res.status(500).json({
+                    success: false,
+                    message: 'Erreur fetching facture globals',
+                    err: err
+                });
+            });
     });
 
     /**
@@ -22,19 +29,17 @@ module.exports = (router) => {
                 message: 'client_id not provided'
             });
         } else {
-            // associe client to params
-            // {} display all FactureGlobal informations
-            FactureGlobal.find({ 'client': req.params.client }, {}, (err, data) => {
-                if (data) {
-                    return res.status(200).json(data);
-                } else {
-                    return res.status(500).json({
+            model.FactureGlobal.findAll({ where: { client: req.params.client } })
+                .then(data => {
+                    res.status(200).json(data);
+                })
+                .catch(err => {
+                    res.status(500).json({
                         success: false,
-                        message: 'Facture Global not found',
+                        message: 'Erreur fetching facture global',
                         err: err
                     });
-                }
-            });
+                });
         }
     });
 
@@ -48,17 +53,17 @@ module.exports = (router) => {
                 message: 'devis not provided'
             });
         } else {
-            FactureGlobal.find({ 'devis': req.params.devis }, {}, (err, data) => {
-                if (data) {
-                    return res.status(200).json(data);
-                } else {
-                    return res.status(500).json({
+            model.FactureGlobal.findAll({ where: { devis: req.params.devis } })
+                .then(data => {
+                    res.status(200).json(data);
+                })
+                .catch(err => {
+                    res.status(500).json({
                         success: false,
-                        message: 'Facture Global not found',
+                        message: 'Erreur fetching facture global',
                         err: err
                     });
-                }
-            });
+                });
         }
     });
 
@@ -81,20 +86,15 @@ module.exports = (router) => {
         } else {
             // associe ref to params
             // {} display all FactureGlobal informations
-            FactureGlobal.find({ 'ref_factureGlobal': req.params.ref_factureGlobal }, {}, (err, facture) => {
-                if (err) {
-                    return res.status(500).json({
-                        success: false,
-                        message: 'Facture global not found',
-                        err: err
-                    });
-                }
-                if (facture) {
+            FactureGlobal.findAll({ where: { ref_factureGlobal: req.params.ref_factureGlobal } })
+                .then(data => {
                     let statusVerifRef = false;
-                    for (var fact in facture) {
-                        if (facture.hasOwnProperty(fact)) {
-                            if (facture[fact].client == req.params.client) {
-                                statusVerifRef = true;
+                    if (data) {
+                        for (var fact in facture) {
+                            if (facture.hasOwnProperty(fact)) {
+                                if (facture[fact].client == req.params.client) {
+                                    statusVerifRef = true;
+                                }
                             }
                         }
                     }
@@ -109,8 +109,14 @@ module.exports = (router) => {
                             message: 'Facture Global not found'
                         });
                     }
-                }
-            });
+                })
+                .catch(err => {
+                    res.status(500).json({
+                        success: false,
+                        message: 'erreur fetching facture globals',
+                        err: err
+                    });
+                });
         }
     });
 
@@ -124,17 +130,17 @@ module.exports = (router) => {
                 message: 'id_fact not provided'
             });
         } else {
-            FactureGlobal.findById(req.params.id, (err, data) => {
-                if (err) {
-                    return res.status(500).json({
+            model.FactureGlobal.findById(req.params.id)
+                .then(data => {
+                    res.status(200).json(data);
+                })
+                .catch(err => {
+                    res.status(500).json({
                         success: false,
-                        message: 'Facture global not found',
+                        message: 'Erreur fetching facture global',
                         err: err
                     });
-                } else {
-                    return res.status(200).json(data);
-                }
-            });
+                });
         }
     });
 
@@ -148,21 +154,21 @@ module.exports = (router) => {
                 message: 'Data not provided'
             });
         } else {
-            FactureGlobal.create(req.body, (err, data) => {
-                if (err) {
-                    return res.status(500).json({
+            model.FactureGlobal.create(req.body)
+                .then(data => {
+                    res.status(200).json({
+                        success: true,
+                        message: 'facture global sauvée',
+                        obj: data
+                    });
+                })
+                .catch(err => {
+                    res.status(500).json({
                         success: false,
-                        message: 'Facture global not found',
+                        message: 'Erreur saving facture global',
                         err: err
                     });
-                } else {
-                    return res.status(200).json({
-                        success: true,
-                        obj: data,
-                        message: 'Facture créée'
-                    });
-                }
-            });
+                });
         }
     });
 
@@ -176,21 +182,21 @@ module.exports = (router) => {
                 message: 'id_fact not provided'
             });
         } else {
-            FactureGlobal.findByIdAndUpdate(req.params.id, req.body, { new: true }, (err, data) => {
-                if (err) {
-                    return res.status(500).json({
+            model.FactureGlobal.update(req.body, { where: { id: req.params.id } })
+                .then(data => {
+                    res.status(200).json({
+                        success: true,
+                        message: 'facture global modifiée',
+                        obj: data
+                    });
+                })
+                .catch(err => {
+                    res.status(500).json({
                         success: false,
-                        message: 'Facture global not found',
+                        message: 'Erreur update facture global',
                         err: err
                     });
-                } else {
-                    return res.status(200).json({
-                        success: true,
-                        obj: data,
-                        message: 'Facture modifiée'
-                    });
-                }
-            });
+                });
         }
     });
 
@@ -204,20 +210,20 @@ module.exports = (router) => {
                 message: 'id_fact not provided'
             });
         } else {
-            FactureGlobal.findByIdAndRemove(req.params.id, req.body, (err, data) => {
-                if (err) {
-                    return res.status(500).json({
+            model.FactureGlobal.destroy(req.params.id)
+                .then(resp => {
+                    res.status(200).json({
+                        success: true,
+                        message: 'facture global supprimée'
+                    });
+                })
+                .catch(err => {
+                    res.status(500).json({
                         success: false,
-                        message: 'Facture global not found',
+                        message: 'Erreur suppression facture global',
                         err: err
                     });
-                } else {
-                    return res.status(200).json({
-                        success: true,
-                        message: 'Facture supprimée'
-                    });
-                }
-            });
+                });
         }
     });
 

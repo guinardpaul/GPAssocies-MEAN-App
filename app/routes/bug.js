@@ -1,4 +1,4 @@
-const Bug = require('../models/Bug');
+const model = require('../models');
 
 module.exports = (router) => {
 
@@ -6,10 +6,17 @@ module.exports = (router) => {
    * Get All Bugs
    */
   router.get('/bugs', (req, res, next) => {
-    Bug.find((err, data) => {
-      if (err) return next(err);
-      res.status(200).json(data);
-    });
+    model.Bug.findAll()
+      .then((data) => {
+        res.status(200).json(data);
+      })
+      .catch(err => {
+        res.status(500).json({
+          success: false,
+          message: 'Erreur getting bugs',
+          err: err
+        });
+      });
   });
 
   /**
@@ -22,17 +29,17 @@ module.exports = (router) => {
         message: 'id not provided'
       });
     } else {
-      Bug.findById(req.params.id, (err, data) => {
-        if (data) {
-          res.status(200).json(data);
-        } else {
-          res.status(409).json({
+      model.Bug.findById(req.params.id)
+        .then(data => {
+          return res.status(200).json(data);
+        })
+        .catch(err => {
+          res.status(500).json({
             success: false,
-            message: 'Bug not found',
+            message: 'Bug not find',
             err: err
           });
-        }
-      });
+        });
     }
   });
 
@@ -46,48 +53,45 @@ module.exports = (router) => {
         message: 'body not provided'
       });
     } else {
-      Bug.create(req.body, (err, data) => {
-        if (err) {
+      model.Bug.create(req.body)
+        .then(data => {
+          return res.status(200).json({
+            success: true,
+            obj: data
+          });
+        })
+        .catch(err => {
           res.status(500).json({
             success: false,
             message: 'Erreur création bug',
             err: err
           });
-        } else {
-          res.status(200).json({
-            success: true,
-            obj: data,
-            message: 'Bug créé'
-          });
-        }
-      });
+        });
     }
   });
 
   router.put('/bugs/:id', (req, res, next) => {
     if (!req.params.id) {
-      res.status(400).json({
+      return res.status(400).json({
         success: false,
         message: 'id not provided'
       });
     } else {
-      Bug.findByIdAndUpdate(req.params.id, req.body, (err, data) => {
-        if (err) {
+      model.Bug.update(req.body, { where: { id: req.params.id } })
+        .then(data => {
+          res.status(200).json({
+            success: true,
+            obj: data,
+            message: 'Bug modifié'
+          });
+        })
+        .catch(err => {
           res.status(500).json({
             success: false,
             message: 'Erreur modification bug',
             err: err
           });
-        } else {
-          Bug.findById(req.params.id, (err, data) => {
-            res.status(200).json({
-              success: true,
-              obj: data,
-              message: 'Bug modifié'
-            });
-          });
-        }
-      });
+        });
     }
   });
 
@@ -101,20 +105,19 @@ module.exports = (router) => {
         message: 'id not provided'
       });
     } else {
-      Bug.findByIdAndRemove(req.params.id, req.body, (err, data) => {
-        if (err) {
-          res.status(500).json({
-            success: false,
-            message: 'Erreur suppresion bug',
-            err: err
-          });
-        } else {
+      model.Bug.destroy({ where: { id: req.params.id } })
+        .then(resp => {
           res.status(200).json({
             success: true,
-            message: 'Bug supprimé'
+            message: 'bug supprimé'
           });
-        }
-      });
+        })
+        .catch(err => {
+          res.status(500).json({
+            success: false,
+            message: 'Erreur suppression bug'
+          });
+        });
     }
   });
 

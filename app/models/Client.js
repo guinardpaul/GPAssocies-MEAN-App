@@ -1,90 +1,52 @@
-const mongoose = require('mongoose');
-mongoose.Promise = global.Promise;
-
-// BackEnd Validators Definition
-// Validators Function
-let validNomChecker = (nom) => {
-    if (!nom) {
-        return false;
-    } else {
-        const regExp = new RegExp(/[a-zA-z-_éè]+$/);
-        return regExp.test(nom);
-    }
-};
-
-let validPrenomChecker = (prenom) => {
-    if (!prenom) {
-        return false;
-    } else {
-        const regExp = new RegExp(/[a-zA-z-_éè]+$/);
-        return regExp.test(prenom);
-    }
-};
-
-let validEmailChecker = (email) => {
-    if (!email) {
-        return false;
-    } else {
-        const regExp = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
-        return regExp.test(email);
-    }
-};
-
-// Validators
-const nomValidator = [{
-    validator: validNomChecker,
-    message: 'Le nom doit être composé seulement de lettres'
-}];
-
-const prenomValidator = [{
-    validator: validPrenomChecker,
-    message: 'Le nom doit être composé seulement de lettres'
-}];
-
-const emailValidator = [{
-    validator: validEmailChecker,
-    message: 'Email invalide'
-}];
-
-const ClientSchema = new mongoose.Schema({
+'use strict';
+module.exports = (sequelize, DataTypes) => {
+  var Client = sequelize.define('Client', {
+    id: {
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
+      type: DataTypes.INTEGER
+    },
     affaire: {
-        type: String,
-        required: true,
-        unique: true
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true
     },
     civilite: {
-        type: String,
-        enum: ['', 'Mr', 'Mme/Mlle']
+      type: DataTypes.ENUM,
+      values: ['Mr', 'Mme/Mlle']
     },
     status_client: {
-        type: Boolean,
-        default: false
+      type: DataTypes.STRING,
+      defaultValue: false
     },
     nom: {
-        type: String,
-        required: true,
-        validate: nomValidator
+      type: DataTypes.STRING,
+      allowNull: false
     },
     prenom: {
-        type: String,
-        required: true,
-        validate: prenomValidator
+      type: DataTypes.STRING,
+      allowNull: false
     },
     email: {
-        type: String,
-        lowercase: true,
-        required: true,
-        validate: emailValidator
+      type: DataTypes.STRING,
+      allowNull: false
     },
-    adresseFact: String,
-    complAdresseFact: String,
-    cpFact: Number,
-    villeFact: String,
-    adresseChantier: String,
-    complAdresseChantier: String,
-    cpChantier: Number,
-    villeChantier: String,
-    numTel: String
-});
-
-module.exports = mongoose.model('Client', ClientSchema);
+    numTel: DataTypes.STRING,
+    adresseFact: DataTypes.STRING,
+    complAdresseFact: DataTypes.STRING,
+    cpFact: DataTypes.INTEGER,
+    villeFact: DataTypes.STRING,
+    adresseChantier: DataTypes.STRING,
+    complAdresseChantier: DataTypes.STRING,
+    cpChantier: DataTypes.INTEGER,
+    villeChantier: DataTypes.STRING
+  }, {
+      classMethods: {
+        associate: function (models) {
+          // associations can be defined here
+        }
+      }
+    });
+  return Client;
+};

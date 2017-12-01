@@ -1,4 +1,4 @@
-const FactureAccompte = require('../models/FactureAccompte');
+const model = require('../models');
 
 module.exports = (router) => {
 
@@ -6,10 +6,17 @@ module.exports = (router) => {
      * GET ALL FactureAccompte
      */
     router.get('/facture-accompte', (req, res, next) => {
-        FactureAccompte.find((err, data) => {
-            if (err) return next(err);
-            return res.status(200).json(data);
-        });
+        model.FactureAccompte.findAll()
+            .then(data => {
+                res.status(200).json(data);
+            })
+            .catch(err => {
+                res.status(500).json({
+                    success: false,
+                    message: 'factureaccompte not find',
+                    err: err
+                });
+            });
     });
 
     /**
@@ -22,19 +29,17 @@ module.exports = (router) => {
                 message: 'factureGlobal._id not provided'
             });
         } else {
-            // associe client to params
-            // {} display all FactureAccompte informations
-            FactureAccompte.find({ 'factureGlobal': req.params.factureGlobal }, {}, (err, data) => {
-                if (err) {
-                    return res.status(500).json({
+            model.FactureAccompte.findAll({ where: { factureGlobal: req.params.factureGlobal } })
+                .then(data => {
+                    res.status(200).json(data);
+                })
+                .catch(err => {
+                    res.status(500).json({
                         success: false,
-                        message: 'Facture d\'accompte not found',
+                        message: 'facture accompte not find',
                         err: err
                     });
-                } else {
-                    return res.status(200).json(data);
-                }
-            });
+                });
         }
     });
 
@@ -48,17 +53,17 @@ module.exports = (router) => {
                 message: 'id not provided'
             });
         } else {
-            FactureAccompte.findById(req.params.id, (err, data) => {
-                if (err) {
-                    return res.status(500).json({
+            model.FactureAccompte.findById(req.params.id)
+                .then(data => {
+                    res.status(200).json(data);
+                })
+                .catch(err => {
+                    res.status(500).json({
                         success: false,
-                        message: 'Facture d\'accompte not found',
+                        message: 'facture accompte not find',
                         err: err
                     });
-                } else {
-                    return res.status(200).json(data);
-                }
-            });
+                });
         }
     });
 
@@ -81,20 +86,15 @@ module.exports = (router) => {
         } else {
             // associe ref to params
             // {} display all Devis informations
-            FactureAccompte.find({ 'ref_factureAccompte': req.params.ref_factureAccompte }, {}, (err, factureAccompte) => {
-                if (err) {
-                    return res.status(500).json({
-                        success: false,
-                        message: 'Facture Accompte not found',
-                        err: err
-                    });
-                }
-                if (factureAccompte) {
+            model.FactureAccompte.findAll({ where: { ref_factureAccompte: req.params.ref_factureAccompte } })
+                .then(data => {
                     let statusVerifRef = false;
-                    for (var fact in factureAccompte) {
-                        if (factureAccompte.hasOwnProperty(fact)) {
-                            if (factureAccompte[fact].factureGlobal == req.params.factureGlobal) {
-                                statusVerifRef = true;
+                    if (data) {
+                        for (var fact in factureAccompte) {
+                            if (factureAccompte.hasOwnProperty(fact)) {
+                                if (factureAccompte[fact].factureGlobal == req.params.factureGlobal) {
+                                    statusVerifRef = true;
+                                }
                             }
                         }
                     }
@@ -109,8 +109,14 @@ module.exports = (router) => {
                             message: 'Facture Accompte not found'
                         });
                     }
-                }
-            });
+                })
+                .catch(err => {
+                    res.status(500).json({
+                        success: false,
+                        message: 'facture accompte not find',
+                        err: err
+                    });
+                });
         }
     });
 
@@ -124,28 +130,21 @@ module.exports = (router) => {
                 message: 'data not provided'
             });
         } else {
-            FactureAccompte.create(req.body, (err, data) => {
-                if (err) {
-                    if (err.errors.montantFacture) {
-                        return res.status(409).json({
-                            success: false,
-                            message: err.errors.montantFacture.message
-                        });
-                    } else {
-                        return res.status(500).json({
-                            success: false,
-                            err: err,
-                            message: 'Erreur création facture d\'accompte'
-                        });
-                    }
-                } else {
-                    return res.status(200).json({
+            model.FactureAccompte.create(req.body)
+                .then(data => {
+                    res.status(200).json({
                         success: true,
-                        obj: data,
-                        message: 'Facture d\'accompte créée'
+                        message: 'facture accompte créée',
+                        obj: data
                     });
-                }
-            });
+                })
+                .catch(err => {
+                    res.status(500).json({
+                        success: false,
+                        message: 'Erreur création facture accompte',
+                        err: err
+                    });
+                });
         }
     });
 
@@ -159,23 +158,21 @@ module.exports = (router) => {
                 message: 'id not provided'
             });
         } else {
-            FactureAccompte.findByIdAndUpdate(req.params.id, req.body, (err, data) => {
-                if (err) {
-                    return res.status(500).json({
+            model.FactureAccompte.update(req.body, { where: { id: req.params.id } })
+                .then(data => {
+                    res.status(200).json({
+                        success: true,
+                        message: 'facture accompte modifiée',
+                        obj: data
+                    });
+                })
+                .catch(err => {
+                    res.status(500).json({
                         success: false,
-                        message: 'Erreur modification facture d\'accompte',
+                        message: 'Erreur modification facture accompte',
                         err: err
                     });
-                } else {
-                    FactureAccompte.findById(req.params.id, (err, data) => {
-                        return res.status(200).json({
-                            success: true,
-                            obj: data,
-                            message: 'Facture  d\'accompte modifiée'
-                        });
-                    });
-                }
-            });
+                });
         }
     });
 
@@ -189,20 +186,20 @@ module.exports = (router) => {
                 message: 'id not provided'
             });
         } else {
-            FactureAccompte.findByIdAndRemove(req.params.id, req.body, (err, data) => {
-                if (data) {
-                    return res.status(200).json({
+            model.FactureAccompte.destroy(req.params.id)
+                .then(resp => {
+                    res.status(200).json({
                         success: true,
-                        message: 'Facture d\'accompte supprimée'
+                        message: 'facture accompte supprimée'
                     });
-                } else {
-                    return res.status(500).json({
+                })
+                .catch(err => {
+                    res.status(500).json({
                         success: false,
-                        message: 'Erreur suppresion facture d\'accompte',
+                        message: 'Erreur suppression facture accompte',
                         err: err
                     });
-                }
-            });
+                });
         }
     });
 

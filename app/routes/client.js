@@ -1,4 +1,4 @@
-const Client = require('../models/Client');
+const model = require('../models');
 
 module.exports = (router) => {
 
@@ -6,10 +6,17 @@ module.exports = (router) => {
      * GET ALL CLIENT
      */
     router.get('/clients', (req, res, next) => {
-        Client.find((err, data) => {
-            if (err) return next(err);
-            return res.status(200).json(data);
-        });
+        model.Client.findAll()
+            .then((data) => {
+                res.status(200).json(data);
+            })
+            .catch(err => {
+                res.status(500).json({
+                    success: false,
+                    message: 'Erreur getting clients',
+                    err: err
+                });
+            });
     });
 
     /**
@@ -22,17 +29,17 @@ module.exports = (router) => {
                 message: 'id not provided'
             });
         } else {
-            Client.findById(req.params.id, (err, data) => {
-                if (data) {
+            model.Client.findById(req.params.id)
+                .then(data => {
                     return res.status(200).json(data);
-                } else {
-                    return res.status(409).json({
+                })
+                .catch(err => {
+                    res.status(500).json({
                         success: false,
-                        message: 'Client not found',
+                        message: 'Client not find',
                         err: err
                     });
-                }
-            });
+                });
         }
     });
 
@@ -46,23 +53,17 @@ module.exports = (router) => {
                 message: 'N° affaire not provided'
             });
         } else {
-            Client.findOne({ affaire: req.params.affaire }, (err, client) => {
-                if (err) return next(err);
-                // Si client non trouvé => N° valide
-                if (!client) {
-                    res.status(200).json({
-                        success: true,
-                        message: 'N° affaire disponible'
-                    });
-                }
-                // Si client trouvé => N° non valide
-                if (client) {
-                    res.status(200).json({
+            model.Client.findOne({ where: { affaire: req.params.affaire } })
+                .then(data => {
+                    return res.status(200).json(data);
+                })
+                .catch(err => {
+                    res.status(500).json({
                         success: false,
-                        message: 'N° affaire déjà utilisé'
+                        message: 'Client not find',
+                        err: err
                     });
-                }
-            });
+                });
         }
     });
 
@@ -76,42 +77,21 @@ module.exports = (router) => {
                 message: 'data not provided'
             });
         } else {
-            Client.create(req.body, (err, data) => {
-                if (err) {
-                    if (err.code === 11000) {
-                        return res.status(409).json({
-                            success: false,
-                            message: 'N° d\'affaire déjà utilisé'
-                        });
-                    } else if (err.errors.email) {
-                        return res.status(409).json({
-                            success: false,
-                            message: err.errors.email.message
-                        });
-                    } else if (err.errors.nom) {
-                        return res.status(409).json({
-                            success: false,
-                            message: err.errors.nom.message
-                        });
-                    } else if (err.errors.prenom) {
-                        return res.status(409).json({
-                            success: false,
-                            message: err.errors.prenom.message
-                        });
-                    } else {
-                        return res.status(500).json({
-                            success: false,
-                            message: 'Erreur création client',
-                            err: err
-                        });
-                    }
-                }
-                return res.status(200).json({
-                    success: true,
-                    obj: data,
-                    message: 'Client créé'
+            model.Client.create(req.body)
+                .then(data => {
+                    return res.status(200).json({
+                        success: true,
+                        message: 'Client sauvé',
+                        obj: data
+                    });
+                })
+                .catch(err => {
+                    res.status(500).json({
+                        success: false,
+                        message: 'Client non sauvé',
+                        err: err
+                    });
                 });
-            });
         }
     });
 
@@ -125,22 +105,21 @@ module.exports = (router) => {
                 message: 'id not provided'
             });
         } else {
-            Client.findByIdAndUpdate(req.params.id, req.body, { new: true }, (err, data) => {
-                if (err) {
-                    return res.status(500).json({
-                        success: false,
-                        message: 'Erreur modification client',
-                        err: err
-                    });
-                    // }
-                } else {
+            model.Client.update(req.body, { where: { id: req.params.id } })
+                .then(data => {
                     return res.status(200).json({
                         success: true,
-                        obj: data,
-                        message: 'Client modifié'
+                        message: 'Client modifié',
+                        obj: data
                     });
-                }
-            });
+                })
+                .catch(err => {
+                    res.status(500).json({
+                        success: false,
+                        message: 'Client non modifié',
+                        err: err
+                    });
+                });
         }
     });
 
@@ -154,20 +133,20 @@ module.exports = (router) => {
                 message: 'id not provided'
             });
         } else {
-            Client.findByIdAndRemove(req.params.id, req.body, (err, data) => {
-                if (data) {
+            model.Client.destroy({ where: { id: req.params.id } })
+                .then(data => {
                     return res.status(200).json({
                         success: true,
                         message: 'Client supprimé'
                     });
-                } else {
-                    return res.status(500).json({
+                })
+                .catch(err => {
+                    res.status(500).json({
                         success: false,
                         message: 'Erreur suppression client',
                         err: err
                     });
-                }
-            });
+                });
         }
     });
 

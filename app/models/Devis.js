@@ -1,46 +1,56 @@
-const mongoose = require('mongoose');
-mongoose.Promise = global.Promise;
-const Client = require('./Client');
+'use strict';
+const Client = require('./client');
 
-const DevisSchema = new mongoose.Schema({
-	ref_devis: {
-		type: String,
-		required: true
-	},
-	date_creation: {
-		type: Date,
-		default: Date.now,
-		required: true
-	},
-	montantHt: {
-		type: Number,
-		required: true
-	},
-	tauxTva: {
-		type: Number,
-		required: true
-	},
-	montantTtc: {
-		type: Number
-	},
-	client: {
-		type: mongoose.Schema.Types.ObjectId,
-		ref: 'Client',
-		required: true
-	},
-	valid: {
-		type: Boolean,
-		default: true,
-		required: true
-	},
-	description: {
-		type: String
-	},
-	updated_at: {
-		type: Date,
-		default: new Date(),
-		required: true
-	}
-});
-
-module.exports = mongoose.model('Devis', DevisSchema);
+module.exports = (sequelize, DataTypes) => {
+  var Devis = sequelize.define('Devis', {
+    id: {
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
+      type: DataTypes.INTEGER
+    },
+    ref_devis: {
+      type: DataTypes.STRING,
+      allowNul: false
+    },
+    date_creation: {
+      type: DataTypes.STRING,
+      allowNul: false,
+      defaultValue: sequelize.NOW
+    },
+    montantHt: {
+      type: DataTypes.DOUBLE,
+      allowNul: false
+    },
+    tauxTva: {
+      type: DataTypes.DOUBLE,
+      allowNul: false
+    },
+    montantTtc: DataTypes.DOUBLE,
+    client: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: 'Clients',
+        key: 'id'
+      }
+    },
+    valid: {
+      type: DataTypes.BOOLEAN,
+      allowNul: false,
+      defaultValue: true
+    },
+    description: DataTypes.STRING,
+    updatedAt: {
+      allowNull: false,
+      type: DataTypes.DATE,
+      defaultValue: sequelize.NOW
+    }
+  }, {
+      classMethods: {
+        associate: function (models) {
+          // associations can be defined here
+        }
+      }
+    });
+  return Devis;
+};

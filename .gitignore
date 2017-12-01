@@ -1,7 +1,8 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
-# Secret
+# Secrets / Database config
 secret.js
+config.json
 
 # logs
 *.log

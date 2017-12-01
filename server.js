@@ -11,18 +11,10 @@ const cors = require('cors');
 const passport = require('passport');
 require('./app/config/passport')(passport);
 const nodemailer = require('nodemailer');
-const port = process.env.PORT || 3001;
 
-// Changer a database.prod quand déployer en production
-const config = require('./app/config/database.dev');
+// Changer a config.prod quand déployer en production
+const config = require('./app/config/config.dev');
 process.env.NODE_ENV = config.environment;
-
-// mongoDB connection
-const promise = mongoose.connect(config.uri, config.options);
-promise.then((db, err) => {
-    if (err) return console.log(err);
-    console.log('Successfully connected to ' + config.environment + ' mongoDb database:' + config.db);
-});
 
 // Set app
 const app = express();
@@ -45,14 +37,13 @@ app.use(logger('dev'));
 // create a write stream (in append mode) 
 //var accessLogStream = fs.createWriteStream(path.join(__dirname, 'server.log'), { flags: 'a' })
 //app.use(logger('common', { stream: accessLogStream }))
-
 // Favicon
 app.use(favicon(path.join(__dirname, config.favicon_path, config.favicon)));
-// app.use(favicon(path.join(__dirname, 'dist', 'favicon.ico')))
-
 // Allows cross origin in development only
-app.use(cors(config.cors_origin));
-// app.use(cors({ origin: 'http://gp-suivifact.herokuapp.com/' }));
+// config.cors_origin = '' in production mode
+if (config.cors_origin !== '') {
+    app.use(cors(config.cors_origin));
+}
 // body-parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -78,8 +69,4 @@ app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, config.static_path, config.static_file));
 });
 
-
-// Start Server: Listen on port
-app.listen(port, () => {
-    console.log('Listening on port ' + port + ' in ' + config.environment + ' mode.');
-});
+module.exports = app;

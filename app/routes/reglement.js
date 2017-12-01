@@ -1,15 +1,21 @@
-const Reglement = require('../models/Reglement');
-const FactureAccompte = require('../models/FactureAccompte');
+const model = require('../models');
 
 module.exports = (router) => {
   /**
    * Get All Reglements
    */
   router.get('/reglements', (req, res, next) => {
-    Reglement.find((err, data) => {
-      if (err) return next(err);
-      return res.status(200).json(data);
-    });
+    model.Reglement.findAll()
+      .then(data => {
+        res.status(200).json(data);
+      })
+      .catch(err => {
+        res.status(500).json({
+          success: false,
+          message: 'erreur fetching reglements',
+          err: err
+        });
+      });
   });
 
   /**
@@ -22,17 +28,17 @@ module.exports = (router) => {
         message: 'id not provided'
       });
     } else {
-      Reglement.find({ 'factureAccompte': req.params.factureAccompte }, (err, data) => {
-        if (err) {
-          return res.status(500).json({
+      model.Reglement.findAll({ where: { factureAccompte: req.params.factureAccompte } })
+        .then(data => {
+          res.status(200).json(data);
+        })
+        .catch(err => {
+          res.status(500).json({
             success: false,
-            message: 'facture d\'accompte not found',
+            message: 'Erreur fetching reglements',
             err: err
           });
-        } else {
-          return res.status(200).json(data);
-        }
-      });
+        });
     }
   });
 
@@ -46,27 +52,21 @@ module.exports = (router) => {
         message: 'body not provided'
       });
     } else {
-      Reglement.create(req.body, (err, data) => {
-        if (err) {
-          if (err.errors.reglementTtc) {
-            return res.status(409).json({
-              success: false,
-              message: err.errors.reglementTtc.message
-            });
-          } else {
-            return res.status(500).json({
-              success: false,
-              message: 'Erreur création réglement',
-              err: err
-            });
-          }
-        } else {
-          return res.status(200).json({
+      model.Reglement.create(req.body)
+        .then(data => {
+          res.status(200).json({
             success: true,
-            message: 'Règlement créé'
+            message: 'reglement créé',
+            obj: data
           });
-        }
-      });
+        })
+        .catch(err => {
+          res.status(500).json({
+            success: false,
+            message: 'Erreur création reglements',
+            err: err
+          });
+        });
     }
   });
 
@@ -80,21 +80,21 @@ module.exports = (router) => {
         message: 'id not provided'
       });
     } else {
-      Reglement.findByIdAndUpdate(req.params.id, req.body, { new: true }, (err, data) => {
-        if (err) {
-          return res.status(500).json({
+      model.Reglement.update(req.body, { where: { id: req.params.id } })
+        .then(data => {
+          res.status(200).json({
+            success: true,
+            message: 'reglement modifié',
+            obj: data
+          });
+        })
+        .catch(err => {
+          res.status(500).json({
             success: false,
-            message: 'facture d\'accompte not found',
+            message: 'Erreur modification reglements',
             err: err
           });
-        } else {
-          return res.status(200).json({
-            success: true,
-            obj: data,
-            message: 'Règlement modifié'
-          });
-        }
-      });
+        });
     }
   });
 
@@ -108,20 +108,20 @@ module.exports = (router) => {
         message: 'id not provided'
       });
     } else {
-      Reglement.findByIdAndRemove(req.params.id, req.body, (err, data) => {
-        if (data) {
-          return res.status(200).json({
+      model.Reglement.destroy(req.params.id)
+        .then(resp => {
+          res.status(200).json({
             success: true,
-            message: 'Règlement supprimé'
+            message: 'reglement supprimé'
           });
-        } else {
-          return res.status(500).json({
+        })
+        .catch(err => {
+          res.status(500).json({
             success: false,
-            message: 'Erreur suppression réglement',
+            message: 'Erreur suppression reglements',
             err: err
           });
-        }
-      });
+        });
     }
   });
 
