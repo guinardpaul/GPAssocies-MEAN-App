@@ -1,6 +1,6 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-const User = require('../models/User');
+const model = require('../models');
 
 module.exports = (passport) => {
 
@@ -10,33 +10,36 @@ module.exports = (passport) => {
     passport.use('local-login', new LocalStrategy({
         usernameField: 'email'
     }, (email, password, done) => {
-        User.findOne({ where: { email: email } }, (err, user) => {
-            if (err) return done(err);
+        model.User.findOne({ where: { email: email } })
+            .then(user => {
+                // le compte n'existe pas pour cet email
+                if (!user)
+                    return done(null, false, {
+                        success: false,
+                        message: 'Le compte n\'existe pas'
+                    });
 
-            // le compte n'existe pas pour cet email
-            if (!user) return done(null, false, {
-                success: false,
-                message: 'Le Compte n\'existe pas'
-            });
+                // Password do not match
+                if (!user.comparePassword(password))
+                    return done(null, false, {
+                        success: false,
+                        message: 'Email ou mot de passe invalide'
+                    });
 
-            // Password do not match
-            if (!user.comparePassword(password))
-                return done(null, false, {
-                    success: false,
-                    message: 'Email ou mot de passe invalide'
+                // Authentication réussie
+                return done(null, user, {
+                    success: true,
+                    message: 'Vous êtes connecté',
+                    obj: {
+                        nom: user.nom,
+                        prenom: user.prenom,
+                        email: email
+                    }
                 });
-
-            // Authentication réussie
-            return done(null, user, {
-                success: true,
-                message: 'Vous êtes connecté',
-                obj: {
-                    nom: user.nom,
-                    prenom: user.prenom,
-                    email: email
-                }
+            })
+            .catch(err => {
+                return done(err);
             });
-        });
     }));
 
     /**
@@ -46,65 +49,50 @@ module.exports = (passport) => {
         usernameField: 'email',
         passReqToCallback: true
     }, (req, email, password, done) => {
-
         process.nextTick(() => {
+            model.User.findOne({ where: { email: email } })
+                .then(user => {
+                    // Si un compte existe déja avec cet email
+                    if (user) {
+                        return done(null, false, {
+                            success: false,
+                            message: 'Cet email est déjà utilisé pour un compte valide'
+                        });
+                    } else {
+                        // Si aucun compte associé a l'email => création nouveau user
+                        const newUser = new User({
+                            nom: req.body.nom,
+                            prenom: req.body.prenom,
+                            email: email,
+                            password: password
+                        });
 
-            User.findOne({ where: { email: email } }, (err, user) => {
-                if (err) {
-                    return done(err);
-                }
-                if (user) {
-                    return done(null, false, {
-                        success: false,
-                        message: 'Cet email est déjà utilisé pour un compte valide'
-                    });
-                } else {
-
-                    const newUser = new User({
-                        nom: req.body.nom,
-                        prenom: req.body.prenom,
-                        email: email,
-                        password: password
-                    });
-
-                    newUser.create((err, data) => {
-                        if (err) {
-                            if (err.code === 11000) {
+                        model.user.create(newUser)
+                            .then(data => {
+                                return done(null, data, {
+                                    success: true,
+                                    message: 'User registered',
+                                    obj: {
+                                        nom: data.nom,
+                                        prenom: data.prenom,
+                                        email: data.email
+                                    }
+                                });
+                            })
+                            .catch(err => {
                                 return done(null, false, {
                                     success: false,
-                                    message: 'Email already exists'
+                                    message: err
                                 });
-                            } else if (err.errors) {
-                                if (err.errors.email) {
-                                    return done(null, false, {
-                                        success: false,
-                                        message: err.errors.email.message
-                                    });
-                                } else if (err.errors.password) {
-                                    return done(null, false, {
-                                        success: false,
-                                        message: 'Le mot de passe doit avoir au moins 6 caractères'
-                                    });
-                                }
-                            }
-                            return done(null, false, {
-                                success: false,
-                                message: err
                             });
-                        } else {
-                            return done(null, data, {
-                                success: true,
-                                message: 'User registered',
-                                obj: {
-                                    nom: data.nom,
-                                    prenom: data.prenom,
-                                    email: data.email
-                                }
-                            });
-                        }
+                    }
+                })
+                .catch(err => {
+                    return done(null, false, {
+                        success: false,
+                        message: err
                     });
-                }
-            });
+                });
         });
     }));
 
