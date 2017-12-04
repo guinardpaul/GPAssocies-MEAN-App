@@ -23,7 +23,7 @@ import { InitPasswordComponent } from './authentication/components/init-password
 const routes: Routes = [
   // Auth routes
   { path: 'login', component: LoginComponent, canActivate: [ NotAuthGuard ] },
-  { path: 'register', component: RegisterComponent, canActivate: [ AuthGuard ] },
+  { path: 'register', component: RegisterComponent, canActivate: [ NotAuthGuard ] },
   { path: 'forgot-password', component: ForgotPasswordComponent, canActivate: [ NotAuthGuard ] },
   { path: 'init-password', component: InitPasswordComponent },
   { path: 'init-password/:_id', component: InitPasswordComponent },

@@ -1,4 +1,8 @@
 'use strict';
+const bcrypt = require('bcrypt-nodejs');
+const secret = require('../config/secret');
+const jwt = require('jsonwebtoken');
+
 module.exports = (sequelize, DataTypes) => {
   var User = sequelize.define('User', {
     id: {
@@ -28,6 +32,28 @@ module.exports = (sequelize, DataTypes) => {
       classMethods: {
         associate: function (models) {
           // associations can be defined here
+        }
+      },
+      instanceMethods: {
+        generateHash(password) {
+          return bcrypt.hash(password, null, null, (err, hash) => {
+            if (err) return next(err);
+            password = hash;
+          });
+        },
+        // TODO:
+        comparePassword(password) {
+          return bcrypt.compareSync(password, this.password);
+        },
+        generateToken(id) {
+          // Set expiration date to date.now() + 7 days
+          var expiry = new Date();
+          expiry.setDate(expiry.getDate() + 7);
+
+          return jwt.sign({
+            userId: _id,
+            exp: parseInt(expiry.getTime() / 1000),
+          }, config.secret);
         }
       }
     });

@@ -12,6 +12,8 @@ module.exports = (passport) => {
     }, (email, password, done) => {
         model.User.findOne({ where: { email: email } })
             .then(user => {
+                console.log('then');
+                console.log(user);
                 // le compte n'existe pas pour cet email
                 if (!user)
                     return done(null, false, {
@@ -20,6 +22,7 @@ module.exports = (passport) => {
                     });
 
                 // Password do not match
+                // TODO:
                 if (!user.comparePassword(password))
                     return done(null, false, {
                         success: false,
@@ -38,6 +41,8 @@ module.exports = (passport) => {
                 });
             })
             .catch(err => {
+                console.log('err');
+                console.log(err);
                 return done(err);
             });
     }));
@@ -60,14 +65,20 @@ module.exports = (passport) => {
                         });
                     } else {
                         // Si aucun compte associé a l'email => création nouveau user
-                        const newUser = new User({
+                        // TODO: pq utiliser newUser throw error => nom,prenom,email,password null
+                        /* const newUser = new model.User({
                             nom: req.body.nom,
                             prenom: req.body.prenom,
                             email: email,
                             password: password
-                        });
+                        }); */
 
-                        model.user.create(newUser)
+                        model.User.create({
+                            nom: req.body.nom,
+                            prenom: req.body.prenom,
+                            email: email,
+                            password: password
+                        })
                             .then(data => {
                                 return done(null, data, {
                                     success: true,

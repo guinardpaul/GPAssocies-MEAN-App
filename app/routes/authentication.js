@@ -16,6 +16,7 @@ module.exports = (router, passport) => {
             }
 
             // If a user is found
+            // TODO:
             if (user) {
                 token = user.generateToken(user._id);
                 res.status(200).json({
@@ -54,7 +55,7 @@ module.exports = (router, passport) => {
                 message: 'Password not provided'
             });
         } else {
-            passport.authenticate('local-register', function(err, user, info) {
+            passport.authenticate('local-register', function (err, user, info) {
                 if (err) {
                     return next(err); // will generate a 500 error
                 }
