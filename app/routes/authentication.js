@@ -18,7 +18,7 @@ module.exports = (router, passport) => {
             // If a user is found
             // TODO:
             if (user) {
-                token = user.generateToken(user._id);
+                token = user.generateToken(user.id);
                 res.status(200).json({
                     token: token,
                     info: info

@@ -2,6 +2,7 @@
 const bcrypt = require('bcrypt-nodejs');
 const secret = require('../config/secret');
 const jwt = require('jsonwebtoken');
+const util = require('../config/secret');
 
 module.exports = (sequelize, DataTypes) => {
   var User = sequelize.define('User', {
@@ -33,29 +34,30 @@ module.exports = (sequelize, DataTypes) => {
         associate: function (models) {
           // associations can be defined here
         }
-      },
-      instanceMethods: {
-        generateHash(password) {
-          return bcrypt.hash(password, null, null, (err, hash) => {
-            if (err) return next(err);
-            password = hash;
-          });
-        },
-        // TODO:
-        comparePassword(password) {
-          return bcrypt.compareSync(password, this.password);
-        },
-        generateToken(id) {
-          // Set expiration date to date.now() + 7 days
-          var expiry = new Date();
-          expiry.setDate(expiry.getDate() + 7);
-
-          return jwt.sign({
-            userId: _id,
-            exp: parseInt(expiry.getTime() / 1000),
-          }, config.secret);
-        }
       }
     });
+
+  // Generate hash
+  User.prototype.generateHash = function (password) {
+    return bcrypt.hashSync(password, null);
+  };
+
+  // Compare password received with hash in database
+  User.prototype.comparePassword = function (password) {
+    return bcrypt.compareSync(password, this.password);
+  };
+
+  // Generate token when login successfull
+  User.prototype.generateToken = function (id) {
+    // Set expiration date to date.now() + 7 days
+    var expiry = new Date();
+    expiry.setDate(expiry.getDate() + 7);
+
+    return jwt.sign({
+      userId: id,
+      exp: parseInt(expiry.getTime() / 1000),
+    }, util.secret);
+  };
+
   return User;
 };

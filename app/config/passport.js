@@ -65,19 +65,23 @@ module.exports = (passport) => {
                         });
                     } else {
                         // Si aucun compte associé a l'email => création nouveau user
-                        // TODO: pq utiliser newUser throw error => nom,prenom,email,password null
-                        /* const newUser = new model.User({
+                        // TODO: pq utiliser newUser throw error return nom,prenom,email,password = null
+                        const newUser = new model.User({
                             nom: req.body.nom,
                             prenom: req.body.prenom,
                             email: email,
                             password: password
-                        }); */
+                        });
 
+                        // Generate hash
+                        const hash = newUser.generateHash(newUser.password);
+
+                        // Create User
                         model.User.create({
                             nom: req.body.nom,
                             prenom: req.body.prenom,
                             email: email,
-                            password: password
+                            password: hash
                         })
                             .then(data => {
                                 return done(null, data, {
