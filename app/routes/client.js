@@ -55,7 +55,21 @@ module.exports = (router) => {
         } else {
             model.Client.findOne({ where: { affaire: req.params.affaire } })
                 .then(data => {
-                    return res.status(200).json(data);
+                    if (data) {
+                        // Num affaire already used
+                        return res.status(200).json({
+                            success: false,
+                            message: 'Num affaire already used',
+                            obj: data
+                        });
+                    } else {
+                        // Num affaire disponible
+                        return res.status(200).json({
+                            success: true,
+                            message: 'Num affaire available'
+                        });
+                    }
+
                 })
                 .catch(err => {
                     res.status(500).json({

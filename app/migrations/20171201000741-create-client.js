@@ -34,7 +34,8 @@ module.exports = {
         allowNull: false
       },
       numTel: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       adresseFact: {
         type: Sequelize.STRING

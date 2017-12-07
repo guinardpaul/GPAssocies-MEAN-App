@@ -32,7 +32,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false
     },
-    numTel: DataTypes.STRING,
+    numTel: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     adresseFact: DataTypes.STRING,
     complAdresseFact: DataTypes.STRING,
     cpFact: DataTypes.INTEGER,
@@ -48,5 +51,6 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     });
+
   return Client;
 };
