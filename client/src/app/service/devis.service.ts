@@ -106,7 +106,7 @@ export class DevisService {
    * @memberof DevisService
    */
   updateDevis(devis: Devis) {
-    return this.http.put(`${this.url}/devis/${devis._id}`, devis)
+    return this.http.put(`${this.url}/devis/${devis.id}`, devis)
       .map(res => res.json());
   }
 

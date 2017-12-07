@@ -76,7 +76,7 @@ export class BugsService {
    * @memberof BugsService
    */
   updateBug(bug: Bug) {
-    return this.http.put(`${this.url}/bugs/${bug._id}`, bug)
+    return this.http.put(`${this.url}/bugs/${bug.id}`, bug)
       .map(res => res.json());
   }
 

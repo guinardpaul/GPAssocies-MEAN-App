@@ -5,7 +5,7 @@
  * @class Reglement
  */
 export class Reglement {
-    _id?: number;
+    id?: number;
     date_reglement?: Date;
     reglementTtc: number;
     factureAccompte: number;

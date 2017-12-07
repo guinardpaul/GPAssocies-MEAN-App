@@ -80,7 +80,7 @@ export class ClientService {
    * @memberof ClientService
    */
   updateClient(client: Client) {
-    return this.http.put(`${this.url}/clients/${client._id}`, client)
+    return this.http.put(`${this.url}/clients/${client.id}`, client)
       .map(res => res.json());
   }
 
@@ -108,7 +108,7 @@ export class ClientService {
     // Set status_client
     client.status_client = status;
     // PUT request
-    return this.http.put(`${this.url}/clients/${client._id}`, client)
+    return this.http.put(`${this.url}/clients/${client.id}`, client)
       .map(res => res.json());
   }
 

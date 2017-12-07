@@ -209,7 +209,7 @@ export class BugsComponent implements OnInit {
     this.modeUpdate = true;
     // Set bug value
     this.generateFormUpdate();
-    this.id_bug = bug._id;
+    this.id_bug = bug.id;
     this.bug = bug;
     const latest_date = this.datePipe.transform(this.bug.date_creation, 'yyyy-MM-dd');
     this.bug.date_creation = latest_date;

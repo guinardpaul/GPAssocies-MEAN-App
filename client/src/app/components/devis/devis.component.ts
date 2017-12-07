@@ -513,7 +513,7 @@ export class DevisComponent implements OnInit {
   onDelete(devis: Devis) {
     if (historique) {
       let devisValid = false;
-      this.factureGlobalService.getAllFactureGlobalByDevis(devis._id)
+      this.factureGlobalService.getAllFactureGlobalByDevis(devis.id)
         .subscribe(
         data => {
           if (data.length > 0) {
@@ -538,7 +538,7 @@ export class DevisComponent implements OnInit {
                 });
                 this.onSuccess();
                 // Fetch DetailsDevis by Devis._id & delete detailsDevis
-                this.fetchAnddeleteDetailsDevis(devis._id);
+                this.fetchAnddeleteDetailsDevis(devis.id);
               },
               error => {
                 console.log(error),
@@ -558,11 +558,11 @@ export class DevisComponent implements OnInit {
         }, err => console.log('Erreur :' + err)
         );
     } else {
-      this.factureGlobalService.getAllFactureGlobalByDevis(devis._id)
+      this.factureGlobalService.getAllFactureGlobalByDevis(devis.id)
         .subscribe(
         data => {
           if (data.length === 0) {
-            this.devisService.deleteDevis(devis._id)
+            this.devisService.deleteDevis(devis.id)
               .subscribe(
               dev => {
                 this.flashMessages.show('Devis supprimé', {
@@ -571,7 +571,7 @@ export class DevisComponent implements OnInit {
                 });
                 this.onSuccess();
                 // Fetch DetailsDevis by Devis._id & delete detailsDevis
-                this.fetchAnddeleteDetailsDevis(devis._id);
+                this.fetchAnddeleteDetailsDevis(devis.id);
               }, err => {
                 console.log(err);
                 this.flashMessages.show('Erreur : Devis non supprimé', {
@@ -683,12 +683,12 @@ export class DevisComponent implements OnInit {
     this.devis = d;
     const latest_date = this.datepipe.transform(this.devis.date_creation, 'yyyy-MM-dd');
     this.devis.date_creation = latest_date;
-    this.devis.client = this.client._id;
+    this.devis.client = this.client.id;
     this.mode = true;
     this.updateMode = true;
     this.devisForm.get('ref_devis').setValue(this.devis.ref_devis);
 
-    this.detailsDevisService.getDetailsDevisByDevis(d._id)
+    this.detailsDevisService.getDetailsDevisByDevis(d.id)
       .subscribe(
       data => {
         // Fetch data from database
@@ -971,7 +971,7 @@ export class DevisComponent implements OnInit {
    * @memberof ValiderDevisComponent
    */
   verifRef() {
-    this.devisService.getOneDevisByRef(this.client._id, this.devisForm.get('ref_devis').value)
+    this.devisService.getOneDevisByRef(this.client.id, this.devisForm.get('ref_devis').value)
       .subscribe(
       data => {
         if (data.success) {

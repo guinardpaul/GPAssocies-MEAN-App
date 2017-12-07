@@ -223,7 +223,7 @@ export class ValiderDevisComponent implements OnInit {
   updateStatusClient(client: Client) {
     let status_facture = true;
     // Fetch Facture Globals from Database
-    this.factureGlobalService.getAllFactureGlobalByClient(client._id)
+    this.factureGlobalService.getAllFactureGlobalByClient(client.id)
       .subscribe(
       FactureGlobals => {
         // Check each factureGlobal.status dans listFactureGlobals       
@@ -261,7 +261,7 @@ export class ValiderDevisComponent implements OnInit {
    * @memberof ValiderDevisComponent
    */
   verifRef() {
-    this.factureGlobalService.getOneFactureGlobalByRef(this.client._id, this.validerDevisForm.get('ref_factureGlobal').value)
+    this.factureGlobalService.getOneFactureGlobalByRef(this.client.id, this.validerDevisForm.get('ref_factureGlobal').value)
       .subscribe(
       data => {
         if (data.success) {

@@ -8,7 +8,7 @@ import { STATUS } from './status-bug.enum';
  * @class Bug
  */
 export class Bug {
-  _id?: number;
+  id?: number;
   status_correction: STATUS;
   date_creation: Date;
   description?: string;

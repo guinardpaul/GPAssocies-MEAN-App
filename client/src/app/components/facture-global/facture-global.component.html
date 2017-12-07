@@ -29,7 +29,7 @@
                 <td>{{client.nom}} {{client.prenom}}</td>
                 <td>
                     <div class="btn-group-vertical">
-                        <a class="btn btn-success" [routerLink]="['/facture/facture-accompte', f._id]">Consulter</a>
+                        <a class="btn btn-success" [routerLink]="['/facture/facture-accompte', f.id]">Consulter</a>
                         <button class="btn btn-warning" (click)="onUpdate(f)">Modifier</button>
                         <button class="btn btn-danger" data-toggle="modal" data-target="#myModal1" (click)="getFactureGlobalToDelete(f)">Supprimer</button>
                     </div>

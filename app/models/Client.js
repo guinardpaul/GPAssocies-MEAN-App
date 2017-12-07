@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
       values: ['Mr', 'Mme/Mlle']
     },
     status_client: {
-      type: DataTypes.STRING,
+      type: DataTypes.BOOLEAN,
       defaultValue: false
     },
     nom: {
@@ -38,11 +38,11 @@ module.exports = (sequelize, DataTypes) => {
     },
     adresseFact: DataTypes.STRING,
     complAdresseFact: DataTypes.STRING,
-    cpFact: DataTypes.INTEGER,
+    cpFact: DataTypes.STRING,
     villeFact: DataTypes.STRING,
     adresseChantier: DataTypes.STRING,
     complAdresseChantier: DataTypes.STRING,
-    cpChantier: DataTypes.INTEGER,
+    cpChantier: DataTypes.STRING,
     villeChantier: DataTypes.STRING
   }, {
       classMethods: {

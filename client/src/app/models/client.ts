@@ -8,7 +8,7 @@ import { CIVILITE } from './civilite.enum';
  * @class Client
  */
 export class Client {
-    _id?: number;
+    id?: number;
     affaire?: string;
     status_client?: boolean;
     civilite?: CIVILITE;

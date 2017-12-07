@@ -59,7 +59,7 @@ export class ReglementService {
    * @memberof ReglementService
    */
   updateReglement(reglement: Reglement) {
-    return this.http.put(`${this.url}/reglements/${reglement._id}`, reglement)
+    return this.http.put(`${this.url}/reglements/${reglement.id}`, reglement)
       .map(res => res.json());
   }
 

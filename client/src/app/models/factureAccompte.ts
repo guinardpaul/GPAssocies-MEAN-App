@@ -5,7 +5,7 @@
  * @class FactureAccompte
  */
 export class FactureAccompte {
-    _id?: number;
+    id?: number;
     status_factureAccompte?: boolean;
     ref_factureAccompte: string;
     date_creation?: Date;

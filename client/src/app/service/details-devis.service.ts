@@ -60,7 +60,7 @@ export class DetailsDevisService {
    * @memberof DetailsDevisService
    */
   updateDetailsDevis(detailsDevis: DetailsDevis) {
-    return this.http.put(`${this.url}/details-devis/${detailsDevis._id}`, detailsDevis)
+    return this.http.put(`${this.url}/details-devis/${detailsDevis.id}`, detailsDevis)
       .map(res => res.json());
   }
 

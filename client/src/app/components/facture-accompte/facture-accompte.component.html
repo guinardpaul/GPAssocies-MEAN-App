@@ -212,7 +212,7 @@
                         <td>{{r.reglementTtc.toFixed(2)}}</td>
                         <td>
                             <md-spinner *ngIf="processing" style="float: left;width: 24px;height: 24px;"></md-spinner>
-                            <button [disabled]="processing" class="btn btn-danger" (click)="deleteReglement(r._id, r.reglementTtc)">Supprimer</button>
+                            <button [disabled]="processing" class="btn btn-danger" (click)="deleteReglement(r.id, r.reglementTtc)">Supprimer</button>
                         </td>
                     </tr>
                 </tbody>

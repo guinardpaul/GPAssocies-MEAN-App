@@ -143,6 +143,7 @@ export class ClientComponent implements OnInit {
       .subscribe(
       data => {
         this.listClient = data;
+        console.log(data);
       },
       error => console.log(error)
       );
@@ -174,7 +175,7 @@ export class ClientComponent implements OnInit {
     this.processing = true;
     this.disableForm();
     this.client = this.clientForm.value;
-    this.client._id = this.client_id;
+    this.client.id = this.client_id;
     this.client.civilite = this.clientForm.get('civilite').value;
 
     // Check method to use 
@@ -336,7 +337,7 @@ export class ClientComponent implements OnInit {
   onUpdate(client: Client) {
     // Set this.client values (fecth _id)
     this.client = client;
-    this.client_id = client._id;
+    this.client_id = client.id;
 
     // Set clientForm values
     this.clientForm.get('affaire').setValue(client.affaire);

@@ -320,7 +320,7 @@ export class FactureGlobalComponent implements OnInit {
   onDelete(factureGlobal: FactureGlobal) {
     if (historique) {
       let factValid = false;
-      this.factureAccompteService.getAllFactureAccompteByFactureGlobal(factureGlobal._id)
+      this.factureAccompteService.getAllFactureAccompteByFactureGlobal(factureGlobal.id)
         .subscribe(
         data => {
           if (data.length > 0) {
@@ -367,11 +367,11 @@ export class FactureGlobalComponent implements OnInit {
         }, err => console.log('Erreur :' + err)
         );
     } else {
-      this.factureAccompteService.getAllFactureAccompteByFactureGlobal(factureGlobal._id)
+      this.factureAccompteService.getAllFactureAccompteByFactureGlobal(factureGlobal.id)
         .subscribe(
         data => {
           if (data.length === 0) {
-            this.factureGlobalService.deleteFactureGlobal(factureGlobal._id)
+            this.factureGlobalService.deleteFactureGlobal(factureGlobal.id)
               .subscribe(
               msg => {
                 this.flashMessages.show('Facture supprimée', {
@@ -432,7 +432,7 @@ export class FactureGlobalComponent implements OnInit {
   updateStatusClient(client: Client) {
     let status_client = true;
     // Fetch Facture Globals from Database
-    this.factureGlobalService.getAllFactureGlobalByClient(client._id)
+    this.factureGlobalService.getAllFactureGlobalByClient(client.id)
       .subscribe(
       FactureGlobals => {
         // Check each factureGlobal.status dans listFactureGlobals
@@ -600,7 +600,7 @@ export class FactureGlobalComponent implements OnInit {
    */
   verifRef() {
     this.validationRef = false;
-    this.factureGlobalService.getOneFactureGlobalByRef(this.client._id, this.factureForm.get('ref_factureGlobal').value)
+    this.factureGlobalService.getOneFactureGlobalByRef(this.client.id, this.factureForm.get('ref_factureGlobal').value)
       .subscribe(
       data => {
         if (data.success) {

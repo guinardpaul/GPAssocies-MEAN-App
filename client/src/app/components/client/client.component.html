@@ -33,7 +33,7 @@
                 <td>{{client.numTel}}</td>
                 <td>
                     <div class="btn-group-vertical">
-                        <a class="btn btn-success" [routerLink]="['/devis/client', client._id]">Consulter</a>
+                        <a class="btn btn-success" [routerLink]="['/devis/client', client.id]">Consulter</a>
                         <button class="btn btn-warning" (click)="onUpdate(client)">Modifier</button>
                         <button class="btn btn-danger" data-toggle="modal" data-target="#myModal" (click)="getClientToDelete(client)">Supprimer</button>
                     </div>
@@ -58,7 +58,7 @@
                 <p>Etes-vous sûr de vouloir supprimer {{client.nom}} {{client.prenom}} ?</p>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-danger" (click)="onDelete(client._id)" data-dismiss="modal">Supprimer</button>
+                <button class="btn btn-danger" (click)="onDelete(client.id)" data-dismiss="modal">Supprimer</button>
                 <button class="btn btn-default" data-dismiss="modal" (click)="closeModal()">Annuler</button>
             </div>
         </div>

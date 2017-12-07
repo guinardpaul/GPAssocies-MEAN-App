@@ -293,7 +293,7 @@ export class DashboardComponent implements OnInit {
         }
 
         if (this.listFactureGlobal.length > 0) {
-          this.getAllFactureAccomptebyFactureGlobal(data[ 0 ]._id);
+          this.getAllFactureAccomptebyFactureGlobal(data[ 0 ].id);
         } else {
           this.listFactureAccompte = [];
         }
@@ -325,7 +325,7 @@ export class DashboardComponent implements OnInit {
           }
         }
         if (this.listFactureGlobal.length > 0) {
-          this.getAllValidFactureAccomptebyFactureGlobal(this.listFactureGlobal[ 0 ]._id);
+          this.getAllValidFactureAccomptebyFactureGlobal(this.listFactureGlobal[ 0 ].id);
         } else {
           this.listFactureAccompte = [];
         }
@@ -434,8 +434,8 @@ export class DashboardComponent implements OnInit {
     // Load data en fonction des bool activeClient & historique
     if (this.historique) {
       if (this.activeClient) {
-        this.getDevisByClient(this.selectedClient._id);
-        this.getAllFactureGlobalbyClient(this.selectedClient._id);
+        this.getDevisByClient(this.selectedClient.id);
+        this.getAllFactureGlobalbyClient(this.selectedClient.id);
       } else {
         this.getAllDevis();
         this.getAllFactureGlobal();
@@ -443,8 +443,8 @@ export class DashboardComponent implements OnInit {
       }
     } else {
       if (this.activeClient) {
-        this.getValidDevisByClient(this.selectedClient._id);
-        this.getAllValidFactureGlobalbyClient(this.selectedClient._id);
+        this.getValidDevisByClient(this.selectedClient.id);
+        this.getAllValidFactureGlobalbyClient(this.selectedClient.id);
       } else {
         this.getAllValidDevis();
         this.getAllValidFactureGlobal();

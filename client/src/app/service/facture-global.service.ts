@@ -108,7 +108,7 @@ export class FactureGlobalService {
    * @memberof FactureGlobalService
    */
   updateFactureGlobal(factureGlobal: FactureGlobal) {
-    return this.http.put(`${this.url}/facture-global/${factureGlobal._id}`, factureGlobal)
+    return this.http.put(`${this.url}/facture-global/${factureGlobal.id}`, factureGlobal)
       .map(res => res.json());
   }
 
@@ -123,7 +123,7 @@ export class FactureGlobalService {
     // Set Status facture Global
     factureGlobal.status_factureGlobal = status_factureGlobal;
     // PUT Request
-    return this.http.put(`${this.url}/facture-global/${factureGlobal._id}`, factureGlobal)
+    return this.http.put(`${this.url}/facture-global/${factureGlobal.id}`, factureGlobal)
       .map(res => res.json());
   }
 

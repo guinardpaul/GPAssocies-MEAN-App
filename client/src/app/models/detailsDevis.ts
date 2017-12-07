@@ -5,7 +5,7 @@
  * @class DetailsDevis
  */
 export class DetailsDevis {
-    _id?: number;
+    id?: number;
     montantHt?: number;
     tauxTva: number;
     montantTtc?: number;

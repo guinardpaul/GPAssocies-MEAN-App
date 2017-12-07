@@ -5,7 +5,7 @@
  * @class Devis
  */
 export class Devis {
-	_id?: number;
+	id?: number;
 	ref_devis: string;
 	date_creation?: Date;
 	montantHt: number;

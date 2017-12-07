@@ -5,7 +5,7 @@
  * @class FactureGlobal
  */
 export class FactureGlobal {
-    _id?: number;
+    id?: number;
     status_factureGlobal?: boolean;
     ref_factureGlobal: string;
     date_creation: Date;

@@ -440,7 +440,7 @@ export class FactureAccompteComponent implements OnInit {
    * @memberof FactureAccompteComponent
    */
   deleteFactureAccompte(factureAccompte: FactureAccompte) {
-    this.reglementService.getReglementByFactureAccompte(factureAccompte._id)
+    this.reglementService.getReglementByFactureAccompte(factureAccompte.id)
       .subscribe(
       data => {
         if (data.length === 0) {
@@ -473,7 +473,7 @@ export class FactureAccompteComponent implements OnInit {
               }
               );
           } else {
-            this.factureAccompteService.deleteFactureAccompte(factureAccompte._id)
+            this.factureAccompteService.deleteFactureAccompte(factureAccompte.id)
               .subscribe(
               factureData => {
                 if (factureData.success) {
@@ -695,7 +695,7 @@ export class FactureAccompteComponent implements OnInit {
 
     // Fetch Facture Globals from Database
     // this.getAllFactureGlobalByClient(this.client._id);
-    this.factureGlobalService.getAllFactureGlobalByClient(this.client._id)
+    this.factureGlobalService.getAllFactureGlobalByClient(this.client.id)
       .subscribe(
       data => {
         // Si list non vide : check each factureGlobal.status dans listFactureGlobal
@@ -811,7 +811,7 @@ export class FactureAccompteComponent implements OnInit {
     this.reglementComplet = false;
     this.generateForm();
     this.generateReglementForm();
-    this.getAllReglementByFactureAccompte(factureAccompte._id);
+    this.getAllReglementByFactureAccompte(factureAccompte.id);
     this.reglement = {};
     this.factureAccompte = factureAccompte;
     const latest_date = this.datePipe.transform(this.factureAccompte.date_creation, 'yyyy-MM-dd');

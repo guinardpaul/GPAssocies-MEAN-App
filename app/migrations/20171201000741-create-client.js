@@ -18,7 +18,7 @@ module.exports = {
         values: ['Mr', 'Mme/Mlle']
       },
       status_client: {
-        type: Sequelize.STRING,
+        type: Sequelize.BOOLEAN,
         defaultValue: false
       },
       nom: {
@@ -44,7 +44,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       cpFact: {
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING
       },
       villeFact: {
         type: Sequelize.STRING
@@ -56,7 +56,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       cpChantier: {
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING
       },
       villeChantier: {
         type: Sequelize.STRING
