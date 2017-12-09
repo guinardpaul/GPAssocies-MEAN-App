@@ -284,7 +284,7 @@ export class DevisComponent implements OnInit {
       client: this.id_client,
     };
     // Check si Add ou Update
-    if (this.devis._id == null || this.devis._id === 0 || this.devis._id === '') {
+    if (this.devis.id == null || this.devis.id === 0 || this.devis.id === '') {
       this.devisService.addDevis(newDevis)
         .subscribe(
         data => {
@@ -352,7 +352,7 @@ export class DevisComponent implements OnInit {
       } else {
         // Set new Devis data to add
         const updateDevis = {
-          _id: this.devis._id,
+          id: this.devis.id,
           ref_devis: this.devisForm.get('ref_devis').value,
           date_creation: this.devisForm.get('date_creation').value,
           montantHt: this.devisForm.get('montantHt').value,
@@ -392,25 +392,25 @@ export class DevisComponent implements OnInit {
    * @param {any} devis devis data
    * @memberof DevisComponent
    */
-  addDetailsDevis(devis) {
+  addDetailsDevis(devis: Devis) {
     // Set DetailsDevis data from devisForm
     this.detailsDevis1 = {
       tauxTva: this.devisForm.get('tauxTva1').value,
       montantHt: this.devisForm.get('montantHt1').value,
       montantTtc: this.devisForm.get('montantTtc1').value,
-      devis: devis._id
+      devis: devis.id
     };
     this.detailsDevis2 = {
       tauxTva: this.devisForm.get('tauxTva2').value,
       montantHt: this.devisForm.get('montantHt2').value,
       montantTtc: this.devisForm.get('montantTtc2').value,
-      devis: devis._id
+      devis: devis.id
     };
     this.detailsDevis3 = {
       tauxTva: this.devisForm.get('tauxTva3').value,
       montantHt: this.devisForm.get('montantHt3').value,
       montantTtc: this.devisForm.get('montantTtc3').value,
-      devis: devis._id
+      devis: devis.id
     };
 
     // Save DetailsDevis
@@ -454,7 +454,7 @@ export class DevisComponent implements OnInit {
    * @param {any} devis devis
    * @memberof DevisComponent
    */
-  updateDetailsDevis(devis) {
+  updateDetailsDevis(devis: Devis) {
     // Set DetailsDevis data from devisForm
     this.detailsDevis1.montantHt = this.devisForm.get('montantHt1').value;
     this.detailsDevis1.tauxTva = this.devisForm.get('tauxTva1').value;
@@ -562,24 +562,8 @@ export class DevisComponent implements OnInit {
         .subscribe(
         data => {
           if (data.length === 0) {
-            this.devisService.deleteDevis(devis.id)
-              .subscribe(
-              dev => {
-                this.flashMessages.show('Devis supprimé', {
-                  classes: [ 'alert', 'alert-warning' ],
-                  timeout: 3000
-                });
-                this.onSuccess();
-                // Fetch DetailsDevis by Devis._id & delete detailsDevis
-                this.fetchAnddeleteDetailsDevis(devis.id);
-              }, err => {
-                console.log(err);
-                this.flashMessages.show('Erreur : Devis non supprimé', {
-                  classes: [ 'alert', 'alert-danger' ],
-                  timeout: 3000
-                });
-              }
-              )
+            // Fetch DetailsDevis by Devis._id & delete detailsDevis
+            this.fetchAnddeleteDetailsDevis(devis.id);
           } else {
             this.flashMessages.show('Suppression impossible ! Le devis est associé à des factures.', {
               classes: [ 'alert', 'alert-danger' ],
@@ -591,6 +575,25 @@ export class DevisComponent implements OnInit {
           console.log(err)
         });
     }
+  }
+
+  deleteDevis(devis_id: number) {
+    this.devisService.deleteDevis(devis_id)
+      .subscribe(
+      dev => {
+        this.flashMessages.show('Devis supprimé', {
+          classes: [ 'alert', 'alert-warning' ],
+          timeout: 3000
+        });
+        this.onSuccess();
+      }, err => {
+        console.log(err);
+        this.flashMessages.show('Erreur : Devis non supprimé', {
+          classes: [ 'alert', 'alert-danger' ],
+          timeout: 3000
+        });
+      }
+      )
   }
 
   /**
@@ -605,14 +608,16 @@ export class DevisComponent implements OnInit {
       .subscribe(detailsDevisList => {
         // Delete detailsDevis
         detailsDevisList.forEach(detailsDevis => {
-          this.detailsDevisService.deleteDetailsDevis(detailsDevis._id)
+          this.detailsDevisService.deleteDetailsDevis(detailsDevis.id)
             .subscribe(data => {
-              this.onSuccess();
-
+              console.log('DetailsDevis supprimé');
             }, err => {
               console.log('Erreur deleted :' + err);
             });
         });
+        this.deleteDevis(id_devis);
+      }, err => {
+        console.log(err);
       });
   }
 

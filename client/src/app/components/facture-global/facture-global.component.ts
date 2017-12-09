@@ -278,7 +278,7 @@ export class FactureGlobalComponent implements OnInit {
         );
     } else {
       const newFacture = new FactureGlobal({
-        _id: this.factureGlobal._id,
+        id: this.factureGlobal.id,
         status_factureGlobal: this.factureGlobal.status_factureGlobal,
         ref_factureGlobal: this.factureForm.get('ref_factureGlobal').value,
         date_creation: this.factureForm.get('date_creation').value,
@@ -596,7 +596,7 @@ export class FactureGlobalComponent implements OnInit {
    * - si data.success === true && ref != factureGlobal.ref => ref_factureGlobal utilisée => validationRef = true,
    * - si data.success === false => ref_factureGlobal non utilisée => validationRef = false
    *
-   * @memberof ValiderDevisComponent
+   * @memberof FactureGlobalComponent
    */
   verifRef() {
     this.validationRef = false;

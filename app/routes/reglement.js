@@ -108,7 +108,7 @@ module.exports = (router) => {
         message: 'id not provided'
       });
     } else {
-      model.Reglement.destroy(req.params.id)
+      model.Reglement.destroy({ where: { id: req.params.id } })
         .then(resp => {
           res.status(200).json({
             success: true,

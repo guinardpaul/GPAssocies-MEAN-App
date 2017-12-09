@@ -237,7 +237,7 @@ export class FactureAccompteComponent implements OnInit {
   /**
    * Get Client to be updated
    *
-   * @param {number} id client._id
+   * @param {number} id client.id
    * @memberof FactureAccompteComponent
    */
   getOneClient(id: number) {
@@ -266,7 +266,7 @@ export class FactureAccompteComponent implements OnInit {
   /**
    * Get One Facture Global
    *
-   * @param {number} id factureGlobal._id
+   * @param {number} id factureGlobal.id
    * @memberof FactureAccompteComponent
    */
   getOneFactureGlobal(id: number) {
@@ -296,7 +296,7 @@ export class FactureAccompteComponent implements OnInit {
   /**
    * Get All Facture Mois By Facture Global
    *
-   * @param {number} id factureGlobal._id
+   * @param {number} id factureGlobal.id
    * @memberof FactureAccompteComponent
    */
   getAllFactureAccompteByFactureGlobal(id: number) {
@@ -312,7 +312,7 @@ export class FactureAccompteComponent implements OnInit {
   /**
   * Get All Valid Facture Mois By Facture Global
   *
-  * @param {number} id factureGlobal._id
+  * @param {number} id factureGlobal.id
   * @memberof FactureAccompteComponent
   */
   getAllValidFactureAccompteByFactureGlobal(id: number) {
@@ -335,7 +335,7 @@ export class FactureAccompteComponent implements OnInit {
   /**
    * Get All Reglement by factureAccompte
    *
-   * @param {number} id factureAccompte._id
+   * @param {number} id factureAccompte.id
    * @memberof FactureAccompteComponent
    */
   getAllReglementByFactureAccompte(id: number) {
@@ -361,7 +361,7 @@ export class FactureAccompteComponent implements OnInit {
       date_creation: this.factureForm.get('date_creation').value,
       montantFacture: this.factureForm.get('montantFacture').value,
       reglementClient: 0,
-      factureGlobal: this.factureGlobal._id,
+      factureGlobal: this.factureGlobal.id,
     };
 
     this.factureAccompteService.addFactureAccompte(newFacture)
@@ -402,7 +402,7 @@ export class FactureAccompteComponent implements OnInit {
     const newReglement = {
       date_reglement: this.reglementForm.get('date_creation').value,
       reglementTtc: this.reglementForm.get('reglementTtc').value,
-      factureAccompte: this.factureAccompte._id
+      factureAccompte: this.factureAccompte.id
     };
 
     // add Reglement
@@ -434,7 +434,7 @@ export class FactureAccompteComponent implements OnInit {
   /**
    * Delete Facture Accompte si NE possède pas de Reglement
    *
-   * @param {number} id factureAccompte._id
+   * @param {number} id factureAccompte.id
    * @param {number} montantFacture factureAccomte montantTtcFacture
    * @param {number} reglementClient factureAccomte montantTtcRegle
    * @memberof FactureAccompteComponent
@@ -532,7 +532,7 @@ export class FactureAccompteComponent implements OnInit {
    * - Update status facture global
    * - Update status client
    * 
-   * @param {number} id reglement._id
+   * @param {number} id reglement.id
    * @param {number} reglementClient reglement.reglementTtc 
    * @memberof FactureAccompteComponent
    */
@@ -551,7 +551,7 @@ export class FactureAccompteComponent implements OnInit {
           // Update facture global reglementTtcTotal
           this.updateReglementClientFactureGlobal(this.factureGlobal, -reglementClient);
           // Get all reglement by facture accompte
-          this.getAllReglementByFactureAccompte(this.factureAccompte._id);
+          this.getAllReglementByFactureAccompte(this.factureAccompte.id);
 
           this.processing = false;
         } else {
@@ -694,7 +694,7 @@ export class FactureAccompteComponent implements OnInit {
     let status_client = true;
 
     // Fetch Facture Globals from Database
-    // this.getAllFactureGlobalByClient(this.client._id);
+    // this.getAllFactureGlobalByClient(this.client.id);
     this.factureGlobalService.getAllFactureGlobalByClient(this.client.id)
       .subscribe(
       data => {
@@ -802,7 +802,7 @@ export class FactureAccompteComponent implements OnInit {
   /**
    * onUpdate:
    * - generate ReglementForm
-   * - get All reglement by FactureAccompte._id
+   * - get All reglement by FactureAccompte.id
    *
    * @param {FactureAccompte} factureAccompte FactureAccompte
    * @memberof FactureAccompteComponent
@@ -983,7 +983,7 @@ export class FactureAccompteComponent implements OnInit {
    * @memberof ValiderDevisComponent
    */
   verifRef(): boolean {
-    this.factureAccompteService.getOneFactureAccompteByRef(this.factureGlobal._id, this.factureForm.get('ref_factureAccompte').value)
+    this.factureAccompteService.getOneFactureAccompteByRef(this.factureGlobal.id, this.factureForm.get('ref_factureAccompte').value)
       .subscribe(
       data => {
         if (data.success) {

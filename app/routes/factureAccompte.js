@@ -186,7 +186,7 @@ module.exports = (router) => {
                 message: 'id not provided'
             });
         } else {
-            model.FactureAccompte.destroy(req.params.id)
+            model.FactureAccompte.destroy({ where: { id: req.params.id } })
                 .then(resp => {
                     res.status(200).json({
                         success: true,

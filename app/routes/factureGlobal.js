@@ -86,13 +86,13 @@ module.exports = (router) => {
         } else {
             // associe ref to params
             // {} display all FactureGlobal informations
-            FactureGlobal.findAll({ where: { ref_factureGlobal: req.params.ref_factureGlobal } })
+            model.FactureGlobal.findAll({ where: { ref_factureGlobal: req.params.ref_factureGlobal } })
                 .then(data => {
                     let statusVerifRef = false;
                     if (data) {
-                        for (var fact in facture) {
-                            if (facture.hasOwnProperty(fact)) {
-                                if (facture[fact].client == req.params.client) {
+                        for (var fact in data) {
+                            if (data.hasOwnProperty(fact)) {
+                                if (data[fact].client == req.params.client) {
                                     statusVerifRef = true;
                                 }
                             }
@@ -111,6 +111,7 @@ module.exports = (router) => {
                     }
                 })
                 .catch(err => {
+                    console.log(err);
                     res.status(500).json({
                         success: false,
                         message: 'erreur fetching facture globals',
@@ -210,7 +211,7 @@ module.exports = (router) => {
                 message: 'id_fact not provided'
             });
         } else {
-            model.FactureGlobal.destroy(req.params.id)
+            model.FactureGlobal.destroy({ where: { id: req.params.id } })
                 .then(resp => {
                     res.status(200).json({
                         success: true,

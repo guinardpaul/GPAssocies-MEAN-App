@@ -189,7 +189,7 @@ export class ValiderDevisComponent implements OnInit {
     newFacture.client = this.devis.client;
     newFacture.montantHt = this.devis.montantHt;
     newFacture.tauxTva = this.devis.tauxTva;
-    newFacture.devis = this.devis._id;
+    newFacture.devis = this.devis.id;
 
     // Send body to addFactureGlobal method in factureGlobalService
     this.factureGlobalService.addFactureGlobal(newFacture)
