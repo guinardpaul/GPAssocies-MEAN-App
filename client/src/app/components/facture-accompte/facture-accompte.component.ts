@@ -13,7 +13,7 @@ import { FactureAccompteService } from '../../service/facture-accompte.service';
 import { FactureGlobalService } from '../../service/facture-global.service';
 import { ReglementService } from '../../service/reglement.service';
 import { historique } from '../../../environments/config';
-
+import { environment } from '../../../environments/environment';
 // Models
 // Services
 /**
@@ -195,14 +195,14 @@ export class FactureAccompteComponent implements OnInit {
    * 
    * @memberof FactureAccompteComponent
    */
-  status_true = '../../assets/images/status_true.png';
+  status_true = environment.status_true;
 
   /**
    * image status false
    * 
    * @memberof FactureAccompteComponent
    */
-  status_false = '../../assets/images/status_false.png';
+  status_false = environment.status_false;
 
   /**
    * Creates an instance of FactureAccompteComponent.

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-
+import { environment } from '../../../environments/environment';
 import { AuthService } from '../../authentication/services/auth.service';
 import { historique } from '../../../environments/config';
 /**
@@ -13,7 +13,7 @@ import { historique } from '../../../environments/config';
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.css']
+  styleUrls: [ './navbar.component.css' ]
 })
 export class NavbarComponent implements OnInit {
 
@@ -30,7 +30,7 @@ export class NavbarComponent implements OnInit {
   */
   onLogout() {
     this._authService.clearLocalStorage();
-    this._router.navigate(['/']);
+    this._router.navigate([ '/' ]);
   }
 
   ngOnInit() {

@@ -8,7 +8,7 @@ import { CIVILITE } from '../../models/civilite.enum';
 import { ClientService } from '../../service/client.service';
 import { DevisService } from '../../service/devis.service';
 import { FlashMessagesService } from 'ngx-flash-messages';
-
+import { environment } from '../../../environments/environment';
 /**
  *
  * @author Paul GUINARD
@@ -104,14 +104,14 @@ export class ClientComponent implements OnInit {
    * 
    * @memberof ClientComponent
    */
-  status_true = '../../assets/images/status_true.png';
+  status_true = environment.status_true;
 
   /**
    * image status false
    * 
    * @memberof ClientComponent
    */
-  status_false = '../../assets/images/status_false.png';
+  status_false = environment.status_false;
 
   /**
    * Creates an instance of ClientComponent.

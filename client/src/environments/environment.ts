@@ -5,5 +5,8 @@
 
 export const environment = {
   production: false,
-  url: 'http://localhost:3001/api'
+  url: 'http://localhost:3001/api',
+  navbar: '../../../assets/images/GP.png',
+  status_true: '../../assets/images/status_true.png',
+  status_false: '../../assets/images/status_false.png'
 };
