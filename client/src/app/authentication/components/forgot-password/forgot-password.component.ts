@@ -6,7 +6,7 @@ import { EmailService } from '../../services/email.service';
 import { AuthService } from '../../services/auth.service';
 // Models
 import { Email } from '../../../models/Email';
-import { User } from '../../../models/User';
+import { User } from '../../../models/user';
 // Templates
 import * as mailTemplate from '../../../models/template-email';
 

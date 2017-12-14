@@ -1,6 +1,4 @@
 'use strict';
-const Client = require('./client');
-const devis = require('./devis');
 
 module.exports = (sequelize, DataTypes) => {
   var FactureGlobal = sequelize.define('FactureGlobal', {

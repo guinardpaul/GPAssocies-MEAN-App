@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 // Models
-import { User } from '../../../models/User';
+import { User } from '../../../models/user';
 // Services
 import { FlashMessagesService } from 'ngx-flash-messages';
 import { AuthService } from '../../services/auth.service';

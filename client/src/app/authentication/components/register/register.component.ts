@@ -6,7 +6,7 @@ import { AuthService } from '../../services/auth.service';
 import { FlashMessagesService } from 'ngx-flash-messages';
 import { ValidationService } from '../../services/validation.service';
 // Models
-import { User } from '../../../models/User';
+import { User } from '../../../models/user';
 
 /**
  * Création Compte utilisateur

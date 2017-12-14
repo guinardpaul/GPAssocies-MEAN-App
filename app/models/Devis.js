@@ -1,5 +1,4 @@
 'use strict';
-const Client = require('./client');
 
 module.exports = (sequelize, DataTypes) => {
   var Devis = sequelize.define('Devis', {

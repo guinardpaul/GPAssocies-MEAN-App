@@ -1,5 +1,4 @@
 'use strict';
-const FactureAccompte = require('./factureaccompte');
 
 module.exports = (sequelize, DataTypes) => {
   var Reglement = sequelize.define('Reglement', {

@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { tokenNotExpired } from 'angular2-jwt';
 // Models
-import { User } from '../../models/User';
+import { User } from '../../models/user';
 // Environments
 import { environment } from '../../../environments/environment';
 /**

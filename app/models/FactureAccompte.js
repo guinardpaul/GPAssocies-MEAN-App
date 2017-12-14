@@ -1,5 +1,4 @@
 'use strict';
-const FactureGlobal = require('./factureglobal');
 
 module.exports = (sequelize, DataTypes) => {
   var FactureAccompte = sequelize.define('FactureAccompte', {
