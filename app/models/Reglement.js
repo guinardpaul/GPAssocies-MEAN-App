@@ -15,7 +15,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     reglementTtc: {
       type: DataTypes.DOUBLE,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        isDecimal: true
+      }
     },
     factureAccompte: {
       type: DataTypes.INTEGER,

@@ -23,23 +23,38 @@ module.exports = (sequelize, DataTypes) => {
     },
     montantHt: {
       type: DataTypes.DOUBLE,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        isDecimal: true
+      }
     },
     tauxTva: {
       type: DataTypes.DOUBLE,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        isDecimal: true
+      }
     },
     montantTtcTotal: {
       type: DataTypes.DOUBLE,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        isDecimal: true
+      }
     },
     montantTtcRegle: {
       type: DataTypes.DOUBLE,
-      defaultValue: 0
+      defaultValue: 0,
+      validate: {
+        isDecimal: true
+      }
     },
     montantTtcFacture: {
       type: DataTypes.DOUBLE,
-      defaultValue: 0
+      defaultValue: 0,
+      validate: {
+        isDecimal: true
+      }
     },
     client: {
       type: DataTypes.INTEGER,

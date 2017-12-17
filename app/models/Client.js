@@ -1,4 +1,5 @@
 'use strict';
+
 module.exports = (sequelize, DataTypes) => {
   var Client = sequelize.define('Client', {
     id: {
@@ -30,11 +31,18 @@ module.exports = (sequelize, DataTypes) => {
     },
     email: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        isEmail: true,
+        len: [5, 150]
+      }
     },
     numTel: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        len: [10, 30]
+      }
     },
     adresseFact: DataTypes.STRING,
     complAdresseFact: DataTypes.STRING,

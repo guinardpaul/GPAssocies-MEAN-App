@@ -23,11 +23,17 @@ module.exports = (sequelize, DataTypes) => {
     },
     montantFacture: {
       type: DataTypes.DOUBLE,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        isDecimal: true
+      }
     },
     reglementClient: {
       type: DataTypes.DOUBLE,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        isDecimal: true
+      }
     },
     factureGlobal: {
       type: DataTypes.INTEGER,

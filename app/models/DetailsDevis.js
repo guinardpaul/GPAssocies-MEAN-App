@@ -8,9 +8,24 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       type: DataTypes.INTEGER
     },
-    montantHt: DataTypes.DOUBLE,
-    tauxTva: DataTypes.DOUBLE,
-    montantTtc: DataTypes.DOUBLE,
+    montantHt: {
+      type: DataTypes.DOUBLE,
+      validate: {
+        idDecimal: true
+      }
+    },
+    tauxTva: {
+      type: DataTypes.DOUBLE,
+      validate: {
+        idDecimal: true
+      }
+    },
+    montantTtc: {
+      type: DataTypes.DOUBLE,
+      validate: {
+        idDecimal: true
+      }
+    },
     devis: {
       type: DataTypes.INTEGER,
       references: {
