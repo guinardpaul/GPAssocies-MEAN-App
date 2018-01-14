@@ -1,14 +1,15 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
-# Secrets / Database config
-secret.js
-config.json
+# Secret
+# Ajouter secret.js en production
+#secret.js
 
 # logs
 *.log
 
 # compiled output
-/dist
+# Ajouter /dist en production
+#/dist
 /tmp
 /out-tsc
 

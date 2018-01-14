@@ -12,9 +12,9 @@ const passport = require('passport');
 require('./app/config/passport')(passport);
 const nodemailer = require('nodemailer');
 
-// Changer a config.prod quand déployer en production
-const config = require('./app/config/config.dev');
-process.env.NODE_ENV = config.environment;
+// Changer a database.prod quand déployer en production
+const config = require('./app/config/database.prod');
+// process.env.NODE_ENV = config.environment;
 
 // Set app
 const app = express();

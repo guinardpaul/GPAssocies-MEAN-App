@@ -10,11 +10,6 @@ import { Bug } from '../models/bug';
 import { environment } from '../../environments/environment';
 
 /**
- * Set dev url accessing app/routes/ url
- */
-const devUrl = 'http://localhost:3001/api/bugs/';
-
-/**
  * 
  * @author Paul GUINARD
  * @export
@@ -22,8 +17,7 @@ const devUrl = 'http://localhost:3001/api/bugs/';
  */
 @Injectable()
 export class BugsService {
-  url: string;
-
+  private url: string;
   /**
    * Creates an instance of BugsService.
    * @param {Http} http http module
@@ -76,7 +70,7 @@ export class BugsService {
    * @memberof BugsService
    */
   updateBug(bug: Bug) {
-    return this.http.put(`${this.url}/bugs/${bug.id}`, bug)
+    return this.http.put(`${this.url}/bugs/${bug._id}`, bug)
       .map(res => res.json());
   }
 
