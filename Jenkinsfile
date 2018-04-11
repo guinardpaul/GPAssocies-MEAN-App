@@ -1,5 +1,10 @@
 pipeline {
-  agent none
+  agent {
+    node {
+      label 'node:6.3'
+    }
+    
+  }
   stages {
     stage('Clone') {
       steps {
