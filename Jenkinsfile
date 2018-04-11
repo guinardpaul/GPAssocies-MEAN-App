@@ -18,7 +18,7 @@ pipeline {
       steps {
         echo 'Installation de l\'application'
         sh 'npm install'
-        echo 'Installation terminé avec succès'
+        echo 'Installation terminÃ© avec succÃ¨s'
       }
     }
   }
