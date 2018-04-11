@@ -1,15 +1,10 @@
 pipeline {
-  agent {
-    node {
-      label 'test'
-    }
-    
-  }
+  agent none
   stages {
     stage('Clone') {
       steps {
         echo 'Starting Git clone'
-        git(url: 'https://github.com/guinardpaul/GPAssocies-MEAN-App', branch: 'heroku-v1.0.9', credentialsId: 'guinardpaul')
+        git(url: 'https://github.com/guinardpaul/GPAssocies-MEAN-App', branch: 'master', credentialsId: 'guinardpaul')
         echo 'Repository cloned successfuly'
       }
     }
@@ -24,7 +19,7 @@ pipeline {
       steps {
         echo 'Lancement de l\'application'
         sh 'node server.js'
-        echo 'Application démarré avec succès'
+        echo 'Application dÃ©marrÃ© avec succÃ¨s'
       }
     }
   }
