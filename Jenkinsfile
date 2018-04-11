@@ -1,7 +1,7 @@
 pipeline {
   agent {
     node {
-      label 'node:6.3'
+      label 'master'
     }
     
   }
