@@ -1,5 +1,11 @@
 pipeline {
-  agent any
+  agent {
+    docker {
+      image 'node:6-alpine'
+      args '-p 3000:3000'
+    }
+    
+  }
   stages {
     stage('Clone') {
       steps {
@@ -8,11 +14,11 @@ pipeline {
         echo 'Repository cloned successfuly'
       }
     }
-    stage('Launch') {
+    stage('Install') {
       steps {
-        echo 'Lancement de l\'application'
-        sh 'node server.js'
-        echo 'Application d√©marr√© avec succ√®s'
+        echo 'Installation de l\'application'
+        sh 'npm install'
+        echo 'Installation terminÈ avec succËs'
       }
     }
   }
