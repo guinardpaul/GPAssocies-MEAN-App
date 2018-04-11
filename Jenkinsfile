@@ -8,13 +8,6 @@ pipeline {
         echo 'Repository cloned successfuly'
       }
     }
-    stage('Build') {
-      steps {
-        echo 'Start building '
-        sh 'npm run build'
-        echo 'End build'
-      }
-    }
     stage('Launch') {
       steps {
         echo 'Lancement de l\'application'
